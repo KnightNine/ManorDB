@@ -4,7 +4,7 @@
 <hr>
 Open Source Database Manager Made in WinForms that copies CastleDB's UI structure.
 Still working on a <a href="https://stackoverflow.com/questions/61284153/how-would-i-go-about-creating-a-dropdown-subtable-sub-datagridview-in-winform">way to have subTables</a>
-After i'm done that along with saving/loading files i'll be done.
+After i'm done that along with saving/loading I'll be posting the application files.
 
 <br>
 <p>
