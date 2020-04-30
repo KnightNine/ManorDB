@@ -4,7 +4,6 @@
 <hr>
 <p>
 Open Source Database Manager Made in WinForms that copies CastleDB's UI structure.
-Still working on a <a href="https://stackoverflow.com/questions/61284153/how-would-i-go-about-creating-a-dropdown-subtable-sub-datagridview-in-winform">way to have subTables</a>
 After i'm done that along with saving/loading I'll be posting the application files.
 </p>
 
@@ -18,7 +17,7 @@ After i'm done that along with saving/loading I'll be posting the application fi
 The game I am working on relies on complex repeating data structures to define it's entities therefore I find that this Database manager would be particularly useful to me.
 </p>
 <hr>
-<b>FeatureList/Goals:</b> 
+<h4>FeatureList:</h4> 
 <ul>
   <li><b>Column Types:</b></li>
   <ul>
@@ -31,6 +30,21 @@ The game I am working on relies on complex repeating data structures to define i
   </ul>
   <li><b>Object Oriented Data:</b></li>
   <ul>
-    <li><p>All data of a row entry is contained within that entry's data as opposed to Table Oriented Data, in which the data of one entity is stored across multiple tables, (only exception being foreign key refrence entries that are explicily refrences), and as such, all data from a single entity can be loaded without calling multiple tables through refrences, this is mostly relevant to subtables.</p> (i.e. Database>Table>Rows>EntryKey>subtableColumnName>ColumnName>data <b>, ,</b> (Database>Table>Rows>EntryKey>subtableRefrenceKey /and then/ Database>Subtable>subtableRefrenceKey>data)) I want to keep all overhead data used by the manager that is not relevant to the game reading a single entity's data, out of the way. It is most likely that game data is only needed on a per entity basis that this storage format would work well with.</li>
+    <li>All data of a row entry is contained within that entry's data as opposed to Table Oriented Data, in which the data of one entity is stored across multiple tables, (only exception being foreign key refrence entries that are explicily refrences), and as such, all data from a single entity can be loaded without calling multiple tables through refrences, this is mostly relevant to subtables. I want to keep all overhead data used by the manager that is not relevant to the game reading a single entity's data, out of the way. It is most likely that game data is only needed on a per entity basis that this storage format would work well with.
+    </li>
   </ul>
 </ul> 
+
+<hr>
+<h4>Goals:</h4>
+<p>
+  There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what FDB is lacking in that should be improved:
+<p/>
+<ul>
+  <li>Column Shifting (movement of columns left and right, may or may not be added soon)</li>
+  <li>Export to Index Removal (removal of indexes that store the order of rows in the dictionary in order to further simplify data)</li>
+  <li>Seperators (equivalent to CDB's "seperator")</li>
+  <li>Detailed Commentation</li>
+</ul>
+  
+
