@@ -52,4 +52,7 @@ The game I am working on relies on complex repeating data structures to define i
   
   
 </ul>
- 
+
+<p>
+  Anyways, I hope that the community on github will take interest in this project and help it become a viable alternative to CDB.
+<p/>
