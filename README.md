@@ -37,7 +37,7 @@ The game I am working on relies on complex repeating data structures to define i
 <hr>
 <h4>Goals:</h4>
 <p>
-  There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what FDB is lacking in (the first three may or may not be added soon):
+  There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what FDB is lacking in in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
   <li>Renaming Tables and Columns</li>
@@ -46,6 +46,6 @@ The game I am working on relies on complex repeating data structures to define i
   <li>Export to Index Removal (removal of indexes that store the order of rows in the dictionary in order to further simplify data)</li>
   <li>Seperators (equivalent to CDB's "seperator")</li>
   <li>Detailed Commentation</li>
+  <li>Further Organization of Code</li>
 </ul>
-  
-
+ 
