@@ -45,9 +45,11 @@ The game I am working on relies on complex repeating data structures to define i
   <li>Column Shifting (re-ordering of columns left and right)</li>
   <li>Row insertion</li>
   <li>Table Shifiting (re-ordering of Tables)</li>
+  <li>Further Organization of Code</li>
+  <li>Detailed Commentation</li>
   <li>Export to Index Removal (removal of indexes that store the order of rows in the dictionary in order to further simplify data)</li>
   <li>Seperators (equivalent to CDB's "seperator")</li>
-  <li>Detailed Commentation</li>
-  <li>Further Organization of Code</li>
+  
+  
 </ul>
  
