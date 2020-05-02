@@ -3,7 +3,7 @@
 <center><img src="https://raw.githubusercontent.com/KnightNine/FortressDB/master/Images/FDB_Full_Text.png" alt="Logo" width="400" > </center>
 <hr>
 <p>
-Open Source Database Manager Made in WinForms that copies CastleDB's UI structure.
+Open Source Json Database Manager Made in WinForms that copies CastleDB's UI structure.
 </p>
 
 
@@ -37,12 +37,14 @@ The game I am working on relies on complex repeating data structures to define i
 <hr>
 <h4>Goals:</h4>
 <p>
-  There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what FDB is lacking in in order of most prioritized to least (the first three may or may not be added soon):
+  There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what FDB is lacking in in order of most prioritized to least (the first four may or may not be added soon):
 <p/>
 <ul>
+  <li>Order dictionaries where subtables that extend a table are inserted underneath said table's data (more organized file structure)</li>
   <li>Renaming Tables and Columns</li>
   <li>Column Shifting (re-ordering of columns left and right)</li>
   <li>Row insertion</li>
+  <li>Table Shifiting (re-ordering of Tables)</li>
   <li>Export to Index Removal (removal of indexes that store the order of rows in the dictionary in order to further simplify data)</li>
   <li>Seperators (equivalent to CDB's "seperator")</li>
   <li>Detailed Commentation</li>
