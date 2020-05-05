@@ -37,12 +37,10 @@ The game I am working on relies on complex repeating data structures to define i
 <hr>
 <h4>Goals:</h4>
 <p>
-  There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what FDB is lacking in in order of most prioritized to least (the first four may or may not be added soon):
+  There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what FDB is lacking in in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
-  <li>Order dictionaries where subtables that extend a table are inserted underneath said table's data (more organized file structure)</li>
   <li>Renaming Tables and Columns</li>
-  <li>Column Shifting (re-ordering of columns left and right)</li>
   <li>Row insertion</li>
   <li>Table Shifiting (re-ordering of Tables)</li>
   <li>Further Organization of Code</li>
@@ -53,6 +51,3 @@ The game I am working on relies on complex repeating data structures to define i
   
 </ul>
 
-<p>
-  Anyways, I hope that the community on github will take interest in this project and help it become a viable alternative to CDB.
-<p/>
