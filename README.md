@@ -29,7 +29,7 @@ The game I am working on relies on complex repeating data structures to define i
   </ul>
   <li><b>Object Oriented Data:</b></li>
   <ul>
-    <li>All data of a row entry is contained within that entry's data as opposed to Table Oriented Data, in which the data of one entity is stored across multiple tables through refrences, (only exception being foreign key refrence entries that are explicily refrences), and as such, all data from a single entity can be loaded without calling multiple tables , this is mostly relevant to subtables. I want to keep all overhead data used by the manager that is not relevant to the game reading a single entity's data, out of the way. It is most likely that game data is only needed on a per entity basis that this storage format would work well with.
+    <li>All data of a row entry is contained within that entry's data as opposed to Table Oriented Data, in which the data of one entity is stored across multiple tables through refrences, (only exception being foreign key refrence entries that are explicily refrences), and as such, all data from a single entity can be loaded without calling multiple tables , this is mostly relevant to subtables. I want to keep all overhead data used by the manager that is not relevant to the game reading a single entity's data, out of the way. It is most likely that game data is only needed on a per entity basis that this storage format would work well with. (pretty sure cdb's data is stored in the same way)
     </li>
   </ul>
 </ul> 
