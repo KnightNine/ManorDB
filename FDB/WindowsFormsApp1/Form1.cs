@@ -133,7 +133,11 @@ namespace FDB
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DatabaseFunct.ChangeMainTable(Program.mainForm.tabControl1.SelectedTab.Name);
+            if (!DatabaseFunct.loadingTable)
+            {
+                DatabaseFunct.ChangeMainTable(Program.mainForm.tabControl1.SelectedTab.Name);
+            }
+            
         }
 
         public void TableMainGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -382,7 +386,7 @@ namespace FDB
                     DataGridView newDGV = Program.GetGridView();
                     //-------------------------------------------------setting edits-----
                     newDGV.Dock = DockStyle.None;
-                    newDGV.Visible = true;
+                    
 
                     newDGV.Name = senderDGV.Name + "/" + e.RowIndex.ToString() + "," + senderDGV.Columns[e.ColumnIndex].Name;
                     //-------------------------------------------------------------------
@@ -576,12 +580,17 @@ namespace FDB
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InputOutput.ImportFDBFile();
+            InputOutput.ImportFDBFile(true);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InputOutput.ExportFDBFile();
+        }
+
+        private void appendFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InputOutput.ImportFDBFile(false);
         }
     }
    /* public static partial class ComboListBox

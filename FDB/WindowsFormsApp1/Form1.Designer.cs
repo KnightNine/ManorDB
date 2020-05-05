@@ -48,6 +48,7 @@ namespace FDB
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.appendFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,7 +64,7 @@ namespace FDB
             this.newLineToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(2517, 49);
+            this.menuStrip1.Size = new System.Drawing.Size(2517, 52);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -71,50 +72,51 @@ namespace FDB
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
+            this.appendFileToolStripMenuItem,
             this.saveAsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 45);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 48);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(285, 54);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(285, 54);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // newTableToolStripMenuItem
             // 
             this.newTableToolStripMenuItem.Name = "newTableToolStripMenuItem";
-            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(179, 45);
+            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(179, 48);
             this.newTableToolStripMenuItem.Text = "New Table";
             this.newTableToolStripMenuItem.Click += new System.EventHandler(this.newTableToolStripMenuItem_Click);
             // 
             // removeTableToolStripMenuItem
             // 
             this.removeTableToolStripMenuItem.Name = "removeTableToolStripMenuItem";
-            this.removeTableToolStripMenuItem.Size = new System.Drawing.Size(226, 45);
+            this.removeTableToolStripMenuItem.Size = new System.Drawing.Size(226, 48);
             this.removeTableToolStripMenuItem.Text = "Remove Table";
             this.removeTableToolStripMenuItem.Click += new System.EventHandler(this.removeTableToolStripMenuItem_Click);
             // 
             // newColumnToolStripMenuItem
             // 
             this.newColumnToolStripMenuItem.Name = "newColumnToolStripMenuItem";
-            this.newColumnToolStripMenuItem.Size = new System.Drawing.Size(214, 45);
+            this.newColumnToolStripMenuItem.Size = new System.Drawing.Size(214, 48);
             this.newColumnToolStripMenuItem.Text = "New Column";
             this.newColumnToolStripMenuItem.Click += new System.EventHandler(this.newColumnToolStripMenuItem_Click);
             // 
             // newLineToolStripMenuItem
             // 
             this.newLineToolStripMenuItem.Name = "newLineToolStripMenuItem";
-            this.newLineToolStripMenuItem.Size = new System.Drawing.Size(164, 45);
+            this.newLineToolStripMenuItem.Size = new System.Drawing.Size(164, 48);
             this.newLineToolStripMenuItem.Text = "New Line";
             this.newLineToolStripMenuItem.Click += new System.EventHandler(this.newLineToolStripMenuItem_Click);
             // 
@@ -123,7 +125,7 @@ namespace FDB
             this.label1.AutoSize = true;
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 49);
+            this.label1.Location = new System.Drawing.Point(0, 52);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(998, 69);
             this.label1.TabIndex = 1;
@@ -145,12 +147,19 @@ namespace FDB
             this.panel1.AutoSize = true;
             this.panel1.BackColor = System.Drawing.Color.Transparent;
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 49);
+            this.panel1.Location = new System.Drawing.Point(0, 52);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(2517, 942);
+            this.panel1.Size = new System.Drawing.Size(2517, 939);
             this.panel1.TabIndex = 2;
             this.panel1.Visible = false;
             this.panel1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TableMainGridView_Scroll);
+            // 
+            // appendFileToolStripMenuItem
+            // 
+            this.appendFileToolStripMenuItem.Name = "appendFileToolStripMenuItem";
+            this.appendFileToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.appendFileToolStripMenuItem.Text = "Append File";
+            this.appendFileToolStripMenuItem.Click += new System.EventHandler(this.appendFileToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -191,6 +200,7 @@ namespace FDB
 
         //added in Main
         public System.Windows.Forms.DataGridView TableMainGridView;
+        private ToolStripMenuItem appendFileToolStripMenuItem;
     }
 
 
@@ -278,7 +288,7 @@ namespace FDB
             colName = _colName;
 
 
-            MenuItem[] options = { new MenuItem() { Name = "Shift Column Left", Text = "Shift Column Left", Enabled = false }, new MenuItem() { Name = "Shift Column Right", Text = "Shift Column Right", Enabled = false }, new MenuItem() { Name = "Delete Column", Text = "Delete Column" } };
+            MenuItem[] options = { new MenuItem() { Name = "Shift Column Left", Text = "Shift Column Left" }, new MenuItem() { Name = "Shift Column Right", Text = "Shift Column Right" }, new MenuItem() { Name = "Delete Column", Text = "Delete Column" } };
             options[0].Click += new System.EventHandler(shiftLeft);
             options[1].Click += new System.EventHandler(shiftRight);
             options[2].Click += new System.EventHandler(deleteColumn);
@@ -318,11 +328,13 @@ namespace FDB
         }
         private static void shiftLeft(object sender, System.EventArgs e)
         {
-
+            DatabaseFunct.ShiftColumn(colName, DGV, true);
+            cMenu.Dispose();
         }
         private static void shiftRight(object sender, System.EventArgs e)
         {
-
+            DatabaseFunct.ShiftColumn(colName, DGV, false);
+            cMenu.Dispose();
 
         }
 
