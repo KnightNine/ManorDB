@@ -44,7 +44,8 @@ namespace FDB
 
             ((System.ComponentModel.ISupportInitialize)(mainForm.TableMainGridView)).BeginInit();
             mainForm.panel1.Controls.Add(mainForm.TableMainGridView);
-            
+            mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.AutoClose = false;
+            mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.MouseLeave += new EventHandler(mainForm.hideUnhideColumnsToolStripMenuItemMouseLeave);
             ((System.ComponentModel.ISupportInitialize)(mainForm.TableMainGridView)).EndInit();
 
             
@@ -754,6 +755,7 @@ namespace FDB
                             DataGridViewColumn myDataCol = (DataGridViewColumn)Activator.CreateInstance(ColumnTypes.Types[colType]);
 
                             myDataCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                            myDataCol.MinimumWidth = 5;
                             myDataCol.HeaderText = colName;
                             myDataCol.Name = colName;
                             myDataCol.SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -989,6 +991,22 @@ namespace FDB
 
             
 
+        }
+        internal static void HideUnhideColumn(string colName, DataGridView DGV)
+        {
+            if (DGV.Columns[colName].Width != 2)
+            {
+                DGV.Columns[colName].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                DGV.Columns[colName].MinimumWidth = 2;
+                DGV.Columns[colName].Width = 2;
+                
+            }
+            else
+            {
+                DGV.Columns[colName].MinimumWidth = 5;
+                DGV.Columns[colName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
+            
         }
 
         internal static void ShiftColumn(string colName, DataGridView DGV, bool isLeft)

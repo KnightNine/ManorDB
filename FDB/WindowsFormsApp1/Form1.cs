@@ -94,7 +94,7 @@ namespace FDB
             {
 
                 string[] input = Prompt.ShowDialog("Name Column And Select Type", "Create Column", true, true, ColumnTypes.Types.Keys.ToArray<string>());
-                
+
 
                 DatabaseFunct.AddColumn(input[0], input[1], false, senderDGV);
 
@@ -137,7 +137,7 @@ namespace FDB
             {
                 DatabaseFunct.ChangeMainTable(Program.mainForm.tabControl1.SelectedTab.Name);
             }
-            
+
         }
 
         public void TableMainGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -225,7 +225,7 @@ namespace FDB
             else if (e.Button == MouseButtons.Left)
             {
                 if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-                
+
 
                 string tableDir = senderDGV.Name;
                 string tableKey = DatabaseFunct.ConvertDirToTableKey(tableDir);
@@ -292,13 +292,13 @@ namespace FDB
 
                 }
             }
-            
+
         }
 
 
         public void TableMainGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            
+
 
         }
 
@@ -317,7 +317,7 @@ namespace FDB
 
             if (colType == "SubTable")
             {
-                
+
                 void colorTabOfOpenTable(int selectedColIndex)
                 {
 
@@ -325,7 +325,7 @@ namespace FDB
 
                     foreach (DataGridViewCell cell in senderDGV.Rows[e.RowIndex].Cells)
                     {
-                        
+
                         if (cell is DataGridViewButtonCell)
                         {
                             DataGridViewButtonCell bCell = cell as DataGridViewButtonCell;
@@ -344,17 +344,17 @@ namespace FDB
                                 if ((double)e.RowIndex % 2 == 0)
                                 {
                                     bCell.Style.BackColor = senderDGV.DefaultCellStyle.BackColor;
-                                }   
+                                }
                                 else
                                 {
                                     bCell.Style.BackColor = senderDGV.AlternatingRowsDefaultCellStyle.BackColor;
                                 }
-                                
+
                                 bCell.Style.SelectionBackColor = Color.LightCyan;
 
-                               
+
                             }
-                            
+
 
                         }
                     }
@@ -386,7 +386,7 @@ namespace FDB
                     DataGridView newDGV = Program.GetGridView();
                     //-------------------------------------------------setting edits-----
                     newDGV.Dock = DockStyle.None;
-                    
+
 
                     newDGV.Name = senderDGV.Name + "/" + e.RowIndex.ToString() + "," + senderDGV.Columns[e.ColumnIndex].Name;
                     //-------------------------------------------------------------------
@@ -492,7 +492,7 @@ namespace FDB
 
         public void RecenterSubTables()
         {
-            
+
             //Console.WriteLine(scrollValue.Y + " and then: ");
 
             void subFunctExpandParentLoop(DataGridView DGV)
@@ -503,11 +503,11 @@ namespace FDB
                 Console.WriteLine(DGV.Name + " is the directory being expanded");
 
                 int row = Convert.ToInt32(TupleDataArr.Last().Split(',')[0]);
-                Console.WriteLine("expanding row: " +row.ToString());
+                Console.WriteLine("expanding row: " + row.ToString());
 
                 int subDGVHeight = (int)GetDataGridViewHeightAtRow(DGV, -1);
                 //test
-               
+
 
                 parentDGV.Rows[row].DividerHeight = subDGVHeight + subTableSpacing;
                 parentDGV.Rows[row].Height = parentDGV.RowTemplate.Height + subDGVHeight + subTableSpacing;
@@ -592,17 +592,69 @@ namespace FDB
         {
             InputOutput.ImportFDBFile(false);
         }
-    }
-   /* public static partial class ComboListBox
-    {
-        static DialogResult x;
-        private static void ComboBoxNew_SelectValue(object sender, EventArgs e)
+
+        private void hideUnhideColumnToolStripMenuItem(object sender, System.EventArgs e)
         {
-            x = DialogResult.OK;
+            ToolStripMenuItem menuItemSender = sender as ToolStripMenuItem;
+            DatabaseFunct.HideUnhideColumn(menuItemSender.Name, TableMainGridView);
+            menuItemSender.Checked = !menuItemSender.Checked;
+
 
         }
 
-    }*/
+        private void hideUnhideColumnsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TableMainGridView.Columns.Count > 0)
+            {
+                //ContextMenuPrompt.ShowColumnHideContextMenu(TableMainGridView);
+
+                hideUnhideColumnsToolStripMenuItem.DropDownItems.Clear();
+
+                System.Collections.Generic.List<ToolStripItem> options = new System.Collections.Generic.List<ToolStripItem>();
+
+                int i = 0;
+
+                foreach (DataGridViewColumn col in TableMainGridView.Columns)
+                {
+                    bool check = false;
+                    if (col.MinimumWidth != 2)
+                    {
+                        check = true;
+                    }
+
+                    options.Add(new ToolStripMenuItem() { Name = col.Name, Text = col.Name, Checked = check, ImageScaling = ToolStripItemImageScaling.None });
+                    options[i].Click += new System.EventHandler(hideUnhideColumnToolStripMenuItem);
+                    i += 1;
+                }
+
+                hideUnhideColumnsToolStripMenuItem.DropDownItems.AddRange(options.ToArray());
+            }
+            else
+            {
+                MessageBox.Show("No columns exist");
+            }
+        }
+
+        public void hideUnhideColumnsToolStripMenuItemMouseLeave(object sender, EventArgs e)
+        {
+            hideUnhideColumnsToolStripMenuItem.DropDown.Close();
+        }
+
+
+    }
+    
+
+
+    /* public static partial class ComboListBox
+     {
+         static DialogResult x;
+         private static void ComboBoxNew_SelectValue(object sender, EventArgs e)
+         {
+             x = DialogResult.OK;
+
+         }
+
+     }*/
 
 
 

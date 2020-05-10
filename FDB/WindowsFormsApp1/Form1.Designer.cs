@@ -39,16 +39,17 @@ namespace FDB
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.appendFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newColumnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hideUnhideColumnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.appendFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,7 +62,8 @@ namespace FDB
             this.newTableToolStripMenuItem,
             this.removeTableToolStripMenuItem,
             this.newColumnToolStripMenuItem,
-            this.newLineToolStripMenuItem});
+            this.newLineToolStripMenuItem,
+            this.hideUnhideColumnsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(2517, 52);
@@ -81,14 +83,21 @@ namespace FDB
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(343, 54);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // appendFileToolStripMenuItem
+            // 
+            this.appendFileToolStripMenuItem.Name = "appendFileToolStripMenuItem";
+            this.appendFileToolStripMenuItem.Size = new System.Drawing.Size(343, 54);
+            this.appendFileToolStripMenuItem.Text = "Append File";
+            this.appendFileToolStripMenuItem.Click += new System.EventHandler(this.appendFileToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(343, 54);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -119,6 +128,13 @@ namespace FDB
             this.newLineToolStripMenuItem.Size = new System.Drawing.Size(164, 48);
             this.newLineToolStripMenuItem.Text = "New Line";
             this.newLineToolStripMenuItem.Click += new System.EventHandler(this.newLineToolStripMenuItem_Click);
+            // 
+            // hideUnhideColumnsToolStripMenuItem
+            // 
+            this.hideUnhideColumnsToolStripMenuItem.Name = "hideUnhideColumnsToolStripMenuItem";
+            this.hideUnhideColumnsToolStripMenuItem.Size = new System.Drawing.Size(337, 48);
+            this.hideUnhideColumnsToolStripMenuItem.Text = "Hide/Unhide Columns";
+            this.hideUnhideColumnsToolStripMenuItem.Click += new System.EventHandler(this.hideUnhideColumnsToolStripMenuItem_Click);
             // 
             // label1
             // 
@@ -153,13 +169,6 @@ namespace FDB
             this.panel1.TabIndex = 2;
             this.panel1.Visible = false;
             this.panel1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TableMainGridView_Scroll);
-            // 
-            // appendFileToolStripMenuItem
-            // 
-            this.appendFileToolStripMenuItem.Name = "appendFileToolStripMenuItem";
-            this.appendFileToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
-            this.appendFileToolStripMenuItem.Text = "Append File";
-            this.appendFileToolStripMenuItem.Click += new System.EventHandler(this.appendFileToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -200,7 +209,9 @@ namespace FDB
 
         //added in Main
         public System.Windows.Forms.DataGridView TableMainGridView;
+
         private ToolStripMenuItem appendFileToolStripMenuItem;
+        public ToolStripMenuItem hideUnhideColumnsToolStripMenuItem;
     }
 
 
@@ -266,6 +277,7 @@ namespace FDB
             DGV = _DGV;
             rowIndex = _rowIndex;
 
+            
 
             MenuItem[] options = { new MenuItem() { Name = "Shift Row Up", Text = "Shift Row Up" }, new MenuItem() { Name = "Shift Row Down", Text = "Shift Row Down" }, new MenuItem() { Name = "Delete Row", Text = "Delete Row" } };
             options[0].Click += new System.EventHandler(shiftUp);
@@ -344,6 +356,8 @@ namespace FDB
             Program.mainForm.RecenterSubTables();
             cMenu.Dispose();
         }
+
+        
     }
 
 
