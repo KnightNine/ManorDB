@@ -506,7 +506,7 @@ namespace FDB
             string subtableName = parentTabName + "/" + colName;
             if (!currentData.Keys.Contains(subtableName))
             {
-                currentData.Add(subtableName, new Dictionary<string, dynamic>());
+                currentData.Add(subtableName, new Dictionary<string, dynamic>( ) { { ColumnOrderRefrence, new List<string>() } });
             }
             else
             {
@@ -1099,24 +1099,21 @@ namespace FDB
             Dictionary<int, Dictionary<string, dynamic>> tableData = GetTableDataFromDir(tableDir) as Dictionary<int, Dictionary<string, dynamic>>;
 
 
-            DGV.Rows.RemoveAt(rowIndex);
-            tableData.Remove(rowIndex);
+            
             //remove open subtables at index
             if (Program.openSubTables.ContainsKey(new Tuple<DataGridView, int>(DGV, rowIndex)))
             {
                 
                 RemoveSubtableFromOpenSubtables(new Tuple<DataGridView, int>(DGV, rowIndex));
             }
-            //close row beforehand since RecenterSubtables() only accounts for open rows
-            DGV.Rows[rowIndex].Height = DGV.RowTemplate.Height;
-            DGV.Rows[rowIndex].DividerHeight = 0;
-            
+
+            DGV.Rows.RemoveAt(rowIndex);
 
             //shift higher indexes down by 1
             int index = rowIndex + 1;
             while (index < tableData.Count() )
             {
-                //close row beforehand since RecenterSubtables() only accounts for open rows
+                //close row beforehand since RecenterSubtables() only accounts for open rows 
                 //don't do this on the last index as that row would no longer exist though it's data does
                 if (index < tableData.Count() - 1)
                 {
@@ -1442,17 +1439,28 @@ namespace FDB
         //<parent table, row index>
         internal static void RemoveSubtableFromOpenSubtables(Tuple<DataGridView, int> subTableKey)
         {
+            List < KeyValuePair <Tuple<DataGridView, int>, Tuple<string, DataGridView>>> removalList = new List<KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>>>();
 
             foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> subTable in Program.openSubTables)
             {
-                //remove subtable and subtables that derive from subtable from opensubtable array
-                if (subTable.Key.Item1.Name.StartsWith(Program.openSubTables[subTableKey].Item2.Name + "/") || subTable.Key.Item1.Name == Program.openSubTables[subTableKey].Item2.Name)
+                //remove subtables that derive from subtable from opensubtable array
+                if (subTable.Key.Item1.Name.StartsWith(Program.openSubTables[subTableKey].Item2.Name + "/") )
                 {
-                    Program.openSubTables.Remove(subTable.Key);
+                    removalList.Add(subTable);
+
+                    
                 }
             }
+            foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> subTable in removalList)
+            {
+                Program.openSubTables.Remove(subTable.Key);
+                Console.WriteLine(subTable.Key.ToString() + " removed from open subtables.");
+            }
+
             //remove control
             subTableKey.Item1.Controls.Remove(Program.openSubTables[subTableKey].Item2);
+            //remove from open subtables
+            Program.openSubTables.Remove(subTableKey);
         }
 
 

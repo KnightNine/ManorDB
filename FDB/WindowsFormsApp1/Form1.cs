@@ -527,6 +527,7 @@ namespace FDB
 
 
                 DataGridView subDGV = openSubTable.Value.Item2;
+                
                 subFunctExpandParentLoop(subDGV);
 
                 /*DataGridView parentDGV = openSubTable.Key.Item1;
