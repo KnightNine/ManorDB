@@ -44,8 +44,8 @@ namespace FDB
 
             ((System.ComponentModel.ISupportInitialize)(mainForm.TableMainGridView)).BeginInit();
             mainForm.panel1.Controls.Add(mainForm.TableMainGridView);
-            mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.AutoClose = false;
-            mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.MouseLeave += new EventHandler(mainForm.hideUnhideColumnsToolStripMenuItemMouseLeave);
+           // mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.AutoClose = false;
+            /*mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.LostFocus += new EventHandler(mainForm.hideUnhideColumnsToolStripMenuItemLostFocus);*/
             ((System.ComponentModel.ISupportInitialize)(mainForm.TableMainGridView)).EndInit();
 
             
@@ -921,12 +921,27 @@ namespace FDB
 
 
 
-                    
 
 
                 currentData[tableKey].Remove(colName);
-                currentData[tableKey][ColumnOrderRefrence].Remove(colName);
+                int index = 0;
                 
+
+                foreach (string orderColName in currentData[tableKey][ColumnOrderRefrence])
+                {
+                    if (orderColName == colName)
+                    {
+                        break;
+                    }
+                    
+                    index += 1;
+                }
+                currentData[tableKey][ColumnOrderRefrence].RemoveAt(index);
+
+
+
+
+
                 //get all subtable data of same column
                 List<Dictionary<int, Dictionary<string, dynamic>>> parentTableData = GetAllTableDataAtTableLevel(tableKey);
                 
@@ -1341,8 +1356,13 @@ namespace FDB
                     //if it's a comboboxcolumn add the item to the cell
                     if (DGV.Columns[column.Name] is DataGridViewComboBoxColumn)
                     {
-                        DataGridViewComboBoxCell cell = new DataGridViewComboBoxCell() { Items = { value } };
-                        DGV.Rows[index].Cells[column.Name] = cell;
+                        if (value != null)
+                        {
+                            DataGridViewComboBoxCell cell = new DataGridViewComboBoxCell() { Items = { value } };
+                            DGV.Rows[index].Cells[column.Name] = cell;
+                        } 
+                        
+                        
 
                     }
                     else if (DGV.Columns[column.Name] is DataGridViewCheckBoxColumn)

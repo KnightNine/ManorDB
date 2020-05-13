@@ -599,6 +599,7 @@ namespace FDB
             ToolStripMenuItem menuItemSender = sender as ToolStripMenuItem;
             DatabaseFunct.HideUnhideColumn(menuItemSender.Name, TableMainGridView);
             menuItemSender.Checked = !menuItemSender.Checked;
+            hideUnhideColumnsToolStripMenuItem.ShowDropDown();
 
 
         }
@@ -636,11 +637,14 @@ namespace FDB
             }
         }
 
-        public void hideUnhideColumnsToolStripMenuItemMouseLeave(object sender, EventArgs e)
+        /*public void hideUnhideColumnsToolStripMenuItemLostFocus(object sender, EventArgs e)
         {
-            hideUnhideColumnsToolStripMenuItem.DropDown.Close();
-        }
+           hideUnhideColumnsToolStripMenuItem.DropDown.Close();
+            
 
+            
+        }*/
+        
 
     }
     
