@@ -345,17 +345,19 @@ namespace FDB
 
 
 
-
-
-
-
-                                if (ct[key] is Newtonsoft.Json.Linq.JObject)
+                                if (ct[key] is Newtonsoft.Json.Linq.JArray)
                                 {
                                     if (key == DatabaseFunct.ColumnOrderRefrence)
                                     {
+                                        //column order list
                                         tableLevelKVs[key] = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(ct[key].ToString());
+
                                     }
-                                    else if (tableLevel < 1)
+                                }
+                                else if (ct[key] is Newtonsoft.Json.Linq.JObject )
+                                {
+                                    
+                                    if (tableLevel < 1)
                                     {
                                         //table
                                         tableLevelKVs[key] = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(ct[key].ToString());
@@ -388,6 +390,7 @@ namespace FDB
                             //apply to ct
                             foreach (KeyValuePair<string, dynamic> KV in tableLevelKVs)
                             {
+                                
                                 ct[KV.Key] = KV.Value;
                                 if (!(KV.Value is ValueType) && KV.Value !=null)
                                 {
