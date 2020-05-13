@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 //██║     ╚██████╔╝██║  ██║   ██║   ██║  ██║███████╗███████║███████║    ██████╔╝██████╔╝
 //╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝    ╚═════╝ ╚═════╝ 
 //======================================================================================
-//   Version: 1.1.6.0     Author: Alexander Trosok     
+//   Version: 1.2.6.0     Author: Alexander Trosok     
 //======================================================================================
 
 // General Information about an assembly is controlled through the following
