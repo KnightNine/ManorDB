@@ -416,7 +416,7 @@ namespace FDB
                     senderDGV.Rows[e.RowIndex].Height = senderDGV.RowTemplate.Height;
                     senderDGV.Rows[e.RowIndex].DividerHeight = 0;
 
-                    //change color
+                    //change color of all to default
                     colorTabOfOpenTable(-1);
 
                 }

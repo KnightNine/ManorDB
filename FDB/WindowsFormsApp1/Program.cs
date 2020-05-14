@@ -1464,14 +1464,18 @@ namespace FDB
         {
             List < KeyValuePair <Tuple<DataGridView, int>, Tuple<string, DataGridView>>> removalList = new List<KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>>>();
 
+            Console.WriteLine("trying to remove subtable from " + subTableKey.Item1.Name +" at row " + subTableKey.Item2.ToString());
+
+
             foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> subTable in Program.openSubTables)
             {
+                Console.WriteLine(subTable.Key.Item1.Name);
                 //remove subtables that derive from subtable from opensubtable array
-                if (subTable.Key.Item1.Name.StartsWith(Program.openSubTables[subTableKey].Item2.Name + "/") )
+                if (subTable.Key.Item1.Name.StartsWith(Program.openSubTables[subTableKey].Item2.Name + "/") || subTable.Key.Item1.Name == Program.openSubTables[subTableKey].Item2.Name)
                 {
                     removalList.Add(subTable);
-
                     
+
                 }
             }
             foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> subTable in removalList)
