@@ -256,7 +256,10 @@ namespace FDB
                         primaryKeys.Add("");
                         foreach (KeyValuePair<int, Dictionary<string, dynamic>> entry in refrencedTable[DatabaseFunct.RowEntryRefrence])
                         {
-                            primaryKeys.Add(entry.Value[primaryKeyCol]);
+                            if (entry.Value[primaryKeyCol] != null)
+                            {
+                                primaryKeys.Add(entry.Value[primaryKeyCol]);
+                            }
                         }
 
                         //clear value if invalid
