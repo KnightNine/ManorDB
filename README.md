@@ -32,6 +32,11 @@ The game I am working on relies on complex repeating data structures to define i
     <li>All data of a row entry is contained within that entry's data as opposed to Table Oriented Data, in which the data of one entity is stored across multiple tables through refrences, (only exception being foreign key refrence entries that are explicily refrences), and as such, all data from a single entity can be loaded without calling multiple tables , this is mostly relevant to subtables. I want to keep all overhead data used by the manager that is not relevant to the game reading a single entity's data, out of the way. It is most likely that game data is only needed on a per entity basis that this storage format would work well with. (pretty sure cdb's data is stored in the same way)
     </li>
   </ul>
+  <li><b>Why Use this Manager Over CDB?:</b></li>
+  <ul>
+    <li><p>There's also a few benefits to using this DB Manager over CastleDB, one being that I don't store whether or not subtables are hidden within the data itself as to not have extranious data within the database that's weaved into the data you actually want to use. I currently don't save whether or not tables are hidden (so all subtables are closed when switching between tables) but if i did it would be stored in an external table that can be cut from the database when you only want to use the data.</p> <p>Second benefit being that you can hide columns to better see the columns you want to edit if you have a wide and shallow data model that stores many columns across one row so there's no need for pointless categorisation.</p> <p>And lastly an issue I had with CDB was that there was a limited number of tabs for switching between tables before they trailed off the window and became innaccessable via the mouse and required the use of key shortcuts, that isn't an issue here.</p> 
+    </li>
+  </ul>
 </ul> 
 
 <hr>
