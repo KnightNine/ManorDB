@@ -1156,11 +1156,9 @@ namespace FDB
 
 
             }
-            //remove last in table
-            if (index > 1)
-            {
-                tableData.Remove(tableData.Count() - 1);
-            }
+            //remove last in table data
+            tableData.Remove(tableData.Count() - 1);
+            
 
             
 
