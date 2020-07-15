@@ -63,7 +63,7 @@ namespace FDB
 
 
 
-        private void newLineToolStripMenuItem_Click(object sender, EventArgs e)
+        private void newRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             scrollValue = panel1.AutoScrollPosition;
             if (DatabaseFunct.selectedTable != "")
@@ -106,7 +106,7 @@ namespace FDB
             }
         }
 
-        public void subTableNewLineToolStripMenuItem_Click(object sender, EventArgs e)
+        public void subTableNewRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
             ToolStripMenuItem senderTSMI = sender as ToolStripMenuItem;
@@ -260,6 +260,7 @@ namespace FDB
                             {
                                 primaryKeys.Add(entry.Value[primaryKeyCol]);
                             }
+                            
                         }
 
                         //clear value if invalid

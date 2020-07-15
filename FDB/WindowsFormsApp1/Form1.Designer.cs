@@ -44,7 +44,7 @@ namespace FDB
             this.newTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newColumnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newRowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideUnhideColumnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -62,7 +62,7 @@ namespace FDB
             this.newTableToolStripMenuItem,
             this.removeTableToolStripMenuItem,
             this.newColumnToolStripMenuItem,
-            this.newLineToolStripMenuItem,
+            this.newRowToolStripMenuItem,
             this.hideUnhideColumnsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -122,12 +122,12 @@ namespace FDB
             this.newColumnToolStripMenuItem.Text = "New Column";
             this.newColumnToolStripMenuItem.Click += new System.EventHandler(this.newColumnToolStripMenuItem_Click);
             // 
-            // newLineToolStripMenuItem
+            // newRowToolStripMenuItem
             // 
-            this.newLineToolStripMenuItem.Name = "newLineToolStripMenuItem";
-            this.newLineToolStripMenuItem.Size = new System.Drawing.Size(164, 45);
-            this.newLineToolStripMenuItem.Text = "New Line";
-            this.newLineToolStripMenuItem.Click += new System.EventHandler(this.newLineToolStripMenuItem_Click);
+            this.newRowToolStripMenuItem.Name = "newRowToolStripMenuItem";
+            this.newRowToolStripMenuItem.Size = new System.Drawing.Size(164, 45);
+            this.newRowToolStripMenuItem.Text = "New Row";
+            this.newRowToolStripMenuItem.Click += new System.EventHandler(this.newRowToolStripMenuItem_Click);
             // 
             // hideUnhideColumnsToolStripMenuItem
             // 
@@ -204,7 +204,7 @@ namespace FDB
 
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private ToolStripMenuItem newColumnToolStripMenuItem;
-        private ToolStripMenuItem newLineToolStripMenuItem;
+        private ToolStripMenuItem newRowToolStripMenuItem;
         public Panel panel1;
 
         //added in Main

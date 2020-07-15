@@ -150,7 +150,7 @@ namespace FDB
         {
             MenuStrip newMenuStrip = new MenuStrip();
             ToolStripMenuItem newColumnToolStripMenuItem = new ToolStripMenuItem();
-            ToolStripMenuItem newLineToolStripMenuItem = new ToolStripMenuItem();
+            ToolStripMenuItem newRowToolStripMenuItem = new ToolStripMenuItem();
             // 
             // menuStrip1
             // 
@@ -158,7 +158,7 @@ namespace FDB
             newMenuStrip.ImageScalingSize = new System.Drawing.Size(40, 40);
             newMenuStrip.Items.AddRange(new ToolStripItem[] {
             newColumnToolStripMenuItem,
-            newLineToolStripMenuItem
+            newRowToolStripMenuItem
             });
             newMenuStrip.Location = new System.Drawing.Point(0, 0);
             newMenuStrip.Name = "menuStrip";
@@ -172,12 +172,12 @@ namespace FDB
             newColumnToolStripMenuItem.Text = "New Column";
             newColumnToolStripMenuItem.Click += new System.EventHandler(mainForm.subTableNewColumnToolStripMenuItem_Click);
             // 
-            // newLineToolStripMenuItem
+            // newRowToolStripMenuItem
             // 
-            newLineToolStripMenuItem.Name = "newLineToolStripMenuItem";
-            newLineToolStripMenuItem.Size = new System.Drawing.Size(164, 45);
-            newLineToolStripMenuItem.Text = "New Line";
-            newLineToolStripMenuItem.Click += new System.EventHandler(mainForm.subTableNewLineToolStripMenuItem_Click);
+            newRowToolStripMenuItem.Name = "newRowToolStripMenuItem";
+            newRowToolStripMenuItem.Size = new System.Drawing.Size(164, 45);
+            newRowToolStripMenuItem.Text = "New Row";
+            newRowToolStripMenuItem.Click += new System.EventHandler(mainForm.subTableNewRowToolStripMenuItem_Click);
 
             newMenuStrip.Dock = DockStyle.None;
 
@@ -1156,7 +1156,7 @@ namespace FDB
 
 
             }
-            //remove last in table data
+            //remove last in table
             tableData.Remove(tableData.Count() - 1);
             
 
