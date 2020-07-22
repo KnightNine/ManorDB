@@ -1,6 +1,6 @@
 
 
-<center><img src="https://raw.githubusercontent.com/KnightNine/FortressDB/master/Images/FDB_Full_Text.png" alt="Logo" width="400" > </center>
+<center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/MDB_Full_Text.png" alt="Logo" width="400" > </center>
 <hr>
 <p>
 Open Source Json Database Manager Made in WinForms that copies <a href = "https://github.com/ncannasse/castle">CastleDB's</a> UI structure.
