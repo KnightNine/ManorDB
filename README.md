@@ -1,6 +1,6 @@
 
 
-<center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/MDB_Full_Text.png" alt="Logo" width="400" > </center>
+<center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/MDB%20Full%20Text.png" alt="Logo" width="400" > </center>
 <hr>
 <p>
 Open Source Json Database Manager Made in WinForms that copies <a href = "https://github.com/ncannasse/castle">CastleDB's</a> UI structure.
@@ -42,7 +42,7 @@ The game I am working on relies on complex repeating data structures to define i
 <hr>
 <h4>Goals:</h4>
 <p>
-  There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what FDB is lacking in in order of most prioritized to least (the first three may or may not be added soon):
+  There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
   <li>Renaming Tables and Columns</li>
@@ -58,7 +58,5 @@ The game I am working on relies on complex repeating data structures to define i
 <hr>
 <h4>Accessing The Database:</h4>
 <p>
-All data regarding your row entries is stored within the FDB file's main table name `Database[*tableName*]["@RowEntries"][*index*]` and from there that row's column entries are accessed via `[*columnName*]` . If that data is a Subtable, it's row data is accessed in the same fashion through `[*index*]`.
+All data regarding your row entries is stored within the MDB file's main table name `Database[*tableName*]["@RowEntries"][*index*]` and from there that row's column entries are accessed via `[*columnName*]` . If that data is a Subtable, it's row data is accessed in the same fashion through `[*index*]`.
 <p/>
-
-

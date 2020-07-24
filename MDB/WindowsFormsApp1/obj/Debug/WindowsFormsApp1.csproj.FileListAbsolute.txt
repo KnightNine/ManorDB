@@ -46,3 +46,15 @@ C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\MDB.exe
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\MDB.pdb
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\MDB.Form1.resources
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\bin\Debug\MDB.exe.config
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\bin\Debug\MDB.exe
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\bin\Debug\MDB.pdb
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csprojAssemblyReference.cache
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\MDB.Form1.resources
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\MDB.Properties.Resources.resources
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.GenerateResource.cache
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CopyComplete
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\MDB.exe
+C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\MDB.pdb
