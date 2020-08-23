@@ -45,6 +45,10 @@ The game I am working on relies on complex repeating data structures to define i
   There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
+  <li>Adjacent Column Disabler Settings</li>
+  <ul>
+    <li>I'll probably want to have a property in certain colums that disables another column in the same row when the column is filled out (or in the case of subtable cells, when a row is added). This is used when certain cells within a row can conflict with other cells in that same row. </li>
+  </ul>
   <li>Renaming Tables and Columns</li>
   <li>Row insertion</li>
   <li>Table Shifiting (re-ordering of Tables)</li>
