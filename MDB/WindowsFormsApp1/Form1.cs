@@ -60,8 +60,28 @@ namespace MDB
                 System.Windows.Forms.MessageBox.Show("no table selected");
             }
         }
+        
+        public void TableMainGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            /* me trying to increase the bool cell checkbox size:
+             * 
+            if (e.ColumnIndex > -1)
+            {
+                //increase size of check boxes of 
+                DataGridView senderDGV = sender as DataGridView;
 
 
+                if (senderDGV.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
+                {
+                    e.PaintBackground(e.CellBounds, true);
+                    ControlPaint.DrawCheckBox(e.Graphics, 11, 88, 44, 44, (bool)e.FormattedValue ? ButtonState.Checked : ButtonState.Normal);
+                    e.Handled = true;
+                }
+            }
+            
+            */
+
+        }
 
         private void newRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -70,7 +90,7 @@ namespace MDB
             {
                 if (Program.mainForm.TableMainGridView.Columns.Count > 0)
                 {
-                    DatabaseFunct.AddRow(Program.mainForm.TableMainGridView);
+                    DatabaseFunct.AddRow(Program.mainForm.TableMainGridView,false,0);
                     panel1.AutoScrollPosition = new Point(Math.Abs(panel1.AutoScrollPosition.X), Math.Abs(scrollValue.Y));
                 }
                 else
@@ -117,7 +137,7 @@ namespace MDB
             {
                 if (senderDGV.Columns.Count > 0)
                 {
-                    DatabaseFunct.AddRow(senderDGV);
+                    DatabaseFunct.AddRow(senderDGV, false, 0);
                     panel1.AutoScrollPosition = new Point(Math.Abs(panel1.AutoScrollPosition.X), Math.Abs(scrollValue.Y));
                 }
                 else
@@ -199,8 +219,13 @@ namespace MDB
 
 
                 Console.WriteLine("value of entry " + rowIndex + " of column " + colName + " changed to: " + displayVal);
+
+                KeyValuePair<int, Dictionary<string, dynamic>> KVRow = new KeyValuePair<int, Dictionary<string, dynamic>>(rowIndex, tableData[rowIndex]);
+                DatabaseFunct.UpdateStatusOfAllRowCellsInDisablerArrayOfCell(senderDGV, tableKey, KVRow, colName);
             }
 
+
+            
 
 
         }
@@ -271,7 +296,7 @@ namespace MDB
 
                         var prevSel = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
 
-                        DataGridViewComboBoxCell cell = new DataGridViewComboBoxCell();
+                        DataGridViewComboBoxCell cell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
 
 
                         cell.Items.Clear();
@@ -279,7 +304,7 @@ namespace MDB
                         cell.Value = prevSel;
 
 
-                        senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex] = cell;
+                        
 
 
 
@@ -319,119 +344,137 @@ namespace MDB
             //if it is a button cell
             var colType = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name];
 
-            if (colType == "SubTable")
+            bool isEnabled = false;
+            var selcell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            if (selcell is DataGridViewButtonCell)
             {
-
-                void colorTabOfOpenTable(int selectedColIndex)
+                DataGridViewButtonCell bcell = (DataGridViewButtonCell)selcell;
+                isEnabled = ((Dictionary<string, dynamic>)bcell.Tag)["Enabled"];
+            }
+            else if (selcell is DataGridViewCheckBoxCell)
+            {
+                DataGridViewCheckBoxCell cbcell = (DataGridViewCheckBoxCell)selcell;
+                isEnabled = ((Dictionary<string, dynamic>)cbcell.Tag)["Enabled"];
+            }
+                
+            if (isEnabled)
+            {
+                if (colType == "SubTable")
                 {
 
-
-
-                    foreach (DataGridViewCell cell in senderDGV.Rows[e.RowIndex].Cells)
+                    void colorTabOfOpenTable(int selectedColIndex)
                     {
 
-                        if (cell is DataGridViewButtonCell)
+
+
+                        foreach (DataGridViewCell cell in senderDGV.Rows[e.RowIndex].Cells)
                         {
-                            DataGridViewButtonCell bCell = cell as DataGridViewButtonCell;
-                            if (cell.ColumnIndex == selectedColIndex)
+
+                            if (cell is DataGridViewButtonCell)
                             {
-                                //change cell to where color is visible
-                                bCell.FlatStyle = FlatStyle.Popup;
-                                bCell.Style.BackColor = Color.LightGreen;
-                                bCell.Style.SelectionBackColor = Color.LightGreen;
-                            }
-                            else
-                            {
-                                //change cell to default
-                                bCell.FlatStyle = FlatStyle.Standard;
-                                //default style
-                                if ((double)e.RowIndex % 2 == 0)
+                                DataGridViewButtonCell bCell = cell as DataGridViewButtonCell;
+                                if (cell.ColumnIndex == selectedColIndex)
                                 {
-                                    bCell.Style.BackColor = senderDGV.DefaultCellStyle.BackColor;
+                                    //change cell to where color is visible
+                                    bCell.FlatStyle = FlatStyle.Popup;
+                                    bCell.Style.BackColor = Color.LightGreen;
+                                    bCell.Style.SelectionBackColor = Color.LightGreen;
                                 }
                                 else
                                 {
-                                    bCell.Style.BackColor = senderDGV.AlternatingRowsDefaultCellStyle.BackColor;
-                                }
+                                    //change cell to default
+                                    bCell.FlatStyle = FlatStyle.Standard;
+                                    //default style
+                                    if ((double)e.RowIndex % 2 == 0)
+                                    {
+                                        bCell.Style.BackColor = senderDGV.DefaultCellStyle.BackColor;
+                                    }
+                                    else
+                                    {
+                                        bCell.Style.BackColor = senderDGV.AlternatingRowsDefaultCellStyle.BackColor;
+                                    }
 
-                                bCell.Style.SelectionBackColor = Color.LightCyan;
+                                    bCell.Style.SelectionBackColor = Color.LightCyan;
+
+
+                                }
 
 
                             }
+                        }
+                    }
+
+
+                    DatabaseFunct.loadingTable = true;
+
+
+                    scrollValue = panel1.AutoScrollPosition;
+                    panel1.SuspendLayout();
+
+                    Tuple<DataGridView, int> subTableKey = new Tuple<DataGridView, int>(senderDGV, e.RowIndex);
+
+                    //add or replace subtable below row
+                    if (!Program.openSubTables.ContainsKey(subTableKey) || Program.openSubTables[subTableKey].Item1 != senderDGV.Columns[e.ColumnIndex].Name)
+                    {
+
+
+                        if (Program.openSubTables.ContainsKey(subTableKey))
+                        {
+                            DatabaseFunct.RemoveSubtableFromOpenSubtables(subTableKey);
+
 
 
                         }
+
+
+                        DataGridView newDGV = Program.GetGridView();
+                        //-------------------------------------------------setting edits-----
+                        newDGV.Dock = DockStyle.None;
+
+
+                        newDGV.Name = senderDGV.Name + "/" + e.RowIndex.ToString() + "," + senderDGV.Columns[e.ColumnIndex].Name;
+                        //-------------------------------------------------------------------
+                        MenuStrip newMenuStrip = Program.GetSubMenuStrip();
+
+                        //add newdgv to parent
+                        senderDGV.Controls.Add(newDGV);
+
+                        DatabaseFunct.LoadTable(newDGV);
+
+                        //add menu strip to new dgv
+                        newDGV.Controls.Add(newMenuStrip);
+
+                        //add to open subtables
+                        Program.openSubTables.Add(subTableKey, new Tuple<string, DataGridView>(senderDGV.Columns[e.ColumnIndex].Name, newDGV));
+
+                        //change color
+                        colorTabOfOpenTable(e.ColumnIndex);
+
+
                     }
-                }
-
-
-                DatabaseFunct.loadingTable = true;
-
-
-                scrollValue = panel1.AutoScrollPosition;
-                panel1.SuspendLayout();
-
-                Tuple<DataGridView, int> subTableKey = new Tuple<DataGridView, int>(senderDGV, e.RowIndex);
-
-                //add or replace subtable below row
-                if (!Program.openSubTables.ContainsKey(subTableKey) || Program.openSubTables[subTableKey].Item1 != senderDGV.Columns[e.ColumnIndex].Name)
-                {
-
-
-                    if (Program.openSubTables.ContainsKey(subTableKey))
+                    else // close table
                     {
+                        Console.WriteLine("close subtable");
+
                         DatabaseFunct.RemoveSubtableFromOpenSubtables(subTableKey);
 
-
+                        senderDGV.Rows[e.RowIndex].Height = senderDGV.RowTemplate.Height;
+                        senderDGV.Rows[e.RowIndex].DividerHeight = 0;
+                        //change color of all to default
+                        colorTabOfOpenTable(-1);
 
                     }
-
-
-                    DataGridView newDGV = Program.GetGridView();
-                    //-------------------------------------------------setting edits-----
-                    newDGV.Dock = DockStyle.None;
-
-
-                    newDGV.Name = senderDGV.Name + "/" + e.RowIndex.ToString() + "," + senderDGV.Columns[e.ColumnIndex].Name;
-                    //-------------------------------------------------------------------
-                    MenuStrip newMenuStrip = Program.GetSubMenuStrip();
-
-                    //add newdgv to parent
-                    senderDGV.Controls.Add(newDGV);
-
-                    DatabaseFunct.LoadTable(newDGV);
-
-                    //add menu strip to new dgv
-                    newDGV.Controls.Add(newMenuStrip);
-
-                    //add to open subtables
-                    Program.openSubTables.Add(subTableKey, new Tuple<string, DataGridView>(senderDGV.Columns[e.ColumnIndex].Name, newDGV));
-
-                    //change color
-                    colorTabOfOpenTable(e.ColumnIndex);
-
+                    RecenterSubTables();
+                    DatabaseFunct.loadingTable = false;
 
                 }
-                else // close table
+                else if (colType == "Bool")
                 {
-                    Console.WriteLine("close subtable");
-
-                    DatabaseFunct.RemoveSubtableFromOpenSubtables(subTableKey);
-                    senderDGV.Rows[e.RowIndex].Height = senderDGV.RowTemplate.Height;
-                    senderDGV.Rows[e.RowIndex].DividerHeight = 0;
-
-                    //change color of all to default
-                    colorTabOfOpenTable(-1);
-
+                    //bools don't disable other cells since they have no null state
+                    senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Convert.ToBoolean(senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue);
                 }
-                RecenterSubTables();
-                DatabaseFunct.loadingTable = false;
-
             }
-            else if (colType == "Bool")
-            {
-                senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Convert.ToBoolean(senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue);
-            }
+            
 
         }
 

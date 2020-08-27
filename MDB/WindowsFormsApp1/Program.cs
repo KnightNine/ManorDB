@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Reflection;
 using Newtonsoft.Json;
 using System.Collections.Specialized;
+using System.Drawing;
 
 namespace MDB
 {
@@ -87,10 +88,11 @@ namespace MDB
             TableMainGridView.AllowUserToDeleteRows = false;
             TableMainGridView.AllowUserToResizeColumns = false;
             TableMainGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.DarkGray;
-            TableMainGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            
             TableMainGridView.BackgroundColor = System.Drawing.Color.LightGray;
             TableMainGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+
+
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.LightGray;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -99,16 +101,29 @@ namespace MDB
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             TableMainGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+
             TableMainGridView.ColumnHeadersHeight = 58;
             TableMainGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.BackColor = Color.LightGray;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Consolas", 8.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.LightCyan;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             TableMainGridView.DefaultCellStyle = dataGridViewCellStyle3;
+            TableMainGridView.RowsDefaultCellStyle = dataGridViewCellStyle3;
+
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.DarkGray;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Consolas", 8.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.LightCyan;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            TableMainGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+
             TableMainGridView.Dock = System.Windows.Forms.DockStyle.None;
             TableMainGridView.Location = new System.Drawing.Point(0, 0);
             TableMainGridView.MultiSelect = false;
@@ -120,10 +135,11 @@ namespace MDB
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             TableMainGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+
             TableMainGridView.RowHeadersWidth = 102;
             TableMainGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.LightGray;
-            TableMainGridView.RowsDefaultCellStyle = dataGridViewCellStyle5;
+            
+
             TableMainGridView.RowTemplate.Height = 40;
             TableMainGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             TableMainGridView.Size = new System.Drawing.Size(2517, 942);
@@ -139,6 +155,7 @@ namespace MDB
             TableMainGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(mainForm.TableMainGridView_DataError);
             TableMainGridView.RowsRemoved += new DataGridViewRowsRemovedEventHandler(mainForm.RowsRemoved);
             TableMainGridView.RowsAdded += new DataGridViewRowsAddedEventHandler(mainForm.RowsAdded);
+            TableMainGridView.CellPainting += new DataGridViewCellPaintingEventHandler(mainForm.TableMainGridView_CellPainting);
 
             DoubleBuffered(TableMainGridView, true);
 
@@ -347,7 +364,7 @@ namespace MDB
 
                                 if (ct[key] is Newtonsoft.Json.Linq.JArray)
                                 {
-                                    if (key == DatabaseFunct.ColumnOrderRefrence)
+                                    if (key == DatabaseFunct.ColumnOrderRefrence || key.EndsWith(DatabaseFunct.ColumnDisablerArrayExt))
                                     {
                                         //column order list
                                         tableLevelKVs[key] = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(ct[key].ToString());
@@ -461,6 +478,7 @@ namespace MDB
         //used as a entry in the column that determines it's type
         public static string RowEntryRefrence = "@RowEntries";
         public static string ColumnOrderRefrence = "@ColumnOrder";
+        public static string ColumnDisablerArrayExt = ".ColumnsToDisable";
         public static string RefrenceColumnKeyExt = ".Refrence";
         public static string selectedTable = "";
 
@@ -651,6 +669,9 @@ namespace MDB
         internal static void AddColumn(string colName, string colType, bool isLoad, DataGridView DGV)
         {
 
+
+
+
             string tableDir = DGV.Name;
             string tableKey = ConvertDirToTableKey(tableDir);
 
@@ -678,6 +699,7 @@ namespace MDB
                             //if no valid refrence already exists
                             if (!currentData[tableKey].ContainsKey((dynamic)(colName + RefrenceColumnKeyExt)))
                             {
+
                                 string[] input = Prompt.ShowDialog("Choose a table to refrence from.", "Create Refrence Column", false, true, MainTables.ToArray());
                                 tableRefrence = input[1];
                             }
@@ -755,6 +777,7 @@ namespace MDB
 
                         if (valid)
                         {
+                            
                             DataGridViewColumn myDataCol = (DataGridViewColumn)Activator.CreateInstance(ColumnTypes.Types[colType]);
 
                             myDataCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -762,19 +785,43 @@ namespace MDB
                             myDataCol.HeaderText = colName;
                             myDataCol.Name = colName;
                             myDataCol.SortMode = DataGridViewColumnSortMode.NotSortable;
+                            //add first
+                            DGV.Columns.Add(myDataCol);
 
-
+                            //add new empty column rows to table data at level
                             if (!isLoad)
                             {
                                 currentData[tableKey].Add(colName, colType);
                                 currentData[tableKey][ColumnOrderRefrence].Add(colName);
-                                
 
+                                List<string> DGVKeysList = new List<string>();
                                 //get all subtable data of same column
-                                List<Dictionary<int, Dictionary<string, dynamic>>> parentTableData = GetAllTableDataAtTableLevel(tableKey);
+                                List<Dictionary<int, Dictionary<string, dynamic>>> TableDataRowsAtSameLevel = GetAllTableDataAtTableLevel(tableKey, ref DGVKeysList);
+                                List<DataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(tableKey);
 
-                                foreach (Dictionary<int, Dictionary<string, dynamic>> tableData in parentTableData)
+
+                                int tableIndex = 0;
+                                foreach (Dictionary<int, Dictionary<string, dynamic>> tableData in TableDataRowsAtSameLevel)
                                 {
+                                    //get open tables with column to set their cells to enabled
+                                    
+                                    string DGVKeyOfTable = DGVKeysList[tableIndex];
+
+                                    DataGridView openDGVOfTable = null;
+                                    //get openDGVOfTable
+                                    foreach (DataGridView openDGV in openDGVs)
+                                    {
+                                        if (openDGV.Name == DGVKeyOfTable)
+                                        {
+                                            openDGVOfTable = openDGV;
+                                        }
+                                    }
+                                   
+                                               
+                                    tableIndex += 1;
+                                    
+
+
                                     //for all row entries add a null row to this column
                                     foreach (KeyValuePair<int, Dictionary<string, dynamic>> entryData in tableData)
                                     {
@@ -783,10 +830,23 @@ namespace MDB
                                         if (myDataCol is DataGridViewCheckBoxColumn)
                                         {
                                             defaultVal = false;
+                                            //set cell to enabled
+                                            if (openDGVOfTable != null)
+                                            {
+                                                openDGVOfTable.Rows[entryData.Key].Cells[colName].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
+                                            }
+
+
+
                                         }
                                         else if (currentData[tableKey][colName] == "SubTable")
                                         {
                                             defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
+                                            //set cell to enabled
+                                            if (openDGVOfTable != null)
+                                            {
+                                                openDGVOfTable.Rows[entryData.Key].Cells[colName].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
+                                            }
                                         }
                                         //add it to directory
                                         entryData.Value.Add(colName, defaultVal);
@@ -794,27 +854,23 @@ namespace MDB
                                     }
                                 }
 
-                                //add to other open subtables
-                                foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+                                //add to other open subtables if any
+
+                                foreach (DataGridView openDGV in openDGVs)
                                 {
-                                    if (DGV.Parent != null && DGV.Parent == openSubTable.Key.Item1)
+
+                                    if (openDGV!= DGV)
                                     {
-                                        if (openSubTable.Value.Item2 != DGV)
-                                        {
-                                            string openTableKey = ConvertDirToTableKey(openSubTable.Value.Item2.Name);
-                                            if (tableKey == openTableKey)
-                                            {
-                                                DataGridViewColumn adjDataCol = (DataGridViewColumn)Activator.CreateInstance(ColumnTypes.Types[colType]);
+                                        DataGridViewColumn adjDataCol = (DataGridViewColumn)Activator.CreateInstance(ColumnTypes.Types[colType]);
 
-                                                adjDataCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                                                adjDataCol.HeaderText = colName;
-                                                adjDataCol.Name = colName;
-                                                adjDataCol.SortMode = DataGridViewColumnSortMode.NotSortable;
-                                                openSubTable.Value.Item2.Columns.Add(adjDataCol);
-                                            }
-                                        }
-
+                                        adjDataCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                                        adjDataCol.HeaderText = colName;
+                                        adjDataCol.Name = colName;
+                                        adjDataCol.SortMode = DataGridViewColumnSortMode.NotSortable;
+                                        openDGV.Columns.Add(adjDataCol);
                                     }
+                                   
+                                    
                                 }
 
 
@@ -823,7 +879,7 @@ namespace MDB
 
                             Console.WriteLine("valid column: " + colName);
 
-                            DGV.Columns.Add(myDataCol);
+                            
 
                             
 
@@ -859,7 +915,7 @@ namespace MDB
 
         internal static void RemoveColumn(string colName, DataGridView DGV)
         {
-              
+            
 
             string tableDir = DGV.Name;
             string tableKey = ConvertDirToTableKey(tableDir);
@@ -868,6 +924,21 @@ namespace MDB
 
             if (currentData[tableKey].ContainsKey((dynamic)colName))
             {
+                //remove all disabler array connections to this column
+                if (currentData[tableKey].ContainsKey(colName + ColumnDisablerArrayExt))
+                {
+                    foreach (string disablerColName in currentData[tableKey][colName + ColumnDisablerArrayExt])
+                    {
+                        
+                        string selectedColKey1 = colName;
+                        string selectedColKey2 = disablerColName;
+                        addColToDisablerArr(tableKey, selectedColKey1, selectedColKey2);
+
+                    }
+                    
+                }
+                //-----
+
 
                 string colType = currentData[tableKey][colName];
 
@@ -944,11 +1015,11 @@ namespace MDB
 
 
 
-
+                List<string> throwawayDGVKeyList = new List<string>();
                 //get all subtable data of same column
-                List<Dictionary<int, Dictionary<string, dynamic>>> parentTableData = GetAllTableDataAtTableLevel(tableKey);
+                List<Dictionary<int, Dictionary<string, dynamic>>> TableDataRowsAtSameLevel = GetAllTableDataAtTableLevel(tableKey, ref throwawayDGVKeyList);
                 
-                foreach (Dictionary<int, Dictionary<string, dynamic>> tableData in parentTableData)
+                foreach (Dictionary<int, Dictionary<string, dynamic>> tableData in TableDataRowsAtSameLevel)
                 {
                     //for all row entries at table level remove this column's value
                     foreach (KeyValuePair<int, Dictionary<string, dynamic>> entryData in tableData)
@@ -958,24 +1029,25 @@ namespace MDB
                     }
                 }
 
-                //remove this column from adjacent subtables at same level
-                foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+                //remove this column from adjacent open subtables at same level
+                List<DataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(ConvertDirToTableKey(DGV.Name));
+
+                foreach (DataGridView openDGV in openDGVs)
                 {
-                    if (DGV.Parent != null && DGV.Parent == openSubTable.Key.Item1)
+
+                    if (openDGV != DGV)
                     {
+                        DataGridViewColumn adjDataCol = (DataGridViewColumn)Activator.CreateInstance(ColumnTypes.Types[colType]);
 
-                        if (openSubTable.Value.Item2 != DGV)
-                        {
-                            string openTableKey = ConvertDirToTableKey(openSubTable.Value.Item2.Name);
-                            if (tableKey == openTableKey)
-                            {
- 
-                                openSubTable.Value.Item2.Columns.Remove(openSubTable.Value.Item2.Columns[colName]);
-                            }
-                        }
-
+                        
+                        openDGV.Columns.Remove(openDGV.Columns[colName]);
                     }
+
+
                 }
+
+                
+                
 
 
 
@@ -1064,7 +1136,7 @@ namespace MDB
         }
 
 
-        internal static void AddRow(DataGridView DGV)
+        internal static void AddRow(DataGridView DGV, bool isInsert, int index)
         {
             string tableDir = DGV.Name;
             string tableKey = ConvertDirToTableKey(tableDir);
@@ -1073,12 +1145,51 @@ namespace MDB
 
             var columns = DGV.Columns;
 
+            if (isInsert)
+            {
+                DGV.Rows.Insert(index);
+                int i = tableData.Count() - 1;
+                //iterate all tabledata from index
+                while (i >= index)
+                {
+                    //close row beforehand since RecenterSubtables() only accounts for open rows 
+                    //don't do this on the last index as that row would no longer exist though it's data does
 
-            var index = tableData.Count;
+                    DGV.Rows[i].Height = DGV.RowTemplate.Height;
+                    DGV.Rows[i].DividerHeight = 0;
+
+
+
+                    //iterate index
+                    tableData[i + 1] = tableData[i];
+
+
+
+                    DGV.Rows[i + 1].HeaderCell.Value = String.Format("{0}", i + 1);
+
+
+
+                    //open subtable names will need to be shifted
+                    SwapSubtableNames(DGV, i, i + 1);
+
+                    i -= 1;
+
+
+                }
+            }
+            else
+            {
+                index = tableData.Count;
+                DGV.Rows.Add();
+                
+            }
 
             tableData[index] = new Dictionary<string, dynamic>();
 
-            DGV.Rows.Add();
+
+
+
+
             //add row header
             DGV.Rows[index].HeaderCell.Value = String.Format("{0}", index);
 
@@ -1093,12 +1204,16 @@ namespace MDB
                 if (DGV.Columns[column.Name] is DataGridViewCheckBoxColumn)
                 {
                     defaultVal = false;
-
+                    //check box is enabled by default
+                    DataGridViewCheckBoxCell cbcell = (DataGridViewCheckBoxCell)DGV.Rows[index].Cells[column.Name];
+                    cbcell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
                 }
                 if (currentData[tableKey][column.Name] == "SubTable")
                 {
                     defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
-
+                    //button is enabled by default
+                    DataGridViewButtonCell bcell = (DataGridViewButtonCell)DGV.Rows[index].Cells[column.Name];
+                    bcell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
                 }
                 //add default value to tabledata
                 tableData[index].Add(column.Name, defaultVal);
@@ -1106,7 +1221,42 @@ namespace MDB
 
             }
 
+            // there's no need to check for column disabler conditions since a row must already exist for isInsert to be called, so at no point will the last row of a table be removed or the first row added for the subtable to switch between having data and not having data.
+
+            //if this is a subtable of a column with disabler conditions, check those conditions.
+            //i need to get the column and row index from the DGV's parent
+            var ParentObj = DGV.Parent;
+            if (ParentObj is DataGridView && !isInsert)
+            {
+                DataGridView ParentDGV = (DataGridView)ParentObj;
+                //how do i get the row index in which this subtable resides
+                //i could use regex and stuff but this is easier
+
+                int RowIndex = 0;
+                string ColName = "";
+                foreach (KeyValuePair < Tuple<DataGridView, int>, Tuple<string, DataGridView> > openSubTable in Program.openSubTables)
+                {
+                    if (openSubTable.Value.Item2 == DGV)
+                    {
+                        RowIndex = openSubTable.Key.Item2;
+                        ColName = openSubTable.Value.Item1;
+                    }
+                }
+
+                KeyValuePair<int, Dictionary<string, dynamic>> KVRow = new KeyValuePair<int, Dictionary<string, dynamic>>(RowIndex, GetTableDataFromDir(ParentDGV.Name)[RowIndex] );
+
+
+
+
+                UpdateStatusOfAllRowCellsInDisablerArrayOfCell(ParentDGV, ConvertDirToTableKey(ParentDGV.Name), KVRow, ColName);
+            }
+
+
         }
+
+
+        
+
 
         //removes row from data
         internal static void RemoveRow(DataGridView DGV, int rowIndex)
@@ -1158,9 +1308,34 @@ namespace MDB
             }
             //remove last in table
             tableData.Remove(tableData.Count() - 1);
-            
 
-            
+            //if this is a subtable of a column with disabler conditions, check those conditions.
+            //i need to get the column and row index from the DGV's parent
+            //also only check if this is the last row to be removed
+            var ParentObj = DGV.Parent;
+            if (ParentObj is DataGridView && tableData.Count() == 0)
+            {
+                DataGridView ParentDGV = (DataGridView)ParentObj;
+                //how do i get the row index in which this subtable resides
+                //i could use regex and stuff but this is easier
+
+                int RowIndex = 0;
+                string ColName = "";
+                foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+                {
+                    if (openSubTable.Value.Item2 == DGV)
+                    {
+                        RowIndex = openSubTable.Key.Item2;
+                        ColName = openSubTable.Value.Item1;
+                    }
+                }
+
+                KeyValuePair<int, Dictionary<string, dynamic>> KVRow = new KeyValuePair<int, Dictionary<string, dynamic>>(RowIndex, GetTableDataFromDir(ParentDGV.Name)[RowIndex]);
+
+
+                UpdateStatusOfAllRowCellsInDisablerArrayOfCell(ParentDGV, ConvertDirToTableKey(ParentDGV.Name), KVRow, ColName);
+            }
+
 
         }
 
@@ -1217,6 +1392,7 @@ namespace MDB
 
 
         //this exists to remove the need to reload all subtables when a row is shifted
+        //it shifts the indexes within the names of subtable DGVs
         internal static void SwapSubtableNames(DataGridView DGV, int index1, int index2)
         {
             
@@ -1354,6 +1530,8 @@ namespace MDB
                     var value = tableData[index][column.Name];
                     Console.WriteLine("loaded row value: " + value);
 
+
+
                     //if it's a comboboxcolumn add the item to the cell
                     if (DGV.Columns[column.Name] is DataGridViewComboBoxColumn)
                     {
@@ -1361,16 +1539,16 @@ namespace MDB
                         {
                             DataGridViewComboBoxCell cell = new DataGridViewComboBoxCell() { Items = { value } };
                             DGV.Rows[index].Cells[column.Name] = cell;
-                        } 
-                        
-                        
+                        }
+
+
 
                     }
                     else if (DGV.Columns[column.Name] is DataGridViewCheckBoxColumn)
                     {
                         DataGridViewCheckBoxCell cell = ColumnTypes.setBoolCellTFVals(new DataGridViewCheckBoxCell());
 
-
+                        cell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
 
                         //set checkbox state
                         var cellVal = cell.TrueValue;
@@ -1383,9 +1561,21 @@ namespace MDB
 
                         DGV.Rows[index].Cells[column.Name] = cell;
                     }
+                    else if (DGV.Columns[column.Name] is DataGridViewButtonColumn)
+                    {
+                        DataGridViewButtonCell bcell = (DataGridViewButtonCell)DGV.Rows[index].Cells[column.Name];
+                        bcell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
+                    }
 
                     //assign data to column entry
                     DGV.Rows[index].Cells[column.Name].Value = value;
+
+                    //check if cell is enabled
+                    bool isDisabled = IsDataRowCellStillDisabled(tableKey, new KeyValuePair<int, Dictionary<string, dynamic>>(index,tableData[index]), column.Name);
+                    if (isDisabled)
+                    {
+                        DisableCellAtColAndRow(DGV, column.Name, index);
+                    }
 
                 }
                 else
@@ -1458,8 +1648,12 @@ namespace MDB
 
         //removes subtable and children from parent table & open table array
         //<parent table, row index>
+        //this does not remove the subtable from the DataGridView, that is done before calling this (for some reason, i can't say why exactly, there must be a case in which this is called seperately from the removal from the dgv object, i'm writing this 5 months after i built this )
         internal static void RemoveSubtableFromOpenSubtables(Tuple<DataGridView, int> subTableKey)
         {
+
+
+
             List < KeyValuePair <Tuple<DataGridView, int>, Tuple<string, DataGridView>>> removalList = new List<KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>>>();
 
             Console.WriteLine("trying to remove subtable from " + subTableKey.Item1.Name +" at row " + subTableKey.Item2.ToString());
@@ -1488,7 +1682,7 @@ namespace MDB
             Program.openSubTables.Remove(subTableKey);
         }
 
-
+        //the loading of a table's column and rows for the main table and subtables
         public static bool loadingTable = false;
         internal static void LoadTable(DataGridView DGV)
         {
@@ -1497,10 +1691,11 @@ namespace MDB
 
             loadingTable = true;
 
-            //add columns of table
+            //add columns of table in order of ColumnOrderRefrence
             foreach (string K in currentData[tableKey][ColumnOrderRefrence] )
             {
                 dynamic V = currentData[tableKey][K];
+                //confirm that this column is a valid column type
                 if (V is string && ColumnTypes.Types.ContainsKey(V))
                 {
 
@@ -1524,8 +1719,10 @@ namespace MDB
             loadingTable = false;
         }
 
+        //convert a datagridview name to a table key from currentdata where table data regarding columns is stored
         internal static string ConvertDirToTableKey(string dir)
         {
+            //removes row indexes from dir (i.e. "abc/9,uanme/0,lol" > "abc/uanme/lol")
             string regex = "(\\/[^\\,]*\\,)";
             string output = Regex.Replace(dir, regex, "/");
             return output;
@@ -1563,6 +1760,393 @@ namespace MDB
 
         }
 
+
+        //======================================================================================================================
+        // Disable and Enable Cells in a DataGridView
+
+
+
+        internal static void DisableCellAtColAndRow(DataGridView DGV, string ColKey, int RowIndex)
+        {
+
+
+            int ColumnIndex = DGV.Columns.IndexOf(DGV.Columns[ColKey]);
+            
+            DataGridViewCell cell = DGV.Rows[RowIndex].Cells[ColumnIndex];
+
+            
+            cell.Value = null;
+
+            //ignore if already disabled
+            if (!cell.ReadOnly)
+            {
+
+                cell.ReadOnly = true;
+
+                //make button not pressable
+                if (cell.GetType() == typeof(DataGridViewButtonCell))
+                {
+
+                    DataGridViewButtonCell bcell = (DataGridViewButtonCell)cell;
+                    ((Dictionary<string, dynamic>)bcell.Tag)["Enabled"] = false;
+                    bcell.FlatStyle = FlatStyle.Popup;
+                }
+                if (cell.GetType() == typeof(DataGridViewComboBoxCell))
+                {
+                    DataGridViewComboBoxCell cbcell = (DataGridViewComboBoxCell)cell;
+                    cbcell.FlatStyle = FlatStyle.Popup;
+                }
+                if (cell.GetType() == typeof(DataGridViewCheckBoxCell))
+                {
+                    DataGridViewCheckBoxCell cbcell = (DataGridViewCheckBoxCell)cell;
+                    cbcell.FlatStyle = FlatStyle.Popup;
+                }
+
+                //gray out the cell
+                cell.Style.BackColor = Color.Black;
+                cell.Style.ForeColor = Color.Black;
+                cell.Style.SelectionBackColor = Color.Crimson;
+            }
+
+        }
+
+        internal static void EnableCellAtColAndRow(DataGridView DGV, string ColKey, int RowIndex)
+        {
+            int ColumnIndex = DGV.Columns.IndexOf(DGV.Columns[ColKey]);
+            
+            DataGridViewCell cell = DGV.Rows[RowIndex].Cells[ColumnIndex];
+            //ignore if already enabled
+            if (cell.ReadOnly)
+            {
+                cell.ReadOnly = false;
+
+                //make button pressable
+                if (cell.GetType() == typeof(DataGridViewButtonCell))
+                {
+
+                    DataGridViewButtonCell bcell = (DataGridViewButtonCell)cell;
+                    ((Dictionary<string, dynamic>)bcell.Tag)["Enabled"] = true;
+
+                    bcell.FlatStyle = FlatStyle.Standard;
+                }
+                if (cell.GetType() == typeof(DataGridViewComboBoxCell))
+                {
+                    DataGridViewComboBoxCell cbcell = (DataGridViewComboBoxCell)cell;
+                    cbcell.FlatStyle = FlatStyle.Standard;
+                }
+                if (cell.GetType() == typeof(DataGridViewCheckBoxCell))
+                {
+                    DataGridViewCheckBoxCell cbcell = (DataGridViewCheckBoxCell)cell;
+                    cbcell.FlatStyle = FlatStyle.Standard;
+                }
+
+
+                //restore cell style to the default value
+                //default style
+                if (RowIndex % 2 == 0)
+                {
+                    cell.Style.BackColor = DGV.DefaultCellStyle.BackColor;
+                    cell.Style.ForeColor = DGV.DefaultCellStyle.ForeColor;
+                    cell.Style.SelectionBackColor = DGV.DefaultCellStyle.SelectionBackColor;
+                }
+                else
+                {
+                    cell.Style.BackColor = DGV.AlternatingRowsDefaultCellStyle.BackColor;
+                    cell.Style.ForeColor = DGV.AlternatingRowsDefaultCellStyle.ForeColor;
+                    cell.Style.SelectionBackColor = DGV.AlternatingRowsDefaultCellStyle.SelectionBackColor;
+                }
+            }
+            
+        }
+
+        //check if a cell of a row in tabledata contains data
+        internal static bool DoesDataRowCellContainData(KeyValuePair<int, Dictionary<string, dynamic>> KVRow, string ColumnKey)
+        {
+            Type valType;
+            try
+            {
+                valType = KVRow.Value[ColumnKey].GetType();
+                
+            }
+            catch
+            {
+                valType = null;
+            }
+
+            if (valType != null)
+            {
+                //doesn't count bool column data
+                if ((KVRow.Value[ColumnKey] != null && valType != typeof(Dictionary<int, Dictionary<string, dynamic>>) && valType != typeof(bool)) || (valType == typeof(Dictionary<int, Dictionary<string, dynamic>>) && KVRow.Value[ColumnKey].Count != 0))
+                {
+                    return true;
+                }
+            }
+            
+
+
+            return false;
+        }
+
+        //I'd need to account for other potential disabler conditions that may still be disabling either of the two cells
+        internal static bool IsDataRowCellStillDisabled(string tableKey, KeyValuePair<int, Dictionary<string, dynamic>> KVRow, string ColumnKey)
+        {
+            if (DatabaseFunct.currentData[tableKey].ContainsKey(ColumnKey + ColumnDisablerArrayExt))
+            {
+                foreach (string disablerColumnKey in currentData[tableKey][ColumnKey + ColumnDisablerArrayExt])
+                {
+
+                    if (DoesDataRowCellContainData(KVRow, disablerColumnKey))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+
+        }
+
+        //when a change is made to a cell of a column with a disabler array, update all cells in the same row of columns within the disabler array
+        internal static void UpdateStatusOfAllRowCellsInDisablerArrayOfCell(DataGridView DGV, string tableKey, KeyValuePair<int, Dictionary<string, dynamic>> KVRow, string ColumnKey)
+        {
+            Console.WriteLine("in " + DGV.Name + " at row index " + KVRow.Key.ToString());
+            Console.WriteLine("Checking Row Cells if Disabled:");
+
+            if (DatabaseFunct.currentData[tableKey].ContainsKey(ColumnKey + ColumnDisablerArrayExt))
+            {
+                foreach (string ColumnKeyToUpdate in currentData[tableKey][ColumnKey + ColumnDisablerArrayExt])
+                {
+                    Console.WriteLine(ColumnKeyToUpdate);
+                    bool isDisabled = IsDataRowCellStillDisabled(tableKey, KVRow, ColumnKeyToUpdate);
+                    Console.WriteLine("     IsDisabled = " + isDisabled.ToString());
+                    if (isDisabled)
+                    {
+                        DisableCellAtColAndRow(DGV, ColumnKeyToUpdate, KVRow.Key);
+                    }
+                    else
+                    {
+                        EnableCellAtColAndRow(DGV, ColumnKeyToUpdate, KVRow.Key);
+                    }
+                }
+            }
+        }
+
+        //add new disabler array connection between two columns
+        internal static void addColToDisablerArr(string tableKey, string selectedColKey1, string selectedColKey2)
+        {
+            //is being removed
+            bool isRemoveDisablerCondition = false;
+
+            void addOrRemoveFromDisablerArray(string disablerColKey, string selectedColKey)
+            {
+                //remove if already added
+                if (!DatabaseFunct.currentData[tableKey].ContainsKey(disablerColKey +ColumnDisablerArrayExt))
+                {
+                    currentData[tableKey][disablerColKey + ColumnDisablerArrayExt] = new List<string> { selectedColKey };
+                }
+                else
+                {
+                    if (currentData[tableKey][disablerColKey + ColumnDisablerArrayExt].Contains(selectedColKey))
+                    {
+                        currentData[tableKey][disablerColKey + ColumnDisablerArrayExt].Remove(selectedColKey);
+                        if (currentData[tableKey][disablerColKey + ColumnDisablerArrayExt].Count == 0)
+                        {
+                            currentData[tableKey].Remove(disablerColKey + ColumnDisablerArrayExt);
+                        }
+                        isRemoveDisablerCondition = true;
+                    }
+                    else
+                    {
+                        currentData[tableKey][disablerColKey + ColumnDisablerArrayExt].Add(selectedColKey);
+                    }
+
+                    //Console.WriteLine(DatabaseFunct.currentData[tableKey][disablerColKey + DatabaseFunct.ColumnDisablerArrayExt].ToString());
+
+
+                }
+
+            }
+
+            addOrRemoveFromDisablerArray(selectedColKey1, selectedColKey2);
+            // do the reverse where selected col key disables the disabler column key
+            addOrRemoveFromDisablerArray(selectedColKey2, selectedColKey1);
+
+
+            //--------------------------------------------------------------------------------------------------
+
+            //i need to reconstruct the DGV names from the TableDataWithRow
+            //parallel list with TableDataWithRow that contains DGV key names of TableData if they appear in openDGVs
+            List<string> DGVKeysList = new List<string>();
+
+            //Check along all rows at this table depth for this column for conflicting data and delete it
+            List<Dictionary<int, Dictionary<string, dynamic>>> TableDataWithRow = GetAllTableDataAtTableLevel(tableKey, ref DGVKeysList);
+
+            //how can i tell if a cell is in an open table
+            List<DataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(tableKey);
+
+
+
+            if (!isRemoveDisablerCondition)
+            {
+                //then disable the cells where there is conflict
+
+
+
+
+
+
+
+
+                int tableIndex = 0;
+
+                foreach (Dictionary<int, Dictionary<string, dynamic>> Table in TableDataWithRow)
+                {
+                    string DGVKeyOfTable = DGVKeysList[tableIndex];
+
+                    DataGridView openDGVOfTable = null;
+                    //get openDGVOfTable
+                    foreach (DataGridView openDGV in openDGVs)
+                    {
+                        if (openDGV.Name == DGVKeyOfTable)
+                        {
+                            openDGVOfTable = openDGV;
+                        }
+                    }
+
+
+
+                    foreach (KeyValuePair<int, Dictionary<string, dynamic>> KVRow in Table)
+                    {
+                        //if the selected cell isn't void of data then disable the other column cell and vice versa
+                        void disableCol2IfCol1HasData(string Col1, string Col2)
+                        {
+
+                            if (DatabaseFunct.DoesDataRowCellContainData(KVRow, Col1))
+                            {
+                                Type valType;
+                                try
+                                {
+                                    valType = KVRow.Value[Col2].GetType();
+                                }
+                                catch
+                                {
+                                    valType = null;
+                                }
+
+                                //erase value in data
+
+                                //if subtable
+                                if (valType == typeof(Dictionary<int, Dictionary<string, dynamic>>))
+                                {
+
+                                    KVRow.Value[Col2].Clear();
+                                    //close the subtable if subtable open
+                                    if (openDGVOfTable != null)
+                                    {
+                                        Tuple<DataGridView, int> openSubTableKey = new Tuple<DataGridView, int>(openDGVOfTable, KVRow.Key);
+                                        //open subtable exists
+                                        if (Program.openSubTables.ContainsKey(openSubTableKey))
+                                        {
+                                            //and that open subtable is of selectedColKey
+                                            if (Program.openSubTables[openSubTableKey].Item2.Name.EndsWith("," + Col2))
+                                            {
+                                                openSubTableKey.Item1.Controls.Remove(Program.openSubTables[openSubTableKey].Item2);
+
+                                                //close subtable
+                                                RemoveSubtableFromOpenSubtables(openSubTableKey);
+                                                //close row
+                                                openSubTableKey.Item1.Rows[openSubTableKey.Item2].Height = openSubTableKey.Item1.RowTemplate.Height;
+                                                openSubTableKey.Item1.Rows[openSubTableKey.Item2].DividerHeight = 0;
+                                            }
+                                        }
+                                    }
+                                }
+                                //if bool
+                                if (valType == typeof(bool))
+                                {
+                                    KVRow.Value[Col2] = false;
+                                }
+                                //if not subtable
+                                else
+                                {
+                                    KVRow.Value[Col2] = null;
+                                }
+
+                                //disable if dgv table is open
+
+                                if (openDGVOfTable != null)
+                                {
+                                    DisableCellAtColAndRow(openDGVOfTable, Col2, KVRow.Key);
+                                }
+
+
+
+
+
+
+                            }
+                        }
+
+
+
+                        disableCol2IfCol1HasData(selectedColKey1, selectedColKey2);
+                        disableCol2IfCol1HasData(selectedColKey2, selectedColKey1);
+
+                    }
+                    tableIndex += 1;
+                }
+            }
+            else //check what cells need to be re-enabled upon this condition being lifted
+            {
+
+
+                int tableIndex = 0;
+
+                foreach (Dictionary<int, Dictionary<string, dynamic>> Table in TableDataWithRow)
+                {
+                    string DGVKeyOfTable = DGVKeysList[tableIndex];
+
+                    DataGridView openDGVOfTable = null;
+                    //get openDGVOfTable
+                    foreach (DataGridView openDGV in openDGVs)
+                    {
+                        if (openDGV.Name == DGVKeyOfTable)
+                        {
+                            openDGVOfTable = openDGV;
+                        }
+                    }
+
+                    foreach (KeyValuePair<int, Dictionary<string, dynamic>> KVRow in Table)
+                    {
+
+                        if (openDGVOfTable != null)
+                        {
+                            bool isDisabled1 = IsDataRowCellStillDisabled(tableKey, KVRow, selectedColKey1);
+                            bool isDisabled2 = IsDataRowCellStillDisabled(tableKey, KVRow, selectedColKey2);
+                            if (!isDisabled1)
+                            {
+                                EnableCellAtColAndRow(openDGVOfTable, selectedColKey1, KVRow.Key);
+                            }
+                            if (!isDisabled2)
+                            {
+                                EnableCellAtColAndRow(openDGVOfTable, selectedColKey2, KVRow.Key);
+                            }
+                        }
+
+                    }
+
+                    tableIndex += 1;
+                }
+            }
+
+
+
+
+
+
+        }
+
+
+        //======================================================================================================================
         internal static void SetDataAtDir(string tableDir, dynamic value, int rowIndex, string columnIndex)
         {
             Dictionary<int, Dictionary<string, dynamic>> tableData = GetTableDataFromDir(tableDir) as Dictionary<int, Dictionary<string, dynamic>>;
@@ -1570,21 +2154,63 @@ namespace MDB
             tableData[rowIndex][columnIndex] = value;
         }
 
-        //get all data from certain level of table.
-        internal static List<Dictionary<int, Dictionary<string, dynamic>>> GetAllTableDataAtTableLevel(string tableKey)
+        //get all open Datagridviews of table key
+        internal static List<DataGridView> GetAllOpenDGVsAtTableLevel(string tableKey)
         {
+            List<DataGridView> OpenDGVs = new List<DataGridView>() { };
 
+            if (tableKey == Program.mainForm.TableMainGridView.Name)
+            {
+                OpenDGVs.Add(Program.mainForm.TableMainGridView);
+            }
+            else
+            {
+                foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+                {
+                    string openTableKey = ConvertDirToTableKey(openSubTable.Value.Item2.Name);
+                    if (tableKey == openTableKey)
+                    {
+                        OpenDGVs.Add(openSubTable.Value.Item2);
+
+                    }
+
+
+                }
+            }
+
+            
+            return OpenDGVs;
+
+        }
+
+
+        //get all data from certain level of table.
+        //DGV keys get added into DGVKeysPool if you need to collect them
+        internal static List<Dictionary<int, Dictionary<string, dynamic>>> GetAllTableDataAtTableLevel(string tableKey, ref List<string>  DGVKeysPool)
+        {
             List<string> levelKeys = tableKey.Split('/').ToList<string>();
+
+
+
+
             //List<string> collectedDirectories = new List<string>();
 
             dynamic currentDir = currentData[levelKeys[0]][RowEntryRefrence];
+
+            //create the start of DGVKey before removing first level key
+            string DGVKeyStart = levelKeys[0];
             levelKeys.RemoveAt(0);
             List<Dictionary<int, Dictionary<string, dynamic>>> collectedTables = new List<Dictionary<int, Dictionary<string, dynamic>>>();
 
-            subFunct(currentDir, levelKeys, collectedTables);
+            //keys/names of the tables if they were to appear in open subtables
+            List<string> DGVKeysPool2 = new List<string>();
+
+            subFunct(currentDir, levelKeys, collectedTables, DGVKeyStart);
+
 
             //recursive subfunction that calls itself through subtable columns until lvlkeys is empty, wherein the table data is collected
-            void subFunct(dynamic CD, List<string>  lvlKeys ,List<Dictionary<int, Dictionary<string, dynamic>>> tableList)
+            
+            void subFunct(dynamic CD, List<string>  lvlKeys ,List<Dictionary<int, Dictionary<string, dynamic>>> tableList, string DGVKey)
             {
                 Dictionary<int, Dictionary<string, dynamic>> tableData = CD as Dictionary<int, Dictionary<string, dynamic>>;
                 
@@ -1592,13 +2218,16 @@ namespace MDB
                 {
                     List<string> nextLvlKeys = ColumnTypes.Clone(lvlKeys);
                     nextLvlKeys.RemoveAt(0);
+
+
                     foreach (KeyValuePair<int, Dictionary<string, dynamic>> entry in tableData)
                     {
-
+                        string RowDGVKey = DGVKey + "/" + entry.Key.ToString() + "," + lvlKeys[0] ;
+                        
                         try
                         {
                             var subtableCD = entry.Value[lvlKeys[0]];
-                            subFunct(subtableCD, nextLvlKeys, collectedTables);
+                            subFunct(subtableCD, nextLvlKeys, collectedTables, RowDGVKey);
                         }
                         catch
                         {
@@ -1611,10 +2240,13 @@ namespace MDB
                 }
                 else
                 {
+                    DGVKeysPool2.Add(DGVKey);
                     tableList.Add(tableData);
                 }
 
             }
+
+            DGVKeysPool = DGVKeysPool2;
 
             return collectedTables;
 

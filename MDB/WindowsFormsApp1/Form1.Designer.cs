@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using System;
 
 namespace MDB
 {
@@ -279,10 +281,11 @@ namespace MDB
 
             
 
-            MenuItem[] options = { new MenuItem() { Name = "Shift Row Up", Text = "Shift Row Up" }, new MenuItem() { Name = "Shift Row Down", Text = "Shift Row Down" }, new MenuItem() { Name = "Delete Row", Text = "Delete Row" } };
+            MenuItem[] options = { new MenuItem() { Name = "Shift Row Up", Text = "Shift Row Up" }, new MenuItem() { Name = "Shift Row Down", Text = "Shift Row Down" }, new MenuItem() { Name = "Delete Row", Text = "Delete Row" }, new MenuItem() { Name = "Insert Row", Text = "Insert Row" } };
             options[0].Click += new System.EventHandler(shiftUp);
             options[1].Click += new System.EventHandler(shiftDown);
             options[2].Click += new System.EventHandler(deleteRow);
+            options[3].Click += new System.EventHandler(insertRow);
 
 
             cMenu.MenuItems.AddRange(options);
@@ -300,10 +303,11 @@ namespace MDB
             colName = _colName;
 
 
-            MenuItem[] options = { new MenuItem() { Name = "Shift Column Left", Text = "Shift Column Left" }, new MenuItem() { Name = "Shift Column Right", Text = "Shift Column Right" }, new MenuItem() { Name = "Delete Column", Text = "Delete Column" } };
+            MenuItem[] options = { new MenuItem() { Name = "Shift Column Left", Text = "Shift Column Left" }, new MenuItem() { Name = "Shift Column Right", Text = "Shift Column Right" }, new MenuItem() { Name = "Delete Column", Text = "Delete Column" }, new MenuItem() { Name = "Adjacent Column Disabler Settings", Text = "Adjacent Column Disabler Settings" , Tag = new dynamic[] {_DGV, colName} } };
             options[0].Click += new System.EventHandler(shiftLeft);
             options[1].Click += new System.EventHandler(shiftRight);
             options[2].Click += new System.EventHandler(deleteColumn);
+            options[3].Click += new System.EventHandler(openColumnDisabler);
 
 
             cMenu.MenuItems.AddRange(options);
@@ -315,6 +319,104 @@ namespace MDB
 
         }
 
+        public static void ShowColumnDisablerContextMenu(DataGridView _DGV, string _colName)
+        {
+            cMenu.MenuItems.Clear();
+            DGV = _DGV;
+            colName = _colName;
+
+            List<MenuItem> optionsList = new List<MenuItem>();
+            MenuItem[] options = { };
+
+            int i = 0;
+            string tableKey = DatabaseFunct.ConvertDirToTableKey(_DGV.Name);
+            string[] tagData = new string[] { _colName, tableKey };
+
+            foreach (DataGridViewColumn col in _DGV.Columns) 
+            {
+                if (col.Name != _colName)
+                {
+                    //show if this column is already within the disabler
+                    bool isInDisablerArr = false;
+                    if (DatabaseFunct.currentData[tableKey].ContainsKey(_colName + DatabaseFunct.ColumnDisablerArrayExt))
+                    {
+                        
+                        if (((List<string>)DatabaseFunct.currentData[tableKey][_colName + DatabaseFunct.ColumnDisablerArrayExt]).Contains(col.Name))
+                        {
+                            isInDisablerArr = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine(_colName + DatabaseFunct.ColumnDisablerArrayExt + " of key "+ tableKey + " Does not contain: " + col.Name);
+                            
+                        }
+
+                    }
+                    else
+                    {
+                        Console.WriteLine(_colName + DatabaseFunct.ColumnDisablerArrayExt +" Does not exist within tablekey: " + tableKey);
+                    }
+
+                    string selectedColumnKey = col.Name;
+                    string selectedColumnText = col.HeaderText;
+                    
+                    
+                    optionsList.Add(new MenuItem() { Name = selectedColumnKey, Text = selectedColumnText, Tag = tagData, Checked = isInDisablerArr });
+                    //assign event to each option
+                    optionsList[i].Click += new System.EventHandler(addColToDisablerArrEvent);
+
+                    i += 1;
+                }
+                
+            }
+            options = optionsList.ToArray();
+
+
+
+
+            cMenu.MenuItems.AddRange(options);
+            Rectangle screenRectangle = Program.mainForm.RectangleToScreen(Program.mainForm.ClientRectangle);
+
+            int titleHeight = screenRectangle.Top - Program.mainForm.Top;
+
+            cMenu.Show(Program.mainForm, new Point(System.Windows.Forms.Cursor.Position.X - Program.mainForm.Location.X, System.Windows.Forms.Cursor.Position.Y - Program.mainForm.Location.Y - titleHeight));
+        }
+
+
+
+
+
+        private static void addColToDisablerArrEvent(object sender, System.EventArgs e)
+        {
+            //add or remove to Disabler Arr
+            MenuItem senderItem = (MenuItem)sender;
+            string tableKey = ((string[])senderItem.Tag)[1];
+            string selectedColKey1 = ((string[])senderItem.Tag)[0];
+            string selectedColKey2 = senderItem.Name;
+
+            if (senderItem.Checked)
+            {
+                DatabaseFunct.addColToDisablerArr(tableKey, selectedColKey1, selectedColKey2);
+            }
+            else if (MessageBox.Show("This will make rows of columns \"" +selectedColKey1+"\" and \"" +selectedColKey2+"\" not allow eachother to contain data at the same time. For each row, data from the cell of the column mentioned second will be deleted if there is data in the first column's cell.\n Are you sure you want to initiate this?", "Are You Sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+
+            {
+
+                DatabaseFunct.addColToDisablerArr(tableKey, selectedColKey1, selectedColKey2);
+
+            }
+
+            cMenu.Dispose();
+        }
+
+
+        private static void insertRow(object sender, System.EventArgs e)
+        {
+            DatabaseFunct.AddRow(DGV, true, rowIndex);
+            Program.mainForm.RecenterSubTables();
+            cMenu.Dispose();
+
+        }
 
         private static void shiftUp(object sender, System.EventArgs e)
         {
@@ -348,6 +450,16 @@ namespace MDB
             DatabaseFunct.ShiftColumn(colName, DGV, false);
             cMenu.Dispose();
 
+        }
+
+        private static void openColumnDisabler(object sender, System.EventArgs e)
+        {
+            MenuItem senderMI = sender as MenuItem;
+            dynamic[] dat = senderMI.Tag as dynamic[];
+            DataGridView _DGV = dat[0];
+            string _colName = dat[1];
+
+            ShowColumnDisablerContextMenu(_DGV, _colName);
         }
 
         private static void deleteColumn(object sender, System.EventArgs e)
