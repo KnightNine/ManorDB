@@ -927,13 +927,19 @@ namespace MDB
                 //remove all disabler array connections to this column
                 if (currentData[tableKey].ContainsKey(colName + ColumnDisablerArrayExt))
                 {
+                    List<string> disablerColumnNames = new List<string>();
                     foreach (string disablerColName in currentData[tableKey][colName + ColumnDisablerArrayExt])
                     {
-                        
-                        string selectedColKey1 = colName;
-                        string selectedColKey2 = disablerColName;
-                        addColToDisablerArr(tableKey, selectedColKey1, selectedColKey2);
 
+
+
+                        disablerColumnNames.Add(disablerColName);
+
+                    }
+                    foreach (string selectedColKey2 in disablerColumnNames)
+                    {
+                        string selectedColKey1 = colName;
+                        addColToDisablerArr(tableKey, selectedColKey1, selectedColKey2);
                     }
                     
                 }
