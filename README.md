@@ -45,6 +45,7 @@ The game I am working on relies on complex repeating data structures to define i
   There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
+  <li>Editable "on Mouse Hover" Column Descriptions</li>
   <li>Renaming Tables and Columns</li>
   <li>Table Shifting (re-ordering of Tables)</li>
   <li>Further Organization of Code</li>
