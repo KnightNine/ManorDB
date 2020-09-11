@@ -46,6 +46,7 @@ The game I am working on relies on complex repeating data structures to define i
 <p/>
 <ul>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
+  <li>Image Columns</li>
   <li>Renaming Tables and Columns</li>
   <li>Table Shifting (re-ordering of Tables)</li>
   <li>Further Organization of Code</li>
