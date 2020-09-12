@@ -339,8 +339,10 @@ namespace MDB
 
             Dictionary<int, Dictionary<string, dynamic>> tableData = DatabaseFunct.GetTableDataFromDir(tableDir) as Dictionary<int, Dictionary<string, dynamic>>;
 
-            // Ignore clicks that are on an empty table
+            // Ignore clicks that are on an empty table or a num column
             if (e.RowIndex < 0) return;
+            if (e.ColumnIndex < 0) return;
+            
             //if it is a button cell
             var colType = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name];
 
