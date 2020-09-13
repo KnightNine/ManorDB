@@ -1886,6 +1886,11 @@ namespace MDB
                 {
                     return true;
                 }
+                //if bool return true if bool is true
+                else if (valType == typeof(bool) && KVRow.Value[ColumnKey])
+                {
+                    return true;
+                }
             }
             
 
@@ -2035,6 +2040,7 @@ namespace MDB
                                 }
                                 catch
                                 {
+                                    //val is null and null doesn't have a type so it will catch
                                     valType = null;
                                 }
 
@@ -2071,7 +2077,7 @@ namespace MDB
                                 {
                                     KVRow.Value[Col2] = false;
                                 }
-                                //if not subtable
+                                //if not subtable or bool
                                 else
                                 {
                                     KVRow.Value[Col2] = null;
