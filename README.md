@@ -61,4 +61,6 @@ The game I am working on relies on complex repeating data structures to define i
 <p>
 All data regarding your row entries is stored within the MDB file's <b>main table</b> name `Database[*tableName*]["@RowEntries"][*index*]` and from there that row's column entries are accessed via `[*columnName*]` . If that data is a Subtable, it's row data is accessed in the same fashion through `[*index*]`.
 <p/>
-
+<p>
+Note that for all cell types besides subtables and bools, their value in the database is null if they are left blank.
+<p/>
