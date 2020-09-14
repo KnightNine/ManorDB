@@ -48,6 +48,8 @@ The game I am working on relies on complex repeating data structures to define i
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>Image Columns</li>
   <li>Renaming Tables and Columns</li>
+  <li>A "Foreign Key Refrence Primary Key" column (to base a table around foreign keys that can't have duplicate refrences)</li>
+  <li>A "force adjecent cell to value when cell is filled" setting, similar to the feature that disallows two cells from being filled at the same time, except instead of disabling the other cell entirely, the cell is set to a specific value and becomes read only. </li>
   <li>Table Shifting (re-ordering of Tables)</li>
   <li>Further Organization of Code</li>
   <li>Detailed Commentation</li>
@@ -62,5 +64,5 @@ The game I am working on relies on complex repeating data structures to define i
 All data regarding your row entries is stored within the MDB file's <b>main table</b> name `Database[*tableName*]["@RowEntries"][*index*]` and from there that row's column entries are accessed via `[*columnName*]` . If that data is a Subtable, it's row data is accessed in the same fashion through `[*index*]`.
 <p/>
 <p>
-Note that for all cell types besides subtables and bools, their value in the database is null if they are left blank.
+Note that for all cell types besides subtables and bools, their value in the database is null if they are left blank. Also the indexes of rows in the database are strings for some reason, it could have something to do with the Newtonsoft package i am using.
 <p/>
