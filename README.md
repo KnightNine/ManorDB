@@ -45,6 +45,7 @@ The game I am working on relies on complex repeating data structures to define i
   There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
+  <li> A "Parent Subtable Refrence Column" it's a foreign key refrence of a subtable at a higher data/table level, useful if you want a table of rows that are only refrenced by an isolated branch of data. </li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>Image Columns</li>
   <li>Renaming Tables and Columns</li>
