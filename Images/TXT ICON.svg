@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="210mm"
+   viewBox="0 0 210 210"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0beta2 (9cc99b8, 2019-12-14)"
+   sodipodi:docname="TXT ICON.svg"
+   inkscape:export-filename="C:\Users\Alex\Desktop\MDB\Images\MDB ICON.png"
+   inkscape:export-xdpi="48.380951"
+   inkscape:export-ydpi="48.380951">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     inkscape:object-paths="false"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:snap-nodes="true"
+     inkscape:guide-bbox="true"
+     showguides="true"
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.64"
+     inkscape:cx="450.47001"
+     inkscape:cy="495.61749"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:snap-global="true"
+     inkscape:snap-page="false"
+     inkscape:window-width="1593"
+     inkscape:window-height="1036"
+     inkscape:window-x="363"
+     inkscape:window-y="161"
+     inkscape:window-maximized="0"
+     inkscape:pagecheckerboard="true">
+    <sodipodi:guide
+       id="guide883"
+       orientation="0.92132885,0.38878419"
+       position="102.14105,142.57031" />
+    <sodipodi:guide
+       id="guide922"
+       orientation="0,-1"
+       position="86.01367,142.57031" />
+    <sodipodi:guide
+       id="guide926"
+       orientation="0,-1"
+       position="126.70754,35.403309" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:0.997;fill:#ffffff;fill-opacity:0.996078;stroke-width:0.543029"
+       id="rect860"
+       width="210"
+       height="210"
+       x="-4.1507538e-14"
+       y="1.6579331e-15"
+       ry="105" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path904"
+       d="m 86.01367,71.429686 40.6196,100.112164 51.20453,0.81529 26.45833,-42.14434 -21.49739,-60.381697 z"
+       style="opacity:0.997;fill:#ffffff;stroke:none;stroke-width:4;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;fill-opacity:1" />
+    <text
+       id="text864"
+       y="136.22612"
+       x="1.3811827"
+       style="font-size:50.2401px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';stroke-width:0.261667"
+       xml:space="preserve"><tspan
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:104.666px;font-family:'Courier New';-inkscape-font-specification:'Courier New Italic';stroke-width:0.261667"
+         y="136.22612"
+         x="1.3811827"
+         id="tspan862"
+         sodipodi:role="line">TXT</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:50.2401px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';stroke-width:0.261667"
+       x="3.44824"
+       y="136.22612"
+       id="text858"><tspan
+         sodipodi:role="line"
+         id="tspan856"
+         x="3.44824"
+         y="136.22612"
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:104.666px;font-family:'Courier New';-inkscape-font-specification:'Courier New Italic';stroke-width:0.261667">TXT</tspan></text>
+  </g>
+</svg>

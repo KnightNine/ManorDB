@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -261,63 +262,198 @@ namespace MDB
                 var colType = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name];
                 if (colType == "Foreign Key Refrence")
                 {
-                    //refrenced tables are always main tables
-                    var refrencedTable = DatabaseFunct.currentData[DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name + DatabaseFunct.RefrenceColumnKeyExt]];
-                    string primaryKeyCol = "";
+                    string error = "";
 
-                    //find primary key column name
-                    foreach (KeyValuePair<string, dynamic> KV in refrencedTable)
+                    string refrencedTableKey = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name + DatabaseFunct.RefrenceColumnKeyExt];
+
+                    //make sure table still exists and that table still has a primary key col
+                    if (!DatabaseFunct.currentData.ContainsKey(refrencedTableKey))
                     {
 
-                        if (KV.Value is string && KV.Value == "Primary Key")
-                        {
-                            primaryKeyCol = KV.Key;
-                        }
+                        error += "The table being refrenced, \"" + refrencedTableKey + "\" no longer exists. ";
+                    }
+                    else if (!DatabaseFunct.currentData[refrencedTableKey].ContainsValue("Primary Key"))
+                    {
+                        error += "The table being refrenced, \"" + refrencedTableKey + "\", no longer contains a primary key columnn, add one or delete this column.";
+
                     }
 
-                    if (primaryKeyCol != "")
+                    if (error == "")
                     {
-                        List<string> primaryKeys = new List<string>();
-                        primaryKeys.Add("");
-                        foreach (KeyValuePair<int, Dictionary<string, dynamic>> entry in refrencedTable[DatabaseFunct.RowEntryRefrence])
+                        //refrenced tables are always main tables
+
+                        var refrencedTable = DatabaseFunct.currentData[DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name + DatabaseFunct.RefrenceColumnKeyExt]];
+                        string primaryKeyCol = "";
+
+                        //find primary key column name
+                        foreach (KeyValuePair<string, dynamic> KV in refrencedTable)
                         {
-                            if (entry.Value[primaryKeyCol] != null)
+
+                            if (KV.Value is string && KV.Value == "Primary Key")
                             {
-                                primaryKeys.Add(entry.Value[primaryKeyCol]);
+                                primaryKeyCol = KV.Key;
                             }
-                            
                         }
 
-                        //clear value if invalid
-                        if (!primaryKeys.Contains(senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value))
+                        if (primaryKeyCol != "")
                         {
-                            senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = null;
+                            List<string> primaryKeys = new List<string>();
+                            primaryKeys.Add("");
+                            foreach (KeyValuePair<int, Dictionary<string, dynamic>> entry in refrencedTable[DatabaseFunct.RowEntryRefrence])
+                            {
+                                if (entry.Value[primaryKeyCol] != null)
+                                {
+                                    primaryKeys.Add(entry.Value[primaryKeyCol]);
+                                }
+
+                            }
+
+                            //clear value if invalid
+                            if (!primaryKeys.Contains(senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value))
+                            {
+                                senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = null;
+                            }
+
+                            var prevSel = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+
+                            DataGridViewComboBoxCell cell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
+
+
+                            cell.Items.Clear();
+                            cell.Items.AddRange(primaryKeys.ToArray());
+                            cell.Value = prevSel;
+
+
+
+
+
+
+
                         }
-
-                        var prevSel = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-
-                        DataGridViewComboBoxCell cell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
-
-
-                        cell.Items.Clear();
-                        cell.Items.AddRange(primaryKeys.ToArray());
-                        cell.Value = prevSel;
-
-
-                        
-
-
-
-
                     }
                     else
                     {
-
                         senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = null;
-                        System.Windows.Forms.MessageBox.Show("Primary key no longer exists in that table");
+                        System.Windows.Forms.MessageBox.Show(error);
+                    }
+
+                }
+                else if (colType == "Parent Subtable Foreign Key Refrence")
+                {
+                    string error = "";
+
+                    string regex = "/(?!.*/).*";
+
+                    string refrencedSubTableKey = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name + DatabaseFunct.ParentSubTableRefrenceColumnKeyExt];
+
+                    string tableKeyContainingRefrencedSubTable = Regex.Replace(refrencedSubTableKey, regex, "");
+                    string refrencedSubTableCol = Regex.Matches(refrencedSubTableKey, regex)[0].ToString().TrimStart('/');
+
+
+                    string rowIndexOfRefrencedSubTable = "";
+                    string subjectDirectory = tableDir.Clone().ToString();
+
+                    //remove from subject until dir is equivalent to tableKeyContainingRefrencedSubTable
+
+                    while (DatabaseFunct.ConvertDirToTableKey(subjectDirectory) != tableKeyContainingRefrencedSubTable )
+                    {
+                        if (!subjectDirectory.Contains("/"))
+                        {
+                            throw new Exception("subject directory not found");
+                        }
+
+                        //i also need to get the index for the row of this subtable 
+                        //get after '/'
+                            regex = @"([^\/]+$)";
+                        string output = Regex.Matches(subjectDirectory, regex)[0].ToString();
+                        //get before ','
+                        regex = @"^[^,]+";
+                        rowIndexOfRefrencedSubTable = Regex.Matches(output, regex)[0].ToString();
+                        
+                        // remove past and including last '/'
+                        regex = "/(?!.*/).*";
+                        subjectDirectory = Regex.Replace(subjectDirectory, regex, "");
+                        
 
                     }
 
+                    
+
+                    
+
+                    //make sure table still exists and that table still has a primary key col
+                    if (!DatabaseFunct.currentData[tableKeyContainingRefrencedSubTable].ContainsKey(refrencedSubTableCol))
+                    {
+
+                        error += "The subtable column being refrenced, \"" + refrencedSubTableCol + "\" within \""+ tableKeyContainingRefrencedSubTable + " no longer exists.";
+                    }
+                    else if (!DatabaseFunct.currentData[refrencedSubTableKey].ContainsValue("Primary Key"))
+                    {
+                        error += "The subtable being refrenced, \"" + refrencedSubTableKey + "\", no longer contains a primary key columnn, add one or delete this column.";
+
+                    }
+
+                    if (error == "")
+                    {
+
+                        
+                        var refrencedSubTable = DatabaseFunct.currentData[refrencedSubTableKey];
+                        string primaryKeyCol = "";
+
+                        //find primary key column name
+                        foreach (KeyValuePair<string, dynamic> KV in refrencedSubTable)
+                        {
+
+                            if (KV.Value is string && KV.Value == "Primary Key")
+                            {
+                                primaryKeyCol = KV.Key;
+                            }
+                        }
+
+                        if (primaryKeyCol != "")
+                        {
+                            // append the missing directory string of the same row and get the data
+                            Dictionary<int, Dictionary<string, dynamic>> refrencedTableData = DatabaseFunct.GetTableDataFromDir(subjectDirectory + "/" + rowIndexOfRefrencedSubTable + "," + refrencedSubTableCol) as Dictionary<int, Dictionary<string, dynamic>>;
+
+                            List<string> primaryKeys = new List<string>();
+                            primaryKeys.Add("");
+                            foreach (KeyValuePair<int, Dictionary<string, dynamic>> entry in refrencedTableData)
+                            {
+                                if (entry.Value[primaryKeyCol] != null)
+                                {
+                                    primaryKeys.Add(entry.Value[primaryKeyCol]);
+                                }
+
+                            }
+
+                            //clear value if invalid
+                            if (!primaryKeys.Contains(senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value))
+                            {
+                                senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = null;
+                            }
+
+                            var prevSel = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+
+                            DataGridViewComboBoxCell cell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
+
+
+                            cell.Items.Clear();
+                            cell.Items.AddRange(primaryKeys.ToArray());
+                            cell.Value = prevSel;
+
+
+
+
+
+
+
+                        }
+                    }
+                    else
+                    {
+                        senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = null;
+                        System.Windows.Forms.MessageBox.Show(error);
+                    }
 
                 }
             }
@@ -342,7 +478,7 @@ namespace MDB
             // Ignore clicks that are on an empty table or a num column
             if (e.RowIndex < 0) return;
             if (e.ColumnIndex < 0) return;
-            
+
             //if it is a button cell
             var colType = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name];
 

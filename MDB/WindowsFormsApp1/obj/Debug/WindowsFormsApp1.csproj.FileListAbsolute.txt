@@ -58,3 +58,4 @@ C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1
 C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CopyComplete
 C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\MDB.exe
 C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\MDB.pdb
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\MDB.Text_Editor_Form.resources

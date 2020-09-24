@@ -480,6 +480,7 @@ namespace MDB
         public static string ColumnOrderRefrence = "@ColumnOrder";
         public static string ColumnDisablerArrayExt = ".ColumnsToDisable";
         public static string RefrenceColumnKeyExt = ".Refrence";
+        public static string ParentSubTableRefrenceColumnKeyExt = ".ParentSTRefrence";
         public static string selectedTable = "";
 
         public static SortedDictionary<string, dynamic> emptyData = new SortedDictionary<string, dynamic>()
@@ -743,6 +744,89 @@ namespace MDB
 
 
                         }
+                        else if (colType == "Parent Subtable Foreign Key Refrence")
+                        {
+                            string tableRefrence = "";
+
+                            List<string> ParentSubTables = new List<string>();
+                            string subjectTableKey = tableKey.Clone().ToString();
+
+                            //look through parent table levels starting from current table level
+                            while (subjectTableKey != "")
+                            {
+                                Console.WriteLine(subjectTableKey);
+                                foreach (string key in currentData[subjectTableKey].Keys)
+                                {
+                                    Console.WriteLine(key);
+                                    Console.WriteLine(currentData[subjectTableKey][key]);
+                                    Console.WriteLine("--");
+                                    if (currentData[subjectTableKey][key.ToString()] is String && currentData[subjectTableKey][key.ToString()] == "SubTable")
+                                    {
+
+                                        ParentSubTables.Add(subjectTableKey + "/" + key.ToString());
+                                    }
+
+                                }
+                                Console.WriteLine("-----");
+
+                                //remove everything after and including last '/'
+                                if (subjectTableKey.Contains("/"))
+                                {
+                                    string regex = "/(?!.*/).*";
+                                    subjectTableKey = Regex.Replace(subjectTableKey, regex, "");
+                                }
+                                else 
+                                {
+                                    subjectTableKey = "";
+                                }
+                                
+
+
+                            }
+
+                            //if no valid refrence already exists
+                            if (!currentData[tableKey].ContainsKey((dynamic)(colName + ParentSubTableRefrenceColumnKeyExt)))
+                            {
+
+                                string[] input = Prompt.ShowDialog("Choose a subtable to refrence from.", "Create Parent SubTable Refrence Column", false, true, ParentSubTables.ToArray());
+                                tableRefrence = input[1];
+                            }
+                            else
+                            {
+                                tableRefrence = currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt];
+                            }
+
+
+                            if (tableRefrence != null && ParentSubTables.Contains(tableRefrence))
+                            {
+                                if (currentData[tableRefrence].ContainsValue("Primary Key"))
+                                {
+
+                                    valid = true;
+                                    //changes made to currentdata can't happen when loading a table
+                                    if (!isLoad)
+                                    {
+                                        //add refrence kv pair
+
+                                        currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt] = tableRefrence;
+
+                                    }
+
+
+                                }
+                                else
+                                {
+                                    System.Windows.Forms.MessageBox.Show("that subtable doesn't have a Primary Key column!");
+                                }
+
+                            }
+                            else
+                            {
+                                System.Windows.Forms.MessageBox.Show("that table doesn't exist!");
+
+                            }
+
+                        }
                         else if (colType == "SubTable")
                         {
                             if (isLoad && currentData.ContainsKey(tableKey + "/" + colName))
@@ -953,6 +1037,11 @@ namespace MDB
                 if (colType == "Foreign Key Refrence")
                 {
                     currentData[tableKey].Remove(colName + RefrenceColumnKeyExt);
+
+                }
+                else if (colType == "Parent Subtable Foreign Key Refrence")
+                {
+                    currentData[tableKey].Remove(colName + ParentSubTableRefrenceColumnKeyExt);
 
                 }
                 else if (colType == "SubTable")
@@ -2077,7 +2166,7 @@ namespace MDB
                                 {
                                     KVRow.Value[Col2] = false;
                                 }
-                                //if not subtable or bool
+                                //if not subtable or a bool
                                 else
                                 {
                                     KVRow.Value[Col2] = null;
@@ -2280,6 +2369,7 @@ namespace MDB
             {"SubTable",typeof(DataGridViewButtonColumn) },
             {"Foreign Key Refrence",typeof(DataGridViewComboBoxColumn) },
             {"Bool",typeof(DataGridViewCheckBoxColumn) },
+            {"Parent Subtable Foreign Key Refrence",typeof(DataGridViewComboBoxColumn) }
 
         };
 
