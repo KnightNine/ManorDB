@@ -45,7 +45,7 @@ The game I am working on relies on complex repeating data structures to define i
 <hr>
 <h4>Goals:</h4>
 <p>
-  There are a minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
+  There are some minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
