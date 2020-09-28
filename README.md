@@ -11,7 +11,7 @@ Open Source Json Database Manager Made in WinForms that copies <a href = "https:
 <b>Q:</b> Why did I create this when CastleDB already exists?
 </p>
 <p>
-<b>A:</b> Because CastleDB has/had bugs that creep in when the database reaches a certain level of complexity which made the 3000 line json file I had unreadable at random, happened 3 times before I decided not to stick around and find out what the exact issue was and just make my own DB manager that actually works and so I won't have to sift through 3000 lines of json script to fix the issue as there is no indication of what line the read error occurred at, even if i wanted to fix the issue with CDB myself it would be incredibly tedious to do so due to that developer unfriendly design (i would need to look for what triggers that error alert, and if there's more than one potential trigger for it, then it is just a guessing game as to what the exact issue actually is). If I want something done right looks like i'll have to do it myself, disappointingly.
+<b>A:</b> Because CastleDB has/had bugs that creep in when the database reaches a certain level of complexity which made the 3000 line json file I had unreadable at random, happened 3 times before I decided not to stick around and find out what the exact issue was and just make my own DB manager that actually works and so I won't have to sift through 3000 lines of json script to fix the issue as there is no indication of what line the read error occurred at.
 
 The game I am working on relies on complex repeating data structures to define it's entities therefore I find that this Database manager would be particularly useful to me.
 </p>
