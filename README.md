@@ -70,6 +70,10 @@ All data regarding your row entries is stored within the MDB file's <b>main tabl
 <h5>Take Note:</h5>
 <p>
 Note that for all cell types besides subtables and bools, their value in the database is null if they are left blank. Also the indexes of rows in the database are strings for some reason, it could have something to do with the Newtonsoft package i am using.
+</p>
+<p>
 The main tables are currently stored in alphabetical order and will reorder themselves upon reloading the database. 
+</p>
+<p>
 The data is unindented which i've found might affect other json deserialization methods, in particular, The <a href = "https://godotengine.org/">Godot</a> engine doesn't deserialize unindented json properly as of now, so you can use https://json-indent.com/ to indent the data for that or just to view the database.
 <p/>
