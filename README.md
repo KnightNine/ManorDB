@@ -26,6 +26,7 @@ The game I am working on relies on complex repeating data structures to define i
     <li>Bool</li>
     <li>Subtable (the equivalent of CDB's "list" column type)</li>
     <li>Foreign Key Reference (the equivalent of CDB's "Reference" column type)</li>
+    <li><a href = "https://github.com/KnightNine/ManorDB/releases/tag/v1.5.12-beta">Parent Subtable Foreign Key Reference</a></li>
   </ul>
   <li><b>Object Oriented Data:</b></li>
   <ul>
