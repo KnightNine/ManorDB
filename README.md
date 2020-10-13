@@ -49,13 +49,14 @@ The game I am working on relies on complex repeating data structures to define i
   There are some minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
-  <li>Column Text Resizes Automatically as column narrows so that full text is still readable </li>
+  <li>Renaming Tables and Columns</li>
   <li> Subtable Button Text contains the data of the first few rows within that subtable so that it is viewable on hover </li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
+  <li>Column Text Resizes Automatically as column narrows so that full text is still readable </li>
   <li>Image Columns</li>
-  <li>Renaming Tables and Columns</li>
   <li>A "Foreign Key Refrence Primary Key" column (to base a table around foreign keys that can't have duplicate refrences)</li>
   <li>A "force adjecent cell to value when cell is filled" setting, similar to the feature that disallows two cells from being filled at the same time, except instead of disabling the other cell entirely, the cell is set to a specific value and becomes read only. </li>
+  <li>"File Regex Refrence Column": What if you wanted to refrence functions of a script? wouldn't it be much more convenient to have the database manager scan through that script file and update it's data automatically. For each column you'd need to define layers of regex on what you want to search for within the script file and the table would create rows and fill in the extracted data for you.</li>
   <li>Table Shifting (re-ordering of Tables)</li>
   <li>Further Organization of Code</li>
   <li>Detailed Commentation</li>
