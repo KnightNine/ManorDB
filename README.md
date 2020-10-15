@@ -52,8 +52,8 @@ The game I am working on relies on complex repeating data structures to define i
   <li>Renaming Tables and Columns</li>
   <li> Subtable Button Text contains the data of the first few rows within that subtable so that it is viewable on hover </li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
-  <li>Column Text Resizes Automatically as column narrows so that full text is still readable </li>
   <li>Image Columns</li>
+  <li>Undo/Redo</li>
   <li>Int Restriction Setting on Numeric Column</li>
   <li>A "Foreign Key Refrence Primary Key" column (to base a table around foreign keys that can't have duplicate refrences)</li>
   <li>A "force adjecent cell to value when cell is filled" setting, similar to the feature that disallows two cells from being filled at the same time, except instead of disabling the other cell entirely, the cell is set to a specific value and becomes read only. </li>
