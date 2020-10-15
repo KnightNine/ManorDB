@@ -73,7 +73,7 @@ namespace MDB
        
 
 
-        public static DataGridView GetGridView()
+        public static DataGridView GetGridView()//(int tableDepth)
         {
 
 
@@ -94,13 +94,14 @@ namespace MDB
 
 
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.LightGray;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.LightGray;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             TableMainGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            TableMainGridView.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Raised;
 
             TableMainGridView.ColumnHeadersHeight = 58;
             TableMainGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
@@ -116,7 +117,7 @@ namespace MDB
             TableMainGridView.RowsDefaultCellStyle = dataGridViewCellStyle3;
 
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.DarkGray;
+            dataGridViewCellStyle1.BackColor = Color.Silver;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Consolas", 8.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.LightCyan;
@@ -156,6 +157,9 @@ namespace MDB
             TableMainGridView.RowsRemoved += new DataGridViewRowsRemovedEventHandler(mainForm.RowsRemoved);
             TableMainGridView.RowsAdded += new DataGridViewRowsAddedEventHandler(mainForm.RowsAdded);
             TableMainGridView.CellPainting += new DataGridViewCellPaintingEventHandler(mainForm.TableMainGridView_CellPainting);
+            TableMainGridView.CellEndEdit += new DataGridViewCellEventHandler(mainForm.TableMainGridView_CellEndEdit);
+            TableMainGridView.CellMouseEnter += new DataGridViewCellEventHandler(mainForm.TableMainGridView_Focus);
+            TableMainGridView.CellEnter += new DataGridViewCellEventHandler(mainForm.TableMainGridView_Focus);
 
             DoubleBuffered(TableMainGridView, true);
 
@@ -702,7 +706,7 @@ namespace MDB
                             {
 
                                 string[] input = Prompt.ShowDialog("Choose a table to refrence from.", "Create Refrence Column", false, true, MainTables.ToArray());
-                                tableRefrence = input[1];
+                                tableRefrence = input[2];
                             }
                             else
                             {
@@ -789,7 +793,7 @@ namespace MDB
                             {
 
                                 string[] input = Prompt.ShowDialog("Choose a subtable to refrence from.", "Create Parent SubTable Refrence Column", false, true, ParentSubTables.ToArray());
-                                tableRefrence = input[1];
+                                tableRefrence = input[2];
                             }
                             else
                             {
@@ -2450,11 +2454,16 @@ namespace MDB
             if (colType == "Primary Key")
             {
                 int index = 0;
+                //confirm that no other primary index exists with the same key
                 foreach (KeyValuePair<int, Dictionary<string, dynamic>> entry in tableData)
                 {
                     if (entry.Value.ContainsKey(colName) && entry.Value[colName] == value)
                     {
-                        System.Windows.Forms.MessageBox.Show("Duplicate primary key \"" + value + "\" exists at row index " + index);
+                        //don't display if primary key is null
+                        if (value != null)
+                        {
+                            System.Windows.Forms.MessageBox.Show("Duplicate primary key \"" + value + "\" exists at row index " + index);
+                        }
                         return null;
                     }
                     index++;

@@ -21,40 +21,78 @@ namespace MDB
         static int indentationValue = 10;
         //stored scroll point used to retain the panel1 scroll position when contents of panel are redrawn
         Point scrollValue;
+
+
+        
+
         public Form1()
         {
             InitializeComponent();
         }
 
+
+        void setToLastStoredScrollValue()
+        {
+            //adjust scroll position to where it was previously https://support.microsoft.com/en-us/help/829417/the-scroll-position-is-not-maintained-in-an-auto-scrollable-panel-cont 
+            Console.WriteLine("scroll val was: "+ panel1.AutoScrollPosition.Y.ToString() + " but changed back to:"+ scrollValue.Y.ToString());
+            panel1.AutoScrollPosition = new Point(Math.Abs(panel1.AutoScrollPosition.X), Math.Abs(scrollValue.Y));
+        }
+
+        public void TableMainGridView_Focus(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView senderDGV = sender as DataGridView;
+            //if not in focus already
+            if (!senderDGV.Focused)
+            {
+                //store scroll value for later
+                scrollValue = panel1.AutoScrollPosition;
+
+                senderDGV.Focus();
+                setToLastStoredScrollValue();
+            }
+            
+        }
+
+
         private void newTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string input = Microsoft.VisualBasic.Interaction.InputBox("New Table",
-                       "Table Name:",
-                       "Table",
-                       0,
-                       0);
-            DatabaseFunct.AddTable(input);
+            
+            string[] input = Prompt.ShowDialog("Table Name:", "New Table", true, false, null);
+
+            if (input[0] == "T")
+            {
+                DatabaseFunct.AddTable(input[1]);
+            }
+            
         }
 
         private void removeTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string input = Microsoft.VisualBasic.Interaction.InputBox("Remove Table",
-                       "Table Name:",
-                       "Table",
-                       0,
-                       0);
-            DatabaseFunct.RemoveTable(input);
+
+            string[] input = Prompt.ShowDialog("Table Name:", "Remove Table", true, false, null);
+
+            if (input[0] == "T")
+            {
+                DatabaseFunct.RemoveTable(input[1]);
+            }
+            
         }
 
         private void newColumnToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //store scroll value for later
             scrollValue = panel1.AutoScrollPosition;
+
             if (DatabaseFunct.selectedTable != "")
             {
 
                 string[] input = Prompt.ShowDialog("Name Column And Select Type", "Create Column", true, true, ColumnTypes.Types.Keys.ToArray<string>());
-                DatabaseFunct.AddColumn(input[0], input[1], false, Program.mainForm.TableMainGridView);
-                panel1.AutoScrollPosition = new Point(Math.Abs(panel1.AutoScrollPosition.X), Math.Abs(scrollValue.Y));
+                if (input[0] == "T")
+                {
+                    DatabaseFunct.AddColumn(input[1], input[2], false, Program.mainForm.TableMainGridView);
+                    setToLastStoredScrollValue();
+                }
+                
             }
             else
             {
@@ -86,13 +124,15 @@ namespace MDB
 
         private void newRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //store scroll value for later
             scrollValue = panel1.AutoScrollPosition;
+
             if (DatabaseFunct.selectedTable != "")
             {
                 if (Program.mainForm.TableMainGridView.Columns.Count > 0)
                 {
                     DatabaseFunct.AddRow(Program.mainForm.TableMainGridView,false,0);
-                    panel1.AutoScrollPosition = new Point(Math.Abs(panel1.AutoScrollPosition.X), Math.Abs(scrollValue.Y));
+                    setToLastStoredScrollValue();
                 }
                 else
                 {
@@ -109,6 +149,8 @@ namespace MDB
         {
             ToolStripMenuItem senderTSMI = sender as ToolStripMenuItem;
             DataGridView senderDGV = senderTSMI.GetCurrentParent().Parent as DataGridView;
+
+            //store scroll value for later
             scrollValue = panel1.AutoScrollPosition;
 
             if (DatabaseFunct.selectedTable != "")
@@ -116,10 +158,14 @@ namespace MDB
 
                 string[] input = Prompt.ShowDialog("Name Column And Select Type", "Create Column", true, true, ColumnTypes.Types.Keys.ToArray<string>());
 
+                if (input[0] == "T")
+                {
+                    DatabaseFunct.AddColumn(input[1], input[2], false, senderDGV);
+                    setToLastStoredScrollValue();
+                }
+                
 
-                DatabaseFunct.AddColumn(input[0], input[1], false, senderDGV);
-
-                panel1.AutoScrollPosition = new Point(Math.Abs(panel1.AutoScrollPosition.X), Math.Abs(scrollValue.Y));
+                
             }
             else
             {
@@ -127,11 +173,15 @@ namespace MDB
             }
         }
 
+
+
         public void subTableNewRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
             ToolStripMenuItem senderTSMI = sender as ToolStripMenuItem;
             DataGridView senderDGV = senderTSMI.GetCurrentParent().Parent as DataGridView;
+
+            //store scroll value for later
             scrollValue = panel1.AutoScrollPosition;
 
             if (DatabaseFunct.selectedTable != "")
@@ -139,7 +189,7 @@ namespace MDB
                 if (senderDGV.Columns.Count > 0)
                 {
                     DatabaseFunct.AddRow(senderDGV, false, 0);
-                    panel1.AutoScrollPosition = new Point(Math.Abs(panel1.AutoScrollPosition.X), Math.Abs(scrollValue.Y));
+                    setToLastStoredScrollValue();
                 }
                 else
                 {
@@ -225,14 +275,22 @@ namespace MDB
                 DatabaseFunct.UpdateStatusOfAllRowCellsInDisablerArrayOfCell(senderDGV, tableKey, KVRow, colName);
             }
 
-
             
 
 
         }
 
+        public void TableMainGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            setToLastStoredScrollValue();
+        }
+
         public void TableMainGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
+            //scroll value here is re-added after cellvaluechanged
+            //store scroll value for later
+            scrollValue = panel1.AutoScrollPosition;
+
             DataGridView senderDGV = sender as DataGridView;
             if (e.Button == MouseButtons.Right)
             {
@@ -463,7 +521,7 @@ namespace MDB
 
         public void TableMainGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            
 
         }
 
@@ -545,9 +603,9 @@ namespace MDB
 
                     DatabaseFunct.loadingTable = true;
 
-
+                    //store scroll value for later
                     scrollValue = panel1.AutoScrollPosition;
-                    panel1.SuspendLayout();
+                    
 
                     Tuple<DataGridView, int> subTableKey = new Tuple<DataGridView, int>(senderDGV, e.RowIndex);
 
@@ -754,15 +812,14 @@ namespace MDB
 
             }
 
-            panel1.ResumeLayout();
-
-            //Console.WriteLine(panel1.AutoScrollPosition.Y.ToString() + " but changed back to:");
-            panel1.AutoScrollPosition = new Point(Math.Abs(panel1.AutoScrollPosition.X), Math.Abs(scrollValue.Y));
-
+            setToLastStoredScrollValue();
 
 
 
         }
+
+        
+
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {

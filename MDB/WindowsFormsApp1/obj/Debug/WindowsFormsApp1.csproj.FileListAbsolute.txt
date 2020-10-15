@@ -1,44 +1,3 @@
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csprojAssemblyReference.cache
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\FDB.Properties.Resources.resources
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.GenerateResource.cache
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\FDB.exe.config
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\FDB.exe
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\FDB.pdb
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\FDB.Form1.resources
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\FDB.exe
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\FDB.pdb
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CopyComplete
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Alex\Desktop\FDB\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.xml
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\bin\Debug\FDB.exe.config
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\bin\Debug\FDB.exe
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\bin\Debug\FDB.pdb
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.xml
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csprojAssemblyReference.cache
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\obj\Debug\FDB.Form1.resources
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\obj\Debug\FDB.Properties.Resources.resources
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.GenerateResource.cache
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CopyComplete
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\obj\Debug\FDB.exe
-C:\Users\Alex\Desktop\FDB\FDB\WindowsFormsApp1\obj\Debug\FDB.pdb
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\bin\Debug\FDB.exe.config
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\bin\Debug\FDB.exe
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\bin\Debug\FDB.pdb
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.xml
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csprojAssemblyReference.cache
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\obj\Debug\FDB.Form1.resources
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\obj\Debug\FDB.Properties.Resources.resources
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.GenerateResource.cache
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CopyComplete
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\obj\Debug\FDB.exe
-C:\Users\Alex\Desktop\FDB - Copy\FDB\WindowsFormsApp1\obj\Debug\FDB.pdb
-C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\Debug\MDB.exe.config
-C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\Debug\MDB.exe
-C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\Debug\MDB.pdb
-C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csprojAssemblyReference.cache
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\MDB.Properties.Resources.resources
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.GenerateResource.cache
@@ -46,16 +5,7 @@ C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\MDB.exe
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\MDB.pdb
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\MDB.Form1.resources
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\bin\Debug\MDB.exe.config
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\bin\Debug\MDB.exe
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\bin\Debug\MDB.pdb
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\bin\Debug\Newtonsoft.Json.xml
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csprojAssemblyReference.cache
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\MDB.Form1.resources
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\MDB.Properties.Resources.resources
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.GenerateResource.cache
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CopyComplete
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\MDB.exe
-C:\Users\Alex\Desktop\MDB - Copy\MDB\WindowsFormsApp1\obj\Debug\MDB.pdb
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\MDB.Text_Editor_Form.resources
+C:\Users\Alex\Desktop\MDB.exe.config
+C:\Users\Alex\Desktop\MDB.exe
+C:\Users\Alex\Desktop\MDB.pdb
