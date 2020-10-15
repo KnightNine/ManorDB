@@ -44,7 +44,7 @@ The game I am working on relies on complex repeating data structures to define i
 </ul>
 
 <hr>
-<h4>Goals:</h4>
+<h4>Goals/Nice-to-Haves:</h4>
 <p>
   There are some minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
