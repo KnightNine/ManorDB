@@ -593,7 +593,7 @@ namespace MDB
             loadingTable = false;
         }
 
-        //not implemented yet
+        
         internal static void ChangeTableName(string tabName, string newTabName)
         {
             if (currentData.Keys.Contains(tabName))
@@ -605,39 +605,84 @@ namespace MDB
                 {
                     if (!currentData.Keys.Contains(newTabName))
                     {
+                        
                         List<string> keysToRemove = new List<string>();
+                        SortedDictionary<string, dynamic> renamedEntries = new SortedDictionary<string, dynamic>();
+                        List<dynamic[]> refrenceEntries = new List<dynamic[]>();
+
                         foreach (string key in currentData.Keys)
                         {
-                            //change refrences to renamed table
-                            foreach (string subKey in currentData[key].Keys)
-                            {
-                                if (subKey.EndsWith(RefrenceColumnKeyExt) && currentData[key][subKey] == tabName)
-                                {
-                                    currentData[key][subKey] = newTabName;
-                                }
-                            }
-
+                            
+                            //for all table data
                             if (key.StartsWith(tabName + "/") || key == tabName)
                             {
                                 string newKey = newTabName + key.Remove(0, tabName.Length);
-                                var data = currentData[key];
+                                //old keys to be removed
                                 keysToRemove.Add(key);
-                                currentData[newKey] = data;
+                                //re-implement under new name
+                                renamedEntries[newKey] = currentData[key];
 
                             }
 
+                            //change refrences to renamed table
+                            foreach (string subKey in currentData[key].Keys)
+                            {
+                                //foreign key refrence to this table
+                                if (subKey.EndsWith(RefrenceColumnKeyExt) && currentData[key][subKey] == tabName)
+                                {
+                                    refrenceEntries.Add(new dynamic[] { key, subKey, newTabName });
+
+
+                                }
+                                //change subtable refrences with this as the main table
+                                if (subKey.EndsWith(ParentSubTableRefrenceColumnKeyExt) && currentData[key][subKey].StartsWith(tabName + "/"))
+                                {
+                                    string refAlt = newTabName + currentData[key][subKey].Remove(0, tabName.Length);
+                                    refrenceEntries.Add(new dynamic[] { key, subKey, refAlt });
+                                }
+                            }
 
                         }
+
+                        //----------------------------------------------------------------------
+                        //make changes to currentData
+
+                        //apply altered refrence entries (this should also change entries within renamedEntries)
+                        foreach (dynamic[] refEnt in refrenceEntries)
+                        {
+                            string key = refEnt[0];
+                            string subKey = refEnt[1];
+                            string refAlt = refEnt[2];
+
+                            currentData[key][subKey] = refAlt;
+                        }
+
+                        //
                         foreach (string key in keysToRemove)
                         {
+                            //remove old keys
                             currentData.Remove(key);
+                        }
+
+                        //concat current data with renamed entries
+                        foreach (KeyValuePair<string, dynamic> KV in renamedEntries)
+                        {
+                            currentData.Add(KV.Key, KV.Value);
                         }
 
                         if (Program.mainForm.tabControl1.TabPages.ContainsKey(tabName))
                         {
-                            Program.mainForm.tabControl1.TabPages[tabName].Name = newTabName;
+                            //change tabcontrol data
                             Program.mainForm.tabControl1.TabPages[tabName].Text = newTabName;
+                            Program.mainForm.tabControl1.TabPages[tabName].Name = newTabName;
                         }
+
+                        //refresh table if it is the currently selected table (so that DGVs are renamed)
+                        if (Program.mainForm.tabControl1.SelectedTab.Name == newTabName)
+                        {
+                            ChangeMainTable(newTabName);
+                        }
+
 
                     }
                     else
@@ -656,6 +701,347 @@ namespace MDB
             }
             
         }
+
+        internal static void ChangeColumnName(string colName, string newColName, DataGridView DGV)
+        {
+            string tableDir = DGV.Name;
+            string tableKey = ConvertDirToTableKey(tableDir);
+
+            string error = ColumnTypes.ValidateInput(newColName);
+
+            string colType = currentData[tableKey][colName];
+
+
+            if (error == "")
+            {
+                if (ColumnTypes.Types.ContainsKey(colType))
+                {
+                    
+                    if (!currentData[tableKey].ContainsKey((dynamic)newColName))
+                    {
+
+                        //swap column within table data
+                        currentData[tableKey][newColName] = colType;
+                        //in col order
+                        List<string> orderRef = (List<string>)currentData[tableKey][ColumnOrderRefrence];
+                        int orderIndex = orderRef.IndexOf(colName);
+                        orderRef.RemoveAt(orderIndex);
+                        orderRef.Insert(orderIndex, newColName);
+                        currentData[tableKey][ColumnOrderRefrence] = orderRef;
+
+                        //in any adjacent disabler arrays
+                        foreach (KeyValuePair<string, dynamic> KV in currentData[tableKey])
+                        {
+                            List<dynamic[]> replacers= new List<dynamic[]>();
+                            int disablerIndex;
+                            if (KV.Key.EndsWith(ColumnDisablerArrayExt) && (disablerIndex = KV.Value.IndexOf(colName)) != -1)
+                            {
+                                List<string> disablerArr = (List<string>)currentData[tableKey][KV.Key];
+                                replacers.Add(new dynamic[] { KV.Key, disablerIndex });
+                                
+                            }
+                            //apply replacers
+                            foreach (dynamic[] replacer in replacers)
+                            {
+                                List<string> disablerArr = (List<string>)currentData[tableKey][replacer[0]];
+                                disablerArr.RemoveAt(replacer[1]);
+                                disablerArr.Insert(replacer[1], newColName);
+                                currentData[tableKey][replacer[0]] = disablerArr;
+                            }
+                        }
+
+
+                        //remove it
+                        currentData[tableKey].Remove(colName);
+
+                        //rename column refrence data
+                        if (colType == "Foreign Key Refrence")
+                        {
+                            string refDat = currentData[tableKey][colName + RefrenceColumnKeyExt];
+                            currentData[tableKey][newColName + RefrenceColumnKeyExt] = refDat;
+                            //remove old entry
+                            currentData[tableKey].Remove(colName + RefrenceColumnKeyExt);
+
+                        }
+                        else if (colType == "Parent Subtable Foreign Key Refrence")
+                        {
+                            string refDat = currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt];
+                            currentData[tableKey][newColName + ParentSubTableRefrenceColumnKeyExt] = refDat;
+                            //remove old entry
+                            currentData[tableKey].Remove(colName + ParentSubTableRefrenceColumnKeyExt);
+
+                        }
+                        //rename all data branching from the subtable if it is a subtable
+                        else if (colType == "SubTable")
+                        {
+                            List<string> keysToRemove = new List<string>();
+                            SortedDictionary<string, dynamic> renamedEntries = new SortedDictionary<string, dynamic>();
+
+                            List<dynamic[]> parentSubtableRefrenceEntries = new List<dynamic[]>();
+
+                            //rename the direct table
+
+                            renamedEntries[tableKey + "/" + newColName] = currentData[tableKey + "/" + colName];
+
+                            //rename all sub tables below it
+                            foreach (KeyValuePair<string,dynamic> tableKV in currentData)
+                            {
+                                //start with tables that begin with this subtable directory 
+                                if (tableKV.Key.StartsWith(tableKey + "/" + colName + "/"))
+                                {
+                                    string newStart = tableKey + "/" + newColName + "/";
+                                    string newKey = newStart + tableKV.Key.Remove(0, newStart.Length);
+                                    renamedEntries[newKey] = tableKV.Value;
+
+                                    keysToRemove.Add(tableKV.Key);
+                                }
+                                //look through all keys within table that refrence to this subtable
+                                if (tableKV.Key.StartsWith(tableKey + "/") || tableKV.Key == tableKey)
+                                {
+                                    Console.WriteLine("Searching for subtable refrence columns to alter directories in: " + tableKV.Key);
+                                    foreach( KeyValuePair<string,dynamic> KV in tableKV.Value)
+                                    {
+                                        if (KV.Key.EndsWith(ParentSubTableRefrenceColumnKeyExt))
+                                        {
+                                            bool added = false;
+
+                                            if (KV.Value.StartsWith(tableKey + "/" + colName + "/"))
+                                            {
+                                                string newStart = tableKey + "/" + newColName + "/";
+                                                string newValue = newStart + tableKV.Value.Remove(0, newStart.Length);
+                                                parentSubtableRefrenceEntries.Add(new dynamic[] { tableKV.Key, KV.Key, newValue });
+                                                added = true;
+                                            }
+                                            else if (KV.Value == tableKey + "/" + colName)
+                                            {
+
+                                                string newValue = tableKey + "/" + newColName;
+                                                parentSubtableRefrenceEntries.Add(new dynamic[] { tableKV.Key, KV.Key, newValue });
+                                                added = true;
+                                            }
+                                            Console.WriteLine(KV.Value + (added? "- added" : ""));
+                                        }
+                                        
+                                    }
+                                    Console.WriteLine("---");
+                                }
+
+                                
+
+                            }
+
+
+                            List<dynamic[]> replacer = new List<dynamic[]>();
+                            //change all DGV names that start with or are subtable directory
+                            foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+                            {
+                                string openTableDir = openSubTable.Value.Item2.Name;
+                                string openTableKey = ConvertDirToTableKey(openTableDir);
+
+                                if (openTableKey.StartsWith(tableKey + "/" + colName + "/"))
+                                {
+
+                                    //"xxx/#,colname/#,xxx"
+                                    //get parent name
+                                    string parentDir = openSubTable.Key.Item1.Name;
+                                    string clippedDir = openTableDir.Remove(0, parentDir.Length);
+                                    // "/#,colname/#,xxx/..." is what remains
+
+                                    Regex rgx = new Regex(@"\,(.*?)\/");
+                                    //replace first instance of ",colname/" and re insert parent dir
+                                    string newDir = rgx.Replace(clippedDir, "," + newColName + "/", 1).Insert(0, parentDir);
+
+
+                                    Console.WriteLine("Renaming table directory \"" + openTableDir + "\" to \"" + newDir + "\"");
+                                    //change the name
+                                    openSubTable.Value.Item2.Name = newDir;
+
+                                }
+                                else if (openTableKey == tableKey + "/" + colName)
+                                {
+                                    // "xxx/#,colname"
+                                    // get parent name
+                                    string parentDir = openSubTable.Key.Item1.Name;
+                                    string clippedDir = openTableDir.Remove(0, parentDir.Length);
+                                    // "/#,colname" is what remains
+                                    int index = clippedDir.LastIndexOf(",");
+
+                                    string newDir = parentDir + clippedDir.Substring(0, index + 1) + newColName; // index + 1 to keep ","
+
+
+
+
+                                    Console.WriteLine("Renaming table directory " + openTableDir + " to " + newDir);
+                                    //change the name
+                                    openSubTable.Value.Item2.Name = newDir;
+                                }
+
+
+                            }
+                            //---------------------------------
+                            //apply changes
+
+                            //apply altered refrence entries (this should also change entries within renamedEntries)
+                            foreach (dynamic[] refEnt in parentSubtableRefrenceEntries)
+                            {
+                                string key = refEnt[0];
+                                string subKey = refEnt[1];
+                                string refAlt = refEnt[2];
+
+                                Console.WriteLine("within \""+ key +"\" altering subtale refrence entry column \""+ subKey +"\" from \"" + currentData[key][subKey] + "\" to \"" + refAlt + "\"");
+                                currentData[key][subKey] = refAlt;
+                            }
+
+                            //
+                            foreach (string key in keysToRemove)
+                            {
+                                //remove old keys
+                                currentData.Remove(key);
+                            }
+
+                            //concat current data with renamed entries
+                            foreach (KeyValuePair<string, dynamic> KV in renamedEntries)
+                            {
+                                currentData.Add(KV.Key, KV.Value);
+                            }
+
+                            //change sub table key
+                            dynamic dat = currentData[tableKey + "/" + colName];
+                            currentData[tableKey + "/" + newColName] = dat;
+                            currentData.Remove(tableKey + "/" + colName);
+
+                        }
+
+                        //change all data at table level
+                        List<string> DGVKeysList = new List<string>();
+                        //get all rows with the same column
+                        List<Dictionary<int, Dictionary<string, dynamic>>> TableDataRowsAtSameLevel = GetAllTableDataAtTableLevel(tableKey, ref DGVKeysList);
+
+                        foreach(Dictionary<int, Dictionary<string, dynamic>> TableDataBranch in TableDataRowsAtSameLevel)
+                        {
+                            foreach (KeyValuePair<int, Dictionary<string, dynamic>> TableDataRow in TableDataBranch)
+                            {
+                                TableDataRow.Value[newColName] = TableDataRow.Value[colName];
+                                TableDataRow.Value.Remove(colName);
+                            }
+                        }
+                           
+
+
+                        //change column name on open dgvs
+                        List<DataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(tableKey);
+
+                        //change column within open dgvs
+
+                        foreach (DataGridView openDGV in openDGVs)
+                        {
+                            openDGV.Columns[colName].HeaderText = newColName;
+                            openDGV.Columns[colName].Name = newColName;
+                            
+
+                        }
+
+                        
+
+
+                        
+
+
+
+                    }
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show("that column already exists!");
+                    }
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("column type entered is invalid");
+                }
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("column name entered " + error);
+            }
+
+            /*if (currentData.Keys.Contains(tabName))
+            {
+                string error = ColumnTypes.ValidateInput(newTabName);
+
+
+                if (error == "")
+                {
+                    if (!currentData.Keys.Contains(newTabName))
+                    {
+                        List<string> keysToRemove = new List<string>();
+                        foreach (string key in currentData.Keys)
+                        {
+                            //change refrences to renamed table
+                            foreach (string subKey in currentData[key].Keys)
+                            {
+                                //foregn key refrence to this table
+                                if (subKey.EndsWith(RefrenceColumnKeyExt) && currentData[key][subKey] == tabName)
+                                {
+                                    currentData[key][subKey] = newTabName;
+                                }
+                                //change subtable refrences with this as the main table
+                                if (subKey.EndsWith(ParentSubTableRefrenceColumnKeyExt) && currentData[key][subKey].StartsWith(tabName + "/"))
+                                {
+                                    currentData[key][subKey] = newTabName + currentData[key][subKey].Remove(0, tabName.Length);
+                                }
+                            }
+                            //for all table data
+                            if (key.StartsWith(tabName + "/") || key == tabName)
+                            {
+                                string newKey = newTabName + key.Remove(0, tabName.Length);
+                                //old keys to be removed
+                                keysToRemove.Add(key);
+                                //re-implement under new name
+                                currentData[newKey] = currentData[key];
+
+                            }
+
+
+                        }
+                        foreach (string key in keysToRemove)
+                        {
+                            //remove old keys
+                            currentData.Remove(key);
+                        }
+
+                        if (Program.mainForm.tabControl1.TabPages.ContainsKey(tabName))
+                        {
+                            //change tabcontrol data
+                            Program.mainForm.tabControl1.TabPages[tabName].Text = newTabName;
+                            Program.mainForm.tabControl1.TabPages[tabName].Name = newTabName;
+
+                        }
+
+                        //refresh table if it is the currently selected table (so that DGVs are renamed)
+                        if (Program.mainForm.tabControl1.SelectedTab.Name == newTabName)
+                        {
+                            ChangeMainTable(newTabName);
+                        }
+
+
+                    }
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show("that table name already exists");
+                    }
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("table entered " + error);
+                }
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("table entered doesn't exist!");
+            }*/
+
+        }
+
 
         internal static string[] GetMainTableKeys()
         {
@@ -879,6 +1265,10 @@ namespace MDB
                             //add new empty column rows to table data at level
                             if (!isLoad)
                             {
+
+                               
+
+
                                 currentData[tableKey].Add(colName, colType);
                                 currentData[tableKey][ColumnOrderRefrence].Add(colName);
 
@@ -887,6 +1277,25 @@ namespace MDB
                                 List<Dictionary<int, Dictionary<string, dynamic>>> TableDataRowsAtSameLevel = GetAllTableDataAtTableLevel(tableKey, ref DGVKeysList);
                                 List<DataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(tableKey);
 
+
+                                //add to other open subtables if any
+
+                                foreach (DataGridView openDGV in openDGVs)
+                                {
+
+                                    if (openDGV != DGV)
+                                    {
+                                        DataGridViewColumn adjDataCol = (DataGridViewColumn)Activator.CreateInstance(ColumnTypes.Types[colType]);
+
+                                        adjDataCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                                        adjDataCol.HeaderText = colName;
+                                        adjDataCol.Name = colName;
+                                        adjDataCol.SortMode = DataGridViewColumnSortMode.NotSortable;
+                                        openDGV.Columns.Add(adjDataCol);
+                                    }
+
+
+                                }
 
                                 int tableIndex = 0;
                                 foreach (Dictionary<int, Dictionary<string, dynamic>> tableData in TableDataRowsAtSameLevel)
@@ -918,7 +1327,7 @@ namespace MDB
                                         if (myDataCol is DataGridViewCheckBoxColumn)
                                         {
                                             defaultVal = false;
-                                            //set cell to enabled
+                                            //set cell tag to enabled
                                             if (openDGVOfTable != null)
                                             {
                                                 openDGVOfTable.Rows[entryData.Key].Cells[colName].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
@@ -930,7 +1339,7 @@ namespace MDB
                                         else if (currentData[tableKey][colName] == "SubTable")
                                         {
                                             defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
-                                            //set cell to enabled
+                                            //set cell tag to enabled
                                             if (openDGVOfTable != null)
                                             {
                                                 openDGVOfTable.Rows[entryData.Key].Cells[colName].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
@@ -942,24 +1351,7 @@ namespace MDB
                                     }
                                 }
 
-                                //add to other open subtables if any
-
-                                foreach (DataGridView openDGV in openDGVs)
-                                {
-
-                                    if (openDGV!= DGV)
-                                    {
-                                        DataGridViewColumn adjDataCol = (DataGridViewColumn)Activator.CreateInstance(ColumnTypes.Types[colType]);
-
-                                        adjDataCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                                        adjDataCol.HeaderText = colName;
-                                        adjDataCol.Name = colName;
-                                        adjDataCol.SortMode = DataGridViewColumnSortMode.NotSortable;
-                                        openDGV.Columns.Add(adjDataCol);
-                                    }
-                                   
-                                    
-                                }
+                                
 
 
                             }
@@ -1305,6 +1697,7 @@ namespace MDB
                     defaultVal = false;
                     //check box is enabled by default
                     DataGridViewCheckBoxCell cbcell = (DataGridViewCheckBoxCell)DGV.Rows[index].Cells[column.Name];
+                    //unsure if this is needed as cbcell is readonly when disabled
                     cbcell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
                 }
                 if (currentData[tableKey][column.Name] == "SubTable")
@@ -1831,6 +2224,7 @@ namespace MDB
 
         internal static Dictionary<int, Dictionary<string, dynamic>> GetTableDataFromDir(string dir)
         {
+
             List<string> tupleKeys = dir.Split('/').ToList<string>();
             //ignore main table name:
             tupleKeys.RemoveAt(0);
@@ -1842,9 +2236,9 @@ namespace MDB
                 string[] strings = tupleKey.Split(',');
                 keys.Add(new Tuple<int, string>(Convert.ToInt32(strings[0]), strings[1]));
             }
-
+            
             var currentDir = currentData[selectedTable][RowEntryRefrence];
-            Console.WriteLine("Get tableData. \n From main table rows:");
+            Console.WriteLine("Get tableData. \n From table rows:");
             foreach (Tuple<int, string> key in keys)
             {
                 Console.WriteLine("Row: " + key.Item1);
@@ -1854,7 +2248,7 @@ namespace MDB
                 //get column
                 currentDir = currentDir[key.Item2];
             }
-
+            Console.WriteLine("Returning... ");
             return currentDir;
 
         }
@@ -1873,8 +2267,10 @@ namespace MDB
             
             DataGridViewCell cell = DGV.Rows[RowIndex].Cells[ColumnIndex];
 
-            
+            //this is a cosmetic change and shouldn't trigger TableMainGridView_CellValueChanged
+            loadingTable = true;
             cell.Value = null;
+            loadingTable = false;
 
             //ignore if already disabled
             if (!cell.ReadOnly)
@@ -1900,6 +2296,7 @@ namespace MDB
                     DataGridViewCheckBoxCell cbcell = (DataGridViewCheckBoxCell)cell;
                     cbcell.FlatStyle = FlatStyle.Popup;
                 }
+                
 
                 //gray out the cell
                 cell.Style.BackColor = Color.Black;
@@ -1962,12 +2359,11 @@ namespace MDB
         internal static bool DoesDataRowCellContainData(KeyValuePair<int, Dictionary<string, dynamic>> KVRow, string ColumnKey)
         {
             Type valType;
-            try
+            if (KVRow.Value[ColumnKey] != null)
             {
                 valType = KVRow.Value[ColumnKey].GetType();
-                
-            }
-            catch
+            }    
+            else
             {
                 valType = null;
             }
@@ -2123,15 +2519,38 @@ namespace MDB
                         //if the selected cell isn't void of data then disable the other column cell and vice versa
                         void disableCol2IfCol1HasData(string Col1, string Col2)
                         {
+                            Console.WriteLine("Row Dat: ");
+                            Console.WriteLine(KVRow.Value.ToString());
+                            Console.WriteLine("DoesDataRowCellContainData Input: ");
+                            if (KVRow.Value[Col1] != null)
+                            {
+                                Console.WriteLine(KVRow.Value[Col1].ToString());
+                            }
+                            else
+                            {
+                                Console.WriteLine("null");
+                            }
+                            Console.WriteLine("Erase/Disable Subject: ");
+                            if (KVRow.Value[Col2] != null)
+                            {
+                                Console.WriteLine(KVRow.Value[Col2].ToString());
+                            }
+                            else
+                            {
+                                Console.WriteLine("null");
+                            }
+                            
+                            
 
                             if (DatabaseFunct.DoesDataRowCellContainData(KVRow, Col1))
                             {
+                                
                                 Type valType;
-                                try
+                                if (KVRow.Value[Col2] != null)
                                 {
                                     valType = KVRow.Value[Col2].GetType();
                                 }
-                                catch
+                                else
                                 {
                                     //val is null and null doesn't have a type so it will catch
                                     valType = null;
@@ -2142,8 +2561,10 @@ namespace MDB
                                 //if subtable
                                 if (valType == typeof(Dictionary<int, Dictionary<string, dynamic>>))
                                 {
-
+                                    
                                     KVRow.Value[Col2].Clear();
+                                    
+
                                     //close the subtable if subtable open
                                     if (openDGVOfTable != null)
                                     {
@@ -2154,6 +2575,8 @@ namespace MDB
                                             //and that open subtable is of selectedColKey
                                             if (Program.openSubTables[openSubTableKey].Item2.Name.EndsWith("," + Col2))
                                             {
+
+
                                                 openSubTableKey.Item1.Controls.Remove(Program.openSubTables[openSubTableKey].Item2);
 
                                                 //close subtable
@@ -2163,10 +2586,11 @@ namespace MDB
                                                 openSubTableKey.Item1.Rows[openSubTableKey.Item2].DividerHeight = 0;
                                             }
                                         }
+
                                     }
                                 }
                                 //if bool
-                                if (valType == typeof(bool))
+                                else if (valType == typeof(bool))
                                 {
                                     KVRow.Value[Col2] = false;
                                 }
@@ -2175,6 +2599,8 @@ namespace MDB
                                 {
                                     KVRow.Value[Col2] = null;
                                 }
+
+                                
 
                                 //disable if dgv table is open
 

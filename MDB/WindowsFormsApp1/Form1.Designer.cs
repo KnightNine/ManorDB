@@ -158,6 +158,7 @@ namespace MDB
             this.tabControl1.Size = new System.Drawing.Size(2517, 100);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            this.tabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabControl1_MouseDown);
             // 
             // panel1
             // 
@@ -191,6 +192,11 @@ namespace MDB
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void TabControl1_MouseClick(object sender, MouseEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -309,11 +315,12 @@ namespace MDB
             colName = _colName;
 
 
-            MenuItem[] options = { new MenuItem() { Name = "Shift Column Left", Text = "Shift Column Left" }, new MenuItem() { Name = "Shift Column Right", Text = "Shift Column Right" }, new MenuItem() { Name = "Delete Column", Text = "Delete Column" }, new MenuItem() { Name = "Adjacent Column Disabler Settings", Text = "Adjacent Column Disabler Settings" , Tag = new dynamic[] {_DGV, colName} } };
+            MenuItem[] options = { new MenuItem() { Name = "Shift Column Left", Text = "Shift Column Left" }, new MenuItem() { Name = "Shift Column Right", Text = "Shift Column Right" }, new MenuItem() { Name = "Rename Column", Text = "Rename Column", Tag = new dynamic[] { _DGV, _colName } }, new MenuItem() { Name = "Delete Column", Text = "Delete Column" }, new MenuItem() { Name = "Adjacent Column Disabler Settings", Text = "Adjacent Column Disabler Settings" , Tag = new dynamic[] {_DGV, _colName} } };
             options[0].Click += new System.EventHandler(shiftLeft);
             options[1].Click += new System.EventHandler(shiftRight);
-            options[2].Click += new System.EventHandler(deleteColumn);
-            options[3].Click += new System.EventHandler(openColumnDisabler);
+            options[2].Click += new System.EventHandler(renameColumn);
+            options[3].Click += new System.EventHandler(deleteColumn);
+            options[4].Click += new System.EventHandler(openColumnDisabler);
 
 
             cMenu.MenuItems.AddRange(options);
@@ -389,7 +396,52 @@ namespace MDB
         }
 
 
+        public static void ShowTableContextMenu(string _tableName)
+        {
+            cMenu.MenuItems.Clear();
 
+
+            MenuItem[] options = { new MenuItem() { Name = "Rename Table", Text = "Rename Table", Tag = _tableName } };
+            options[0].Click += new System.EventHandler(renameTable);
+
+
+            cMenu.MenuItems.AddRange(options);
+            Rectangle screenRectangle = Program.mainForm.RectangleToScreen(Program.mainForm.ClientRectangle);
+
+            int titleHeight = screenRectangle.Top - Program.mainForm.Top;
+
+            cMenu.Show(Program.mainForm, new Point(System.Windows.Forms.Cursor.Position.X - Program.mainForm.Location.X, System.Windows.Forms.Cursor.Position.Y - Program.mainForm.Location.Y - titleHeight));
+
+        }
+
+        private static void renameTable(object sender, System.EventArgs e)
+        {
+            MenuItem senderItem = (MenuItem)sender;
+            string tableName = (string)senderItem.Tag;
+            string[] input = Prompt.ShowDialog("Enter New Table Name:", "Rename \""+ tableName +"\" Table", true, false, null);
+
+            if (input[0] == "T")
+            {
+                DatabaseFunct.ChangeTableName(tableName,input[1]);
+            }
+
+        }
+        
+        private static void renameColumn(object sender, System.EventArgs e)
+        {
+            
+            MenuItem senderMI = sender as MenuItem;
+            dynamic[] dat = senderMI.Tag as dynamic[];
+            DataGridView _DGV = dat[0];
+            string _colName = dat[1];
+
+            string[] input = Prompt.ShowDialog("Enter New Column Name:", "Rename \"" + _colName + "\" Column", true, false, null);
+            
+            if (input[0] == "T")
+            {
+                DatabaseFunct.ChangeColumnName(_colName, input[1],_DGV);
+            }
+        }
 
 
         private static void addColToDisablerArrEvent(object sender, System.EventArgs e)
@@ -440,21 +492,29 @@ namespace MDB
 
         private static void deleteRow(object sender, System.EventArgs e)
         {
-            DatabaseFunct.RemoveRow(DGV, rowIndex);
-            Program.mainForm.RecenterSubTables();
-            cMenu.Dispose();
+
+            var confirmResult = MessageBox.Show("Are you sure to delete row at index " + rowIndex + " ?",
+                                     "Confirm:",
+                                     MessageBoxButtons.YesNo);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                DatabaseFunct.RemoveRow(DGV, rowIndex);
+                Program.mainForm.RecenterSubTables();
+            }
+            
 
 
         }
         private static void shiftLeft(object sender, System.EventArgs e)
         {
             DatabaseFunct.ShiftColumn(colName, DGV, true);
-            cMenu.Dispose();
+            
         }
         private static void shiftRight(object sender, System.EventArgs e)
         {
             DatabaseFunct.ShiftColumn(colName, DGV, false);
-            cMenu.Dispose();
+            
 
         }
 
@@ -470,9 +530,18 @@ namespace MDB
 
         private static void deleteColumn(object sender, System.EventArgs e)
         {
-            DatabaseFunct.RemoveColumn(colName, DGV);
-            Program.mainForm.RecenterSubTables();
-            cMenu.Dispose();
+            var confirmResult = MessageBox.Show("Are you sure to delete "+colName+" Column?",
+                                     "Confirm:",
+                                     MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                DatabaseFunct.RemoveColumn(colName, DGV);
+                Program.mainForm.RecenterSubTables();
+            }
+            
+
+            
+            
         }
 
         

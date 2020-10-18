@@ -211,6 +211,25 @@ namespace MDB
 
         }
 
+        private void tabControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            Console.WriteLine("tabcontrol mouse down");
+            if (e.Button == MouseButtons.Right)
+            {
+                for (int i = 0; i < tabControl1.TabCount; ++i)
+                {
+                    if (tabControl1.GetTabRect(i).Contains(e.Location))
+                    {
+                        //tabs.Controls[i]; // this is your tab
+                        var tableName = tabControl1.Controls[i].Text;
+                        ContextMenuPrompt.ShowTableContextMenu(tableName);
+
+                    }
+                }
+
+            }
+        }
+
         public void TableMainGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             /*if (e.RowIndex < 0) return;
@@ -269,7 +288,7 @@ namespace MDB
                 tableData[rowIndex][colName] = val;
 
 
-                Console.WriteLine("value of entry " + rowIndex + " of column " + colName + " changed to: " + displayVal);
+                Console.WriteLine("value of entry " + rowIndex + " of column \"" + colName + "\" changed to: " + displayVal);
 
                 KeyValuePair<int, Dictionary<string, dynamic>> KVRow = new KeyValuePair<int, Dictionary<string, dynamic>>(rowIndex, tableData[rowIndex]);
                 DatabaseFunct.UpdateStatusOfAllRowCellsInDisablerArrayOfCell(senderDGV, tableKey, KVRow, colName);
