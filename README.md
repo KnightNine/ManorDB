@@ -6,6 +6,8 @@
 Open Source Json Database Manager Made in WinForms that copies <a href = "https://github.com/ncannasse/castle">CastleDB's</a> UI structure.
 </p>
 
+<p>What it looks like:</p>
+<center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/Sample%20Image.PNG" alt="Logo" width="900" > </center>
 
 <p>
 <b>Q:</b> Why did I create this when CastleDB already exists?
