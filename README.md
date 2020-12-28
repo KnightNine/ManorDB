@@ -51,6 +51,7 @@ The game I am working on relies on complex repeating data structures to define i
   There are some minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
+  <li> currently there's a minor issue when hovering the mouse off of a cell being edited, it will lose focus, I need to specify to not alter the table focus until a new subtable is hovered over but not every cell so that this doesn't happen.</li>
   <li> Subtable Button Text contains the data of the first few rows within that subtable so that it is viewable on hover </li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>Image Columns</li>
@@ -83,3 +84,4 @@ The main tables are currently stored in alphabetical order and will reorder them
 <p>
 The data is unindented which i've found might affect other json deserialization methods, in particular, The <a href = "https://godotengine.org/">Godot</a> engine doesn't deserialize unindented json properly as of now, so you can use https://json-indent.com/ to indent the data for that or just to view the database.
 <p/>
+
