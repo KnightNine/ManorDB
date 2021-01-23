@@ -84,4 +84,7 @@ The main tables are currently stored in alphabetical order and will reorder them
 <p>
 The data is unindented which i've found might affect other json deserialization methods, in particular, The <a href = "https://godotengine.org/">Godot</a> engine doesn't deserialize unindented json properly as of now, so you can use https://json-indent.com/ to indent the data for that or just to view the database.
 <p/>
-
+<p>
+while debugging ctrl+c and ctrl+v will throw an exception if done within the node of a subtable.
+run without debugging or build the project to resolve this.
+<p/>
