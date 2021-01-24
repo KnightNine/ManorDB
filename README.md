@@ -51,6 +51,7 @@ The game I am working on relies on complex repeating data structures to define i
   There are some minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
+  <li> Bugfix needed: coppying from a text cell within a subtable using ctrl+c doesn't give the actual text within that cell, unsure as to why but this will need to get fixed soon </li>
   <li> currently there's a minor issue when hovering the mouse off of a cell being edited, it will lose focus, I need to specify to not alter the table focus until a new subtable is hovered over but not every cell so that this doesn't happen.</li>
   <li> Subtable Button Text contains the data of the first few rows within that subtable so that it is viewable on hover </li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
