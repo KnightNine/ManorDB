@@ -10,3 +10,6 @@ C:\Users\Alex\Desktop\MDB.exe.config
 C:\Users\Alex\Desktop\MDB.exe
 C:\Users\Alex\Desktop\MDB.pdb
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.CoreCompileInputs.cache
+C:\Users\Alex\Desktop\MDB Built\MDB.exe.config
+C:\Users\Alex\Desktop\MDB Built\MDB.exe
+C:\Users\Alex\Desktop\MDB Built\MDB.pdb

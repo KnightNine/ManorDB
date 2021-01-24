@@ -595,9 +595,9 @@ namespace MDB
                                     bCell.Style.BackColor = Color.LightGreen;
                                     bCell.Style.SelectionBackColor = Color.LightGreen;
                                 }
-                                else
+                                else if (!bCell.ReadOnly)//change cell to default if not disabled
                                 {
-                                    //change cell to default
+                                    
                                     bCell.FlatStyle = FlatStyle.Standard;
                                     //default style
                                     if ((double)e.RowIndex % 2 == 0)

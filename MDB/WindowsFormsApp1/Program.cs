@@ -1707,6 +1707,7 @@ namespace MDB
                     DataGridViewButtonCell bcell = (DataGridViewButtonCell)DGV.Rows[index].Cells[column.Name];
                     bcell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
                 }
+
                 //add default value to tabledata
                 tableData[index].Add(column.Name, defaultVal);
 
@@ -2055,8 +2056,10 @@ namespace MDB
                     }
                     else if (DGV.Columns[column.Name] is DataGridViewButtonColumn)
                     {
+
                         DataGridViewButtonCell bcell = (DataGridViewButtonCell)DGV.Rows[index].Cells[column.Name];
                         bcell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
+
                     }
 
                     //assign data to column entry
@@ -2175,7 +2178,31 @@ namespace MDB
         }
 
         //the loading of a table's column and rows for the main table and subtables
-        public static bool loadingTable = false;
+
+        private static bool tableLoading = false;
+
+        public static bool loadingTable
+        {
+            get
+            {
+                return tableLoading;
+            }
+            set
+            {
+                if (value)
+                {
+                    Console.WriteLine("Loading Table Data");
+                }
+                else
+                {
+                    Console.WriteLine("Done Loading Table Data");
+                }
+
+                tableLoading = value;
+            }
+        }
+
+
         internal static void LoadTable(DataGridView DGV)
         {
             string tableDir = DGV.Name;
@@ -2268,9 +2295,21 @@ namespace MDB
             DataGridViewCell cell = DGV.Rows[RowIndex].Cells[ColumnIndex];
 
             //this is a cosmetic change and shouldn't trigger TableMainGridView_CellValueChanged
-            loadingTable = true;
+
+            //also don't want this prematurely ending the loading sequence
+            bool is_already_loading = loadingTable;
+            if (!is_already_loading)
+            {
+                loadingTable = true;
+            }
+            
             cell.Value = null;
-            loadingTable = false;
+
+            if (!is_already_loading)
+            {
+               loadingTable = false;
+            }
+               
 
             //ignore if already disabled
             if (!cell.ReadOnly)
@@ -2283,6 +2322,9 @@ namespace MDB
                 {
 
                     DataGridViewButtonCell bcell = (DataGridViewButtonCell)cell;
+                    Console.WriteLine("bcell.Tag...");
+                    Console.WriteLine(bcell.Tag);
+                    Console.WriteLine(bcell.Tag.GetType());
                     ((Dictionary<string, dynamic>)bcell.Tag)["Enabled"] = false;
                     bcell.FlatStyle = FlatStyle.Popup;
                 }
