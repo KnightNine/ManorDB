@@ -57,6 +57,7 @@ The game I am working on relies on complex repeating data structures to define i
   <li>Image Columns</li>
   <li>Undo/Redo</li>
   <li>Int Restriction Setting on Numeric Column</li>
+  <li> an option to set a subtable to be restricted to a number of rows </li>
   <li>A "Foreign Key Refrence Primary Key" column (to base a table around foreign keys that can't have duplicate refrences)</li>
   <li>A "force adjecent cell to value when cell is filled" setting, similar to the feature that disallows two cells from being filled at the same time, except instead of disabling the other cell entirely, the cell is set to a specific value and becomes read only. </li>
   <li>"File Regex Refrence Column": What if you wanted to refrence functions of a script? wouldn't it be much more convenient to have the database manager scan through that script file and update it's data automatically. For each column you'd need to define layers of regex on what you want to search for within the script file and the table would create rows and fill in the extracted data for you.</li>
