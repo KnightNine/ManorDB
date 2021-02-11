@@ -15,7 +15,7 @@ Open Source Json Database Manager Made in WinForms that copies <a href = "https:
 <p>
 <b>A:</b> Because CastleDB has/had bugs that creep in when the database reaches a certain level of complexity which made the 3000 line json file I had unreadable at seemingly random, happened 3 times before I decided not to stick around and find out what the exact issue was and just make my own DB manager that actually works and so I won't have to sift through 3000 lines of json script to fix the issue as there is no indication of what line the read error occurred at.
 
-The game I am working on relies on complex repeating data structures to define it's entities therefore I find that this Database manager would be particularly useful to me.
+The game I am working on relies on complex repeating data structures to define its entities therefore I find that this Database manager would be particularly useful to me.
 </p>
 <hr>
 <h4>FeatureList:</h4>
@@ -59,7 +59,7 @@ The game I am working on relies on complex repeating data structures to define i
   <li> an option to set a subtable to be restricted to a number of rows </li>
   <li>A "Foreign Key Refrence Primary Key" column (to base a table around foreign keys that can't have duplicate refrences)</li>
   <li>A "force adjecent cell to value when cell is filled" setting, similar to the feature that disallows two cells from being filled at the same time, except instead of disabling the other cell entirely, the cell is set to a specific value and becomes read only. </li>
-  <li>"File Regex Refrence Column": What if you wanted to refrence functions of a script? wouldn't it be much more convenient to have the database manager scan through that script file and update it's data automatically. For each column you'd need to define layers of regex on what you want to search for within the script file and the table would create rows and fill in the extracted data for you.</li>
+  <li>"File Regex Refrence Column": What if you wanted to refrence functions of a script? wouldn't it be much more convenient to have the database manager scan through that script file and update its data automatically. For each column you'd need to define layers of regex on what you want to search for within the script file and the table would create rows and fill in the extracted data for you.</li>
   <li>Key Shortcuts</li>
   <li>Table Shifting (re-ordering of Tables)</li>
   <li>Further Organization of Code</li>
@@ -72,7 +72,7 @@ The game I am working on relies on complex repeating data structures to define i
 <hr>
 <h4>Accessing The Database:</h4>
 <p>
-All data regarding your row entries is stored within the MDB file's <b>main table</b> name `Database[*tableName*]["@RowEntries"][*index*]` and from there that row's column entries are accessed via `[*columnName*]` . If that data is a Subtable, it's row data is accessed in the same fashion through `[*index*]`.
+All data regarding your row entries is stored within the MDB file's <b>main table</b> name `Database[*tableName*]["@RowEntries"][*index*]` and from there that row's column entries are accessed via `[*columnName*]` . If that data is a Subtable, its row data is accessed in the same fashion through `[*index*]`.
 <p/>
 <h5>Take Note:</h5>
 <p>
