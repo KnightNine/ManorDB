@@ -38,12 +38,22 @@ namespace MDB
             panel1.AutoScrollPosition = new Point(Math.Abs(panel1.AutoScrollPosition.X), Math.Abs(scrollValue.Y));
         }
 
+        private DataGridView lastFocusedDGV = null;
+
+        //focus on cell hover:
         public void TableMainGridView_Focus(object sender, DataGridViewCellEventArgs e)
         {
             DataGridView senderDGV = sender as DataGridView;
-            //if not in focus already
-            if (!senderDGV.Focused)
+
+            //if cell content was in focus instead, winforms doesn't know if it was from this DGV or not
+            //so instead of checking Focused, i'll check if the last focused DGV was this one
+            //the ideal solution would be to disable this all together when cell content is brought into focus, but i'm unsure of when that happens so this will do for now.
+
+            if (lastFocusedDGV != senderDGV)
             {
+
+                lastFocusedDGV = senderDGV;
+
                 //store scroll value for later
                 scrollValue = panel1.AutoScrollPosition;
 
@@ -538,9 +548,17 @@ namespace MDB
         }
 
 
+        private DataGridView lastDGVClicked = null;
+
         public void TableMainGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            
+            DataGridView senderDGV = sender as DataGridView;
+            //deselect cells from last selected table (so that their selection doesn't intervene with copy and paste)
+            if (lastDGVClicked != null && lastDGVClicked != senderDGV)
+            {
+                lastDGVClicked.ClearSelection();
+            }
+            lastDGVClicked = senderDGV;
 
         }
 
