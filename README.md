@@ -82,7 +82,7 @@ Note that for all cell types besides subtables and bools, their value in the dat
 The main tables are currently stored in alphabetical order and will reorder themselves upon reloading the database. 
 </p>
 <p>
-The data is unindented which i've found might affect other json deserialization methods, in particular, The <a href = "https://godotengine.org/">Godot</a> engine doesn't deserialize unindented json properly as of now, so you can use https://json-indent.com/ to indent the data for that or just to view the database.
+The data is unindented which i've found might affect other json deserialization methods, so you can use https://json-indent.com/ to indent the data for that or just to view the database.
 <p/>
 <p>
 while debugging ctrl+c and ctrl+v will throw an exception if done within the node of a subtable.
