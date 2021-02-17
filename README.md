@@ -7,7 +7,11 @@ Open Source Json Database Manager Made in WinForms that copies <a href = "https:
 </p>
 
 <p>What it looks like:</p>
-<center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/Sample%20Image.PNG" alt="Logo" width="900" > </center>
+<p>New Dark Mode (Default)</p>
+<center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/darkmode.PNG" alt="Logo" width="900" > </center>
+<p>Light Mode (change "defaultTheme" string in ColorThemes.cs to "Light" if you want this)</p>
+<center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/lightmode.PNG" alt="Logo" width="900" > </center>
+
 
 <p>
 <b>Q:</b> Why did I create this when CastleDB already exists?
@@ -51,7 +55,6 @@ The game I am working on relies on complex repeating data structures to define i
   There are some minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
-  <li> Subtable Button Text contains the data of the first few rows within that subtable so that it is viewable on hover </li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>Image Columns</li>
   <li>Undo/Redo</li>
