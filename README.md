@@ -6,7 +6,7 @@
 Open Source Json Database Manager Made in WinForms that copies <a href = "https://github.com/ncannasse/castle">CastleDB's</a> UI structure.
 </p>
 
-<p>What it looks like:</p>
+<h4>What it looks like:</h4>
 <p>New Dark Mode (Default)</p>
 <center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/darkmode.PNG" alt="Logo" width="900" > </center>
 <p>Light Mode (change "defaultTheme" string in ColorThemes.cs to "Light" if you want this)</p>
