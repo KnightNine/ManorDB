@@ -52,6 +52,7 @@ namespace MDB
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,8 +69,8 @@ namespace MDB
             this.hideUnhideColumnsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(2517, 49);
-            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Size = new System.Drawing.Size(2517, 60);
+            this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
@@ -79,7 +80,7 @@ namespace MDB
             this.appendFileToolStripMenuItem,
             this.saveAsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 45);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 56);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
@@ -106,44 +107,46 @@ namespace MDB
             // newTableToolStripMenuItem
             // 
             this.newTableToolStripMenuItem.Name = "newTableToolStripMenuItem";
-            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(179, 45);
+            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(179, 56);
             this.newTableToolStripMenuItem.Text = "New Table";
             this.newTableToolStripMenuItem.Click += new System.EventHandler(this.newTableToolStripMenuItem_Click);
             // 
             // removeTableToolStripMenuItem
             // 
             this.removeTableToolStripMenuItem.Name = "removeTableToolStripMenuItem";
-            this.removeTableToolStripMenuItem.Size = new System.Drawing.Size(226, 45);
+            this.removeTableToolStripMenuItem.Size = new System.Drawing.Size(226, 56);
             this.removeTableToolStripMenuItem.Text = "Remove Table";
             this.removeTableToolStripMenuItem.Click += new System.EventHandler(this.removeTableToolStripMenuItem_Click);
             // 
             // newColumnToolStripMenuItem
             // 
             this.newColumnToolStripMenuItem.Name = "newColumnToolStripMenuItem";
-            this.newColumnToolStripMenuItem.Size = new System.Drawing.Size(214, 45);
+            this.newColumnToolStripMenuItem.Size = new System.Drawing.Size(214, 56);
             this.newColumnToolStripMenuItem.Text = "New Column";
             this.newColumnToolStripMenuItem.Click += new System.EventHandler(this.newColumnToolStripMenuItem_Click);
             // 
             // newRowToolStripMenuItem
             // 
             this.newRowToolStripMenuItem.Name = "newRowToolStripMenuItem";
-            this.newRowToolStripMenuItem.Size = new System.Drawing.Size(167, 45);
+            this.newRowToolStripMenuItem.Size = new System.Drawing.Size(167, 56);
             this.newRowToolStripMenuItem.Text = "New Row";
             this.newRowToolStripMenuItem.Click += new System.EventHandler(this.newRowToolStripMenuItem_Click);
             // 
             // hideUnhideColumnsToolStripMenuItem
             // 
             this.hideUnhideColumnsToolStripMenuItem.Name = "hideUnhideColumnsToolStripMenuItem";
-            this.hideUnhideColumnsToolStripMenuItem.Size = new System.Drawing.Size(337, 45);
+            this.hideUnhideColumnsToolStripMenuItem.Size = new System.Drawing.Size(337, 56);
             this.hideUnhideColumnsToolStripMenuItem.Text = "Hide/Unhide Columns";
             this.hideUnhideColumnsToolStripMenuItem.Click += new System.EventHandler(this.hideUnhideColumnsToolStripMenuItem_Click);
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 49);
+            this.label1.Location = new System.Drawing.Point(0, 60);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(864, 69);
             this.label1.TabIndex = 1;
@@ -152,26 +155,41 @@ namespace MDB
             // tabControl1
             // 
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tabControl1.Location = new System.Drawing.Point(0, 991);
+            this.tabControl1.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+            this.tabControl1.Font = new System.Drawing.Font("Arial", 8.1F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControl1.Location = new System.Drawing.Point(0, 1041);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(2517, 100);
-            this.tabControl1.TabIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(2517, 50);
+            this.tabControl1.TabIndex = 1;
+            this.tabControl1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TabControl1_DrawItem);
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             this.tabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabControl1_MouseDown);
             // 
             // panel1
             // 
-            this.panel1.AutoScroll = true;
             this.panel1.AutoSize = true;
+            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel1.BackColor = System.Drawing.Color.Transparent;
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 49);
+            this.panel1.Location = new System.Drawing.Point(982, 392);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(2517, 942);
+            this.panel1.Size = new System.Drawing.Size(0, 0);
             this.panel1.TabIndex = 2;
             this.panel1.Visible = false;
-            this.panel1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TableMainGridView_Scroll);
+            this.panel1.SizeChanged += new System.EventHandler(this.Panel_SizeChanged);
+            this.panel1.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.Panel_Scroll);
+            // 
+            // vScrollBar1
+            // 
+            this.vScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.vScrollBar1.LargeChange = 1;
+            this.vScrollBar1.Location = new System.Drawing.Point(2474, 60);
+            this.vScrollBar1.Maximum = 0;
+            this.vScrollBar1.MaximumSize = new System.Drawing.Size(43, 0);
+            this.vScrollBar1.Name = "vScrollBar1";
+            this.vScrollBar1.Size = new System.Drawing.Size(43, 981);
+            this.vScrollBar1.TabIndex = 1;
+            this.vScrollBar1.ValueChanged += new System.EventHandler(this.ScrollBar_ValueChanged);
             // 
             // Form1
             // 
@@ -179,10 +197,12 @@ namespace MDB
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.ClientSize = new System.Drawing.Size(2517, 1091);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.label1);
+            this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
@@ -192,6 +212,50 @@ namespace MDB
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        
+        private void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            var tab = tabControl1.TabPages[e.Index];
+            var tabRect = tabControl1.GetTabRect(e.Index);
+            //height so that rect is always touching base of window
+            int extraRectHeight = 10;
+
+            //these offsets don't seem to work, oh well (can't overwrite the bordercolor of tabs)
+            int yOffset = -10;
+            int extraRectWidth = 5;
+
+
+            Console.WriteLine(tabRect.ToString());
+
+            
+            if (e.Index == tabControl1.SelectedIndex)
+            {
+                //tab color when selected
+                e.Graphics.FillRectangle(ColorThemes.Themes[ColorThemes.currentTheme]["TabSelectedBack"], new Rectangle(e.Bounds.X, e.Bounds.Y + yOffset, e.Bounds.Width, e.Bounds.Height + extraRectHeight));
+                TextRenderer.DrawText(e.Graphics, tab.Text, tabControl1.Font, tabRect, ColorThemes.Themes[ColorThemes.currentTheme]["TabSelectedFore"], TextFormatFlags.VerticalCenter);
+            }
+            else
+            {
+                //tab color when not selected
+                e.Graphics.FillRectangle(ColorThemes.Themes[ColorThemes.currentTheme]["TabBack"], new Rectangle(e.Bounds.X,e.Bounds.Y + yOffset, e.Bounds.Width+ extraRectWidth, e.Bounds.Height + extraRectHeight));
+                TextRenderer.DrawText(e.Graphics, tab.Text, tabControl1.Font, tabRect, ColorThemes.Themes[ColorThemes.currentTheme]["TabFore"], TextFormatFlags.VerticalCenter);
+            }
+            
+            //Pen p = new Pen(Color.White);
+            
+
+
+            //background from left
+
+            Rectangle lasttabrect = tabControl1.GetTabRect(tabControl1.TabPages.Count - 1);
+            Rectangle background = new Rectangle();
+            background.Location = new Point(lasttabrect.Right, 0);
+
+            //pad the rectangle to cover the 1 pixel line between the top of the tabpage and the start of the tabs
+            background.Size = new Size(tabControl1.Right - background.Left, lasttabrect.Height + 1);
+            e.Graphics.FillRectangle(ColorThemes.Themes[ColorThemes.currentTheme]["TabControlBack"], background);
         }
 
         private void TabControl1_MouseClick(object sender, MouseEventArgs e)
@@ -220,6 +284,7 @@ namespace MDB
 
         private ToolStripMenuItem appendFileToolStripMenuItem;
         public ToolStripMenuItem hideUnhideColumnsToolStripMenuItem;
+        public VScrollBar vScrollBar1;
     }
 
 
@@ -238,6 +303,8 @@ namespace MDB
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 Text = caption,
                 StartPosition = FormStartPosition.CenterScreen,
+                BackColor = ColorThemes.Themes[ColorThemes.currentTheme]["FormBack"],
+                ForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["FormFore"],
             };
 
 

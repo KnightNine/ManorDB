@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 
 namespace MDB
@@ -20,7 +21,7 @@ namespace MDB
         //indent value for subtable depth
         static int indentationValue = 10;
         //stored scroll point used to retain the panel1 scroll position when contents of panel are redrawn
-        Point scrollValue;
+        //Point scrollValue;
 
 
         
@@ -28,14 +29,6 @@ namespace MDB
         public Form1()
         {
             InitializeComponent();
-        }
-
-
-        void setToLastStoredScrollValue()
-        {
-            //adjust scroll position to where it was previously https://support.microsoft.com/en-us/help/829417/the-scroll-position-is-not-maintained-in-an-auto-scrollable-panel-cont 
-            Console.WriteLine("scroll val was: "+ panel1.AutoScrollPosition.Y.ToString() + " but changed back to:"+ scrollValue.Y.ToString());
-            panel1.AutoScrollPosition = new Point(Math.Abs(panel1.AutoScrollPosition.X), Math.Abs(scrollValue.Y));
         }
 
         private DataGridView lastFocusedDGV = null;
@@ -49,18 +42,30 @@ namespace MDB
             //so instead of checking Focused, i'll check if the last focused DGV was this one
             //the ideal solution would be to disable this all together when cell content is brought into focus, but i'm unsure of when that happens so this will do for now.
 
+            
+
             if (lastFocusedDGV != senderDGV)
             {
-
+                Console.WriteLine("TMGV Focus");
                 lastFocusedDGV = senderDGV;
 
-                //store scroll value for later
-                scrollValue = panel1.AutoScrollPosition;
-
                 senderDGV.Focus();
-                setToLastStoredScrollValue();
             }
             
+        }
+
+
+        public void TableMainGridView_Got_Focus(object sender, EventArgs e)
+        {
+            
+            DataGridView senderDGV = sender as DataGridView;
+            
+        }
+
+        public void TableMainGridView_Click(object sender, EventArgs e)
+        {
+            DataGridView senderDGV = sender as DataGridView;
+            senderDGV.Focus();
         }
 
 
@@ -91,7 +96,7 @@ namespace MDB
         private void newColumnToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //store scroll value for later
-            scrollValue = panel1.AutoScrollPosition;
+            //scrollValue = panel1.AutoScrollPosition;
 
             if (DatabaseFunct.selectedTable != "")
             {
@@ -100,7 +105,6 @@ namespace MDB
                 if (input[0] == "T")
                 {
                     DatabaseFunct.AddColumn(input[1], input[2], false, Program.mainForm.TableMainGridView);
-                    setToLastStoredScrollValue();
                 }
                 
             }
@@ -134,15 +138,12 @@ namespace MDB
 
         private void newRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //store scroll value for later
-            scrollValue = panel1.AutoScrollPosition;
 
             if (DatabaseFunct.selectedTable != "")
             {
                 if (Program.mainForm.TableMainGridView.Columns.Count > 0)
                 {
                     DatabaseFunct.AddRow(Program.mainForm.TableMainGridView,false,0);
-                    setToLastStoredScrollValue();
                 }
                 else
                 {
@@ -155,13 +156,12 @@ namespace MDB
             }
         }
 
-        public void subTableNewColumnToolStripMenuItem_Click(object sender, EventArgs e)
+        public void subTableNewColumnButton_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem senderTSMI = sender as ToolStripMenuItem;
-            DataGridView senderDGV = senderTSMI.GetCurrentParent().Parent as DataGridView;
+            Button senderButton = sender as Button;
+            DataGridView senderDGV = senderButton.Parent as DataGridView;
 
-            //store scroll value for later
-            scrollValue = panel1.AutoScrollPosition;
+            
 
             if (DatabaseFunct.selectedTable != "")
             {
@@ -171,7 +171,6 @@ namespace MDB
                 if (input[0] == "T")
                 {
                     DatabaseFunct.AddColumn(input[1], input[2], false, senderDGV);
-                    setToLastStoredScrollValue();
                 }
                 
 
@@ -185,21 +184,17 @@ namespace MDB
 
 
 
-        public void subTableNewRowToolStripMenuItem_Click(object sender, EventArgs e)
+        public void subTableNewRowButton_Click(object sender, EventArgs e)
         {
 
-            ToolStripMenuItem senderTSMI = sender as ToolStripMenuItem;
-            DataGridView senderDGV = senderTSMI.GetCurrentParent().Parent as DataGridView;
-
-            //store scroll value for later
-            scrollValue = panel1.AutoScrollPosition;
+            Button senderButton = sender as Button;
+            DataGridView senderDGV = senderButton.Parent as DataGridView;
 
             if (DatabaseFunct.selectedTable != "")
             {
                 if (senderDGV.Columns.Count > 0)
                 {
                     DatabaseFunct.AddRow(senderDGV, false, 0);
-                    setToLastStoredScrollValue();
                 }
                 else
                 {
@@ -276,7 +271,7 @@ namespace MDB
             {
 
                 //validate input of column type and return dynamic type var:
-                dynamic val = ColumnTypes.ValidateInput(e, senderDGV);
+                dynamic val = ColumnTypes.ValidateCellInput(e, senderDGV);
                 string displayVal = Convert.ToString(val);
 
 
@@ -311,14 +306,14 @@ namespace MDB
 
         public void TableMainGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            setToLastStoredScrollValue();
+            
         }
 
         public void TableMainGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             //scroll value here is re-added after cellvaluechanged
             //store scroll value for later
-            scrollValue = panel1.AutoScrollPosition;
+            //scrollValue = panel1.AutoScrollPosition;
 
             DataGridView senderDGV = sender as DataGridView;
             if (e.Button == MouseButtons.Right)
@@ -609,18 +604,18 @@ namespace MDB
                                 if (cell.ColumnIndex == selectedColIndex)
                                 {
                                     //change cell to where color is visible
-                                    bCell.FlatStyle = FlatStyle.Popup;
+                                    //bCell.FlatStyle = FlatStyle.Popup;
                                     bCell.Style.BackColor = Color.LightGreen;
                                     bCell.Style.SelectionBackColor = Color.LightGreen;
                                 }
                                 else if (!bCell.ReadOnly)//change cell to default if not disabled
                                 {
                                     
-                                    bCell.FlatStyle = FlatStyle.Standard;
+                                    //bCell.FlatStyle = FlatStyle.Standard;
                                     //default style
                                     if ((double)e.RowIndex % 2 == 0)
                                     {
-                                        bCell.Style.BackColor = senderDGV.DefaultCellStyle.BackColor;
+                                        bCell.Style.BackColor = senderDGV.RowsDefaultCellStyle.BackColor;
                                     }
                                     else
                                     {
@@ -641,7 +636,7 @@ namespace MDB
                     DatabaseFunct.loadingTable = true;
 
                     //store scroll value for later
-                    scrollValue = panel1.AutoScrollPosition;
+                    //scrollValue = panel1.AutoScrollPosition;
                     
 
                     Tuple<DataGridView, int> subTableKey = new Tuple<DataGridView, int>(senderDGV, e.RowIndex);
@@ -663,11 +658,11 @@ namespace MDB
                         DataGridView newDGV = Program.GetGridView();
                         //-------------------------------------------------setting edits-----
                         newDGV.Dock = DockStyle.None;
-
+                        
 
                         newDGV.Name = senderDGV.Name + "/" + e.RowIndex.ToString() + "," + senderDGV.Columns[e.ColumnIndex].Name;
                         //-------------------------------------------------------------------
-                        MenuStrip newMenuStrip = Program.GetSubMenuStrip();
+                        Button[] newButtonArr = Program.GetSubTableButtons();
 
                         //add newdgv to parent
                         senderDGV.Controls.Add(newDGV);
@@ -675,7 +670,11 @@ namespace MDB
                         DatabaseFunct.LoadTable(newDGV);
 
                         //add menu strip to new dgv
-                        newDGV.Controls.Add(newMenuStrip);
+                        foreach (Button b in newButtonArr)
+                        {
+                            newDGV.Controls.Add(b);
+                        }
+                        
 
                         //add to open subtables
                         Program.openSubTables.Add(subTableKey, new Tuple<string, DataGridView>(senderDGV.Columns[e.ColumnIndex].Name, newDGV));
@@ -696,6 +695,11 @@ namespace MDB
                         //change color of all to default
                         colorTabOfOpenTable(-1);
 
+                        //update displayValue of button cell
+                        Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[e.RowIndex][senderDGV.Columns[e.ColumnIndex].Name];
+
+                        selcell.Value = ColumnTypes.GetSubTableCellDisplay(subtableData, senderDGV.Columns[e.ColumnIndex].Name, tableKey);
+
                     }
                     RecenterSubTables();
                     DatabaseFunct.loadingTable = false;
@@ -713,13 +717,86 @@ namespace MDB
 
         public void MainForm_Resize(object sender, EventArgs e)
         {
+            UpdateScrollBar();
             RecenterSubTables();
         }
 
-        public void TableMainGridView_Scroll(object sender, ScrollEventArgs e)
+        public void Panel_SizeChanged(object sender,EventArgs e)
         {
-            //RecenterSubTables();
+            UpdateScrollBar();
+            Console.WriteLine("size_changed");
         }
+
+        //scrolling from within the panel
+        public void Panel_Scroll(object sender, MouseEventArgs e)
+        {
+            
+            int x = vScrollBar1.Value + 0;
+            if (e.Delta > 0)
+            {
+                //up
+                x -= 1;
+                if (x < 0)
+                {
+                    x = 0;
+                }
+            }
+            else
+            {
+                //down
+                x += 1;
+
+                if (x > vScrollBar1.Maximum)
+                {
+                    x = vScrollBar1.Maximum;
+                }
+            }
+
+            vScrollBar1.Value = x;
+
+
+
+        }
+        
+
+        //sensitivity = pixels shifted per scroll value
+        const double scrollSensitivity = 10;
+        public void UpdateScrollBar()
+        {
+            int panelHeight = panel1.Size.Height;
+            int windowHeight = ClientRectangle.Height;
+            int space = (windowHeight - tabControl1.Height) - menuStrip1.Height;
+
+
+            if (panelHeight > space)
+            {
+                vScrollBar1.Visible = true;
+                int maxRange = panelHeight - space;
+                vScrollBar1.Maximum = (int)(maxRange / scrollSensitivity);
+
+            }
+            else
+            {
+                vScrollBar1.Maximum = 0;
+                vScrollBar1.Visible = false;
+            }
+
+            //if the scroll value changes due to maximum change
+            SetPanelToScrollValue();
+        }
+
+
+        public void ScrollBar_ValueChanged(object sender, EventArgs e)
+        {
+            SetPanelToScrollValue();
+        }
+
+        public void SetPanelToScrollValue()
+        {
+            panel1.Location = new Point(0, menuStrip1.Height - (int)(vScrollBar1.Value * scrollSensitivity));
+            Console.WriteLine("scrollval: " + vScrollBar1.Value.ToString() + "// panel location: "+ panel1.Location.ToString());
+        }
+
         public void RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
             //RecenterSubTables();
@@ -826,7 +903,7 @@ namespace MDB
             }
 
             Program.mainForm.TableMainGridView.Height = (int)GetDataGridViewHeightAtRow(Program.mainForm.TableMainGridView, -1) + 5;
-            Program.mainForm.TableMainGridView.Width = panel1.Width - SystemInformation.VerticalScrollBarWidth;
+            Program.mainForm.TableMainGridView.Width = ClientRectangle.Width - (vScrollBar1.Visible ? vScrollBar1.Width : 0);
 
             //Then move tables into position
             foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
@@ -845,12 +922,12 @@ namespace MDB
                 //adjust relative to TableMainGridView scroll
                 subDGV.Location = new Point(xOffset, (int)(row != 0 ? GetDataGridViewHeightAtRow(parentDGV, row - 1) : subDGV.ColumnHeadersHeight) + parentDGV.RowTemplate.Height);//- Program.mainForm.TableMainGridView.VerticalScrollingOffset);
 
-                subDGV.Width = panel1.Width - SystemInformation.VerticalScrollBarWidth - xOffset;
+                subDGV.Width = ClientRectangle.Width - (vScrollBar1.Visible ? vScrollBar1.Width : 0) - xOffset;
 
             }
 
-            setToLastStoredScrollValue();
-
+            //setToLastStoredScrollValue();
+            
 
 
         }
@@ -923,7 +1000,7 @@ namespace MDB
 
             
         }*/
-        
+
 
     }
     
