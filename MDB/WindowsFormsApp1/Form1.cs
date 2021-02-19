@@ -34,7 +34,7 @@ namespace MDB
         private DataGridView lastFocusedDGV = null;
 
         //focus on cell hover:
-        public void TableMainGridView_Focus(object sender, DataGridViewCellEventArgs e)
+        public void TableMainGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
             DataGridView senderDGV = sender as DataGridView;
 
@@ -46,6 +46,8 @@ namespace MDB
 
             if (lastFocusedDGV != senderDGV)
             {
+                    
+
                 Console.WriteLine("TMGV Focus");
                 lastFocusedDGV = senderDGV;
 
@@ -65,7 +67,7 @@ namespace MDB
         public void TableMainGridView_Click(object sender, EventArgs e)
         {
             DataGridView senderDGV = sender as DataGridView;
-            senderDGV.Focus();
+            
         }
 
 
@@ -551,6 +553,7 @@ namespace MDB
             //deselect cells from last selected table (so that their selection doesn't intervene with copy and paste)
             if (lastDGVClicked != null && lastDGVClicked != senderDGV)
             {
+                Console.WriteLine("clearing last DGV selection");
                 lastDGVClicked.ClearSelection();
             }
             lastDGVClicked = senderDGV;
@@ -694,10 +697,10 @@ namespace MDB
                         senderDGV.Rows[e.RowIndex].DividerHeight = 0;
                         //change color of all to default
                         colorTabOfOpenTable(-1);
-
+                        
                         //update displayValue of button cell
                         Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[e.RowIndex][senderDGV.Columns[e.ColumnIndex].Name];
-
+                        
                         selcell.Value = ColumnTypes.GetSubTableCellDisplay(subtableData, senderDGV.Columns[e.ColumnIndex].Name, tableKey);
 
                     }
@@ -794,7 +797,6 @@ namespace MDB
         public void SetPanelToScrollValue()
         {
             panel1.Location = new Point(0, menuStrip1.Height - (int)(vScrollBar1.Value * scrollSensitivity));
-            Console.WriteLine("scrollval: " + vScrollBar1.Value.ToString() + "// panel location: "+ panel1.Location.ToString());
         }
 
         public void RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)

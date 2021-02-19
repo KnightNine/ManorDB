@@ -161,10 +161,9 @@ namespace MDB
             TableMainGridView.RowsAdded += new DataGridViewRowsAddedEventHandler(mainForm.RowsAdded);
             TableMainGridView.CellPainting += new DataGridViewCellPaintingEventHandler(mainForm.TableMainGridView_CellPainting);
             TableMainGridView.CellEndEdit += new DataGridViewCellEventHandler(mainForm.TableMainGridView_CellEndEdit);
-            TableMainGridView.CellMouseEnter += new DataGridViewCellEventHandler(mainForm.TableMainGridView_Focus);
+            TableMainGridView.CellMouseEnter += new DataGridViewCellEventHandler(mainForm.TableMainGridView_CellMouseEnter);
             TableMainGridView.GotFocus += new EventHandler(mainForm.TableMainGridView_Got_Focus);
             TableMainGridView.Click += new EventHandler(mainForm.TableMainGridView_Click);
-            TableMainGridView.CellEnter += new DataGridViewCellEventHandler(mainForm.TableMainGridView_Focus);
 
             DoubleBuffered(TableMainGridView, true);
 

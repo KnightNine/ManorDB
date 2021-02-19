@@ -227,7 +227,7 @@ namespace MDB
             int extraRectWidth = 5;
 
 
-            Console.WriteLine(tabRect.ToString());
+            //Console.WriteLine(tabRect.ToString());
 
             
             if (e.Index == tabControl1.SelectedIndex)
