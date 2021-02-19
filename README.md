@@ -53,6 +53,7 @@ The game I am working on relies on complex repeating data structures to define i
   There are some minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
+  <li>Bugfix needed: the arrow keys within subtables seem to prioritize dataGridView navigation of the parent table over the table that is actually in focus, meaning they don't work for text navigation, i hope theres a fix without having to rework the entire structure of how my DataGridViews are organized.</li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>Image Columns</li>
   <li>Undo/Redo</li>
