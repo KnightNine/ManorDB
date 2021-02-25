@@ -1147,7 +1147,7 @@ namespace MDB
                         cell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
 
                         //set checkbox state
-                        var cellVal = cell.TrueValue;
+                        var cellVal = cell.FalseValue;
                         if (value)
                         {
                             cellVal = cell.TrueValue;
