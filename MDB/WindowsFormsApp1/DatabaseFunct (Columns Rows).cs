@@ -618,6 +618,7 @@ namespace MDB
                         if (colType == "Foreign Key Refrence")
                         {
                             string refDat = currentData[tableKey][colName + RefrenceColumnKeyExt];
+                            //add new entry
                             currentData[tableKey][newColName + RefrenceColumnKeyExt] = refDat;
                             //remove old entry
                             currentData[tableKey].Remove(colName + RefrenceColumnKeyExt);
@@ -626,14 +627,16 @@ namespace MDB
                         else if (colType == "Parent Subtable Foreign Key Refrence")
                         {
                             string refDat = currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt];
+                            //add new entry 
                             currentData[tableKey][newColName + ParentSubTableRefrenceColumnKeyExt] = refDat;
                             //remove old entry
                             currentData[tableKey].Remove(colName + ParentSubTableRefrenceColumnKeyExt);
 
                         }
-                        //rename all data branching from the subtable if it is a subtable
+                        //rename all data branching from the subtable if it is a subtable column being renamed
                         else if (colType == "SubTable")
                         {
+
                             List<string> keysToRemove = new List<string>();
                             SortedDictionary<string, dynamic> renamedEntries = new SortedDictionary<string, dynamic>();
 
@@ -643,19 +646,23 @@ namespace MDB
 
                             renamedEntries[tableKey + "/" + newColName] = currentData[tableKey + "/" + colName];
 
+                            string oldStart = tableKey + "/" + colName + "/";
+                            string newStart = tableKey + "/" + newColName + "/";
+
                             //rename all sub tables below it
                             foreach (KeyValuePair<string, dynamic> tableKV in currentData)
                             {
                                 //start with tables that begin with this subtable directory 
-                                if (tableKV.Key.StartsWith(tableKey + "/" + colName + "/"))
+                                if (tableKV.Key.StartsWith(oldStart))
                                 {
-                                    string newStart = tableKey + "/" + newColName + "/";
-                                    string newKey = newStart + tableKV.Key.Remove(0, newStart.Length);
+                                    
+                                    //remove old starting directory from the old key string and replace it with the new start the get the key that will be used
+                                    string newKey = newStart + tableKV.Key.Remove(0, oldStart.Length);
                                     renamedEntries[newKey] = tableKV.Value;
 
                                     keysToRemove.Add(tableKV.Key);
                                 }
-                                //look through all keys within table that refrence to this subtable
+                                //look through all keys within table that refrence to this subtable via a ParentSubTableRefrenceColumn
                                 if (tableKV.Key.StartsWith(tableKey + "/") || tableKV.Key == tableKey)
                                 {
                                     Console.WriteLine("Searching for subtable refrence columns to alter directories in: " + tableKV.Key);
@@ -665,14 +672,13 @@ namespace MDB
                                         {
                                             bool added = false;
 
-                                            if (KV.Value.StartsWith(tableKey + "/" + colName + "/"))
+                                            if (KV.Value.StartsWith(oldStart))
                                             {
-                                                string newStart = tableKey + "/" + newColName + "/";
-                                                string newValue = newStart + tableKV.Value.Remove(0, newStart.Length);
+                                                string newValue = newStart + tableKV.Value.Remove(0, oldStart.Length);
                                                 parentSubtableRefrenceEntries.Add(new dynamic[] { tableKV.Key, KV.Key, newValue });
                                                 added = true;
                                             }
-                                            else if (KV.Value == tableKey + "/" + colName)
+                                            else if (KV.Value == tableKey + "/" + colName) //if refrencing this table directly
                                             {
 
                                                 string newValue = tableKey + "/" + newColName;
@@ -690,37 +696,58 @@ namespace MDB
 
                             }
 
+                            //get "/" index of old colName in directory string
+                            char ch = '/';
+                            //the old column name should always be after the number of "/" equivalent to oldDirIndex within the directories.
+                            // "xxx/yyy/colname" tablekey is "xxx/yyy" so add 1 
+                            int oldDirIndex = tableKey.Count(f => (f == ch)) + 1;
+
+
 
                             List<dynamic[]> replacer = new List<dynamic[]>();
-                            //change all DGV names that start with or are subtable directory
+                            //change all open DGV names that start with or are subtable directory
                             foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
                             {
                                 string openTableDir = openSubTable.Value.Item2.Name;
                                 string openTableKey = ConvertDirToTableKey(openTableDir);
 
-                                if (openTableKey.StartsWith(tableKey + "/" + colName + "/"))
+                                if (openTableKey.StartsWith(oldStart))
                                 {
 
-                                    //"xxx/#,colname/#,xxx"
-                                    //get parent name
-                                    string parentDir = openSubTable.Key.Item1.Name;
-                                    string clippedDir = openTableDir.Remove(0, parentDir.Length);
+
+                                    //"xxx/#,colname/#,xxx/..."
+                                    //get parent name/directory
+                                    //string parentDir = openSubTable.Key.Item1.Name;
+                                    int charIndexBeforeOldColName = -1;
+                                    for (int i = 0; i < oldDirIndex; i++)
+                                    {
+                                        charIndexBeforeOldColName = openTableDir.IndexOf(ch, charIndexBeforeOldColName + 1);
+                                        if (charIndexBeforeOldColName == -1) break;
+                                    }
+
+                                    string parentDirBeforeColumn = openTableDir.Remove(charIndexBeforeOldColName, openTableDir.Length - (charIndexBeforeOldColName));
+                                    Console.WriteLine("parent dir Before Column Name :" + parentDirBeforeColumn);
+                                    
+
+                                    //since the parent dir may be modified already first, i'll replace
+                                    string clippedDir = openTableDir.Remove(0, parentDirBeforeColumn.Length);
                                     // "/#,colname/#,xxx/..." is what remains
+
 
                                     Regex rgx = new Regex(@"\,(.*?)\/");
                                     //replace first instance of ",colname/" and re insert parent dir
-                                    string newDir = rgx.Replace(clippedDir, "," + newColName + "/", 1).Insert(0, parentDir);
+                                    string newDir = rgx.Replace(clippedDir, "," + newColName + "/", 1).Insert(0, parentDirBeforeColumn);
 
 
-                                    Console.WriteLine("Renaming table directory \"" + openTableDir + "\" to \"" + newDir + "\"");
+                                    Console.WriteLine("Renaming open table directory \"" + openTableDir + "\" to \"" + newDir + "\"");
                                     //change the name
                                     openSubTable.Value.Item2.Name = newDir;
 
                                 }
-                                else if (openTableKey == tableKey + "/" + colName)
+                                else if (openTableKey == tableKey + "/" + colName) // is a subtable open within the column
                                 {
                                     // "xxx/#,colname"
-                                    // get parent name
+                                    // get parent name/directory
                                     string parentDir = openSubTable.Key.Item1.Name;
                                     string clippedDir = openTableDir.Remove(0, parentDir.Length);
                                     // "/#,colname" is what remains
@@ -731,7 +758,7 @@ namespace MDB
 
 
 
-                                    Console.WriteLine("Renaming table directory " + openTableDir + " to " + newDir);
+                                    Console.WriteLine("Renaming open table directory " + openTableDir + " to " + newDir);
                                     //change the name
                                     openSubTable.Value.Item2.Name = newDir;
                                 }

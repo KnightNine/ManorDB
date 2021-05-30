@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝    ╚═════╝ ╚═════╝ 
 */                                                               
 //======================================================================================
-//   Version: 1.10.24.0     Author: Alexander Trosok     
+//   Version: 1.10.25.0     Author: Alexander Trosok     
 //======================================================================================
 
 // General Information about an assembly is controlled through the following
