@@ -589,18 +589,32 @@ namespace MDB
                         orderRef.Insert(orderIndex, newColName);
                         currentData[tableKey][ColumnOrderRefrence] = orderRef;
 
-                        //in any adjacent disabler arrays
-                        foreach (KeyValuePair<string, dynamic> KV in currentData[tableKey])
+
+                       
+
+                        //change name of disabler array starting with old colname:
+                        if (currentData[tableKey].ContainsKey(colName + ColumnDisablerArrayExt))
                         {
+                            currentData[tableKey][newColName + ColumnDisablerArrayExt] = currentData[tableKey][colName + ColumnDisablerArrayExt];
+                            currentData[tableKey].Remove(colName + ColumnDisablerArrayExt);
+
+                            //if a disabler array exists for this column, that means there are other disabler arrays containing this column
+                            //in any adjacent disabler array
                             List<dynamic[]> replacers = new List<dynamic[]>();
-                            int disablerIndex;
-                            if (KV.Key.EndsWith(ColumnDisablerArrayExt) && (disablerIndex = KV.Value.IndexOf(colName)) != -1)
+                            foreach (KeyValuePair<string, dynamic> KV in currentData[tableKey])
                             {
-                                List<string> disablerArr = (List<string>)currentData[tableKey][KV.Key];
-                                replacers.Add(new dynamic[] { KV.Key, disablerIndex });
+
+                                int disablerIndex;
+                                //is a disabler array and contains the renamed column
+                                if (KV.Key.EndsWith(ColumnDisablerArrayExt) && (disablerIndex = KV.Value.IndexOf(colName)) != -1)
+                                {
+                                    List<string> disablerArr = (List<string>)currentData[tableKey][KV.Key];
+                                    replacers.Add(new dynamic[] { KV.Key, disablerIndex });
+
+                                }
 
                             }
-                            //apply replacers
+                            //apply replacers to change colname in all disabler arrays
                             foreach (dynamic[] replacer in replacers)
                             {
                                 List<string> disablerArr = (List<string>)currentData[tableKey][replacer[0]];
@@ -608,8 +622,8 @@ namespace MDB
                                 disablerArr.Insert(replacer[1], newColName);
                                 currentData[tableKey][replacer[0]] = disablerArr;
                             }
-                        }
 
+                        }
 
                         //remove it
                         currentData[tableKey].Remove(colName);
@@ -1194,7 +1208,9 @@ namespace MDB
 
                         //get abreviated sub table data and set text to that
                         Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[index][column.Name] as Dictionary<int, Dictionary<string, dynamic>>;
-                        
+                        Console.WriteLine(subtableData);
+                        Console.WriteLine(tableData);
+
                         displayValue = ColumnTypes.GetSubTableCellDisplay(subtableData,column.Name,tableKey);
 
                     }
