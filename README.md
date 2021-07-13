@@ -53,6 +53,8 @@ The game I am working on relies on complex repeating data structures to define i
   There are some minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
+  
+  <li>Duplicate Rows (excluding primary key if there is one)<li>
   <li>Bugfix needed: the arrow keys within subtables seem to prioritize dataGridView navigation of the parent table over the table that is actually in focus, meaning they don't work for text navigation, i hope theres a fix without having to rework the entire structure of how my DataGridViews are organized.</li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>Image Columns</li>
@@ -70,6 +72,7 @@ The game I am working on relies on complex repeating data structures to define i
   <li>Detailed Commentation</li>
   <li>Export to Index Removal (removal of indexes that store the order of rows in the dictionary and replacing them with that row's primary key, in order to further simplify data)</li>
   <li>Separators (equivalent to CDB's "separator")</li>
+  <li>Column Input Limiter (An option to limit the number of rows that can be filled within a certain column before the rest become disabled)</li>
  
  
 </ul>
