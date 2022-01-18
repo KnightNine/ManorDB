@@ -22,8 +22,6 @@ namespace MDB
         static int indentationValue = 10;
         //stored scroll point used to retain the panel1 scroll position when contents of panel are redrawn
         //Point scrollValue;
-
-
         
 
         public Form1()
@@ -31,12 +29,12 @@ namespace MDB
             InitializeComponent();
         }
 
-        private DataGridView lastFocusedDGV = null;
+        private CustomDataGridView lastFocusedDGV = null;
 
         //focus on cell hover:
         public void TableMainGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridView senderDGV = sender as DataGridView;
+            CustomDataGridView senderDGV = sender as CustomDataGridView;
 
             //if cell content was in focus instead, winforms doesn't know if it was from this DGV or not
             //so instead of checking Focused, i'll check if the last focused DGV was this one
@@ -60,25 +58,26 @@ namespace MDB
         public void TableMainGridView_Got_Focus(object sender, EventArgs e)
         {
             
-            DataGridView senderDGV = sender as DataGridView;
+            CustomDataGridView senderDGV = sender as CustomDataGridView;
             
         }
 
         public void TableMainGridView_Click(object sender, EventArgs e)
         {
-            DataGridView senderDGV = sender as DataGridView;
+            CustomDataGridView senderDGV = sender as CustomDataGridView;
             
         }
 
 
         private void newTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
-            string[] input = Prompt.ShowDialog("Table Name:", "New Table", true, false, null);
+
+            string[] ListBoxArr = new string[] { "User Input Table", "File Regex Refrence Table" };
+            string[] input = Prompt.ShowDialog("Enter table Name and Type:", "New Table", true, true, ListBoxArr);
 
             if (input[0] == "T")
             {
-                DatabaseFunct.AddTable(input[1]);
+                DatabaseFunct.AddTable(input[1], input[2]);
             }
             
         }
@@ -95,7 +94,8 @@ namespace MDB
             
         }
 
-        private void newColumnToolStripMenuItem_Click(object sender, EventArgs e)
+
+        public void newColumnToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //store scroll value for later
             //scrollValue = panel1.AutoScrollPosition;
@@ -115,7 +115,60 @@ namespace MDB
                 System.Windows.Forms.MessageBox.Show("no table selected");
             }
         }
-        
+        public void newRowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (DatabaseFunct.selectedTable != "")
+            {
+                if (Program.mainForm.TableMainGridView.Columns.Count > 0)
+                {
+                    DatabaseFunct.AddRow(Program.mainForm.TableMainGridView, false, 0);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("add a column first");
+                }
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("no table selected");
+            }
+        }
+
+
+        public void editRegexRefrenceTableConstructorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (DatabaseFunct.selectedTable != "")
+            {
+                //check for existing Regex Refrence Table Data
+
+                CustomDataGridView TableMainGridView = Program.mainForm.TableMainGridView;
+                string tableKey = DatabaseFunct.ConvertDirToTableKey(TableMainGridView.Name);
+                if (DatabaseFunct.currentData[tableKey].ContainsKey(DatabaseFunct.RegexRefrenceTableConstructorDataRefrence))
+                {
+                    var RegexRefrenceTableConstructorData = DatabaseFunct.currentData[tableKey][DatabaseFunct.RegexRefrenceTableConstructorDataRefrence];
+                    RegexRefrenceTableConstructorData = RegexRefrenceTableConstructorPromptHandler.ShowDialog( RegexRefrenceTableConstructorData);
+                    if (RegexRefrenceTableConstructorData != null)
+                    {
+                        //set to new data:
+                        DatabaseFunct.currentData[tableKey][DatabaseFunct.RegexRefrenceTableConstructorDataRefrence] = RegexRefrenceTableConstructorData;
+                        //construct the table:
+                        RegexRefrenceTableConstructorPromptHandler.ConstructRegexRefrenceTable();
+                    }
+
+                }
+                    
+                //there is no else case since editRegexRefrenceTableConstructorToolStripMenuItem isn't accesible if there's no RegexRefrenceTableConstructorDataRefrence in the table data
+
+
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("no table selected");
+            }
+        }
+
         public void TableMainGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             /* me trying to increase the bool cell checkbox size:
@@ -123,7 +176,7 @@ namespace MDB
             if (e.ColumnIndex > -1)
             {
                 //increase size of check boxes of 
-                DataGridView senderDGV = sender as DataGridView;
+                CustomDataGridView senderDGV = sender as CustomDataGridView;
 
 
                 if (senderDGV.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
@@ -138,30 +191,12 @@ namespace MDB
 
         }
 
-        private void newRowToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-            if (DatabaseFunct.selectedTable != "")
-            {
-                if (Program.mainForm.TableMainGridView.Columns.Count > 0)
-                {
-                    DatabaseFunct.AddRow(Program.mainForm.TableMainGridView,false,0);
-                }
-                else
-                {
-                    System.Windows.Forms.MessageBox.Show("add a column first");
-                }
-            }
-            else
-            {
-                System.Windows.Forms.MessageBox.Show("no table selected");
-            }
-        }
+        
 
         public void subTableNewColumnButton_Click(object sender, EventArgs e)
         {
             Button senderButton = sender as Button;
-            DataGridView senderDGV = senderButton.Parent as DataGridView;
+            CustomDataGridView senderDGV = senderButton.Parent as CustomDataGridView;
 
             
 
@@ -188,9 +223,10 @@ namespace MDB
 
         public void subTableNewRowButton_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("New Row Pressed");
 
             Button senderButton = sender as Button;
-            DataGridView senderDGV = senderButton.Parent as DataGridView;
+            CustomDataGridView senderDGV = senderButton.Parent as CustomDataGridView;
 
             if (DatabaseFunct.selectedTable != "")
             {
@@ -209,26 +245,26 @@ namespace MDB
             }
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private void customTabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!DatabaseFunct.loadingTable)
             {
-                DatabaseFunct.ChangeMainTable(Program.mainForm.tabControl1.SelectedTab.Name);
+                DatabaseFunct.ChangeMainTable(Program.mainForm.customTabControl1.SelectedTab.Name);
             }
 
         }
 
-        private void tabControl1_MouseDown(object sender, MouseEventArgs e)
+        private void customTabControl1_MouseDown(object sender, MouseEventArgs e)
         {
             Console.WriteLine("tabcontrol mouse down");
             if (e.Button == MouseButtons.Right)
             {
-                for (int i = 0; i < tabControl1.TabCount; ++i)
+                for (int i = 0; i < customTabControl1.TabCount; ++i)
                 {
-                    if (tabControl1.GetTabRect(i).Contains(e.Location))
+                    if (customTabControl1.GetTabRect(i).Contains(e.Location))
                     {
                         //tabs.Controls[i]; // this is your tab
-                        var tableName = tabControl1.Controls[i].Text;
+                        var tableName = customTabControl1.Controls[i].Text;
                         ContextMenuPrompt.ShowTableContextMenu(tableName);
 
                     }
@@ -262,10 +298,11 @@ namespace MDB
 
 
 
-            DataGridView senderDGV = sender as DataGridView;
+            CustomDataGridView senderDGV = sender as CustomDataGridView;
 
             string tableDir = senderDGV.Name;
             string tableKey = DatabaseFunct.ConvertDirToTableKey(tableDir);
+            
 
             Dictionary<int, Dictionary<string, dynamic>> tableData = DatabaseFunct.GetTableDataFromDir(tableDir) as Dictionary<int, Dictionary<string, dynamic>>;
 
@@ -274,8 +311,18 @@ namespace MDB
 
                 //validate input of column type and return dynamic type var:
                 dynamic val = ColumnTypes.ValidateCellInput(e, senderDGV);
+
                 string displayVal = Convert.ToString(val);
 
+                //get if the table is constructed by script
+                Dictionary<string,dynamic> DGVTag = senderDGV.Tag as Dictionary<string,dynamic>;
+                bool isConstructed = false;
+                if (DGVTag.ContainsKey("tableConstructorScript"))
+                {
+                    isConstructed = true;
+                }
+
+                
 
 
                 //don't want to trigger CellValueChanged a second time for checkboxes
@@ -286,6 +333,8 @@ namespace MDB
                     senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = displayVal;
                 }
 
+
+
                 //add data to database
                 var colName = senderDGV.Columns[e.ColumnIndex].Name;
                 var rowIndex = e.RowIndex;
@@ -294,11 +343,94 @@ namespace MDB
                 //apply to data
                 tableData[rowIndex][colName] = val;
 
-
+                
                 Console.WriteLine("value of entry " + rowIndex + " of column \"" + colName + "\" changed to: " + displayVal);
 
                 KeyValuePair<int, Dictionary<string, dynamic>> KVRow = new KeyValuePair<int, Dictionary<string, dynamic>>(rowIndex, tableData[rowIndex]);
-                DatabaseFunct.UpdateStatusOfAllRowCellsInDisablerArrayOfCell(senderDGV, tableKey, KVRow, colName);
+                //if it isn't constructed
+                if (!isConstructed)
+                {
+                    //if the column type is a foreign key refrence
+                    
+                    if (DatabaseFunct.currentData[tableKey][colName] == "Foreign Key Refrence")
+                    {
+                        //if this row has an open subtable
+                        //get the columnname that subtable is being sourced from
+                        string sourceColNameOfOpenSubTableAtRow = null;
+                        Tuple<CustomDataGridView, int> subTableKey = new Tuple<CustomDataGridView, int>(senderDGV, rowIndex);
+                        if (Program.openSubTables.ContainsKey(subTableKey))
+                        {
+                            Tuple<string, CustomDataGridView> openSubTableAtRow = Program.openSubTables[subTableKey];
+                            sourceColNameOfOpenSubTableAtRow = openSubTableAtRow.Item1;
+                        }
+
+                        
+                        //look for Auto Table Constructor Script Receiver columns that link to this column and close their tables
+                        List<string> removalList = new List<string>();
+
+                        DatabaseFunct.loadingTable = true;
+                        foreach (KeyValuePair<string, dynamic> KV in DatabaseFunct.currentData[tableKey])
+                        {
+                            if (KV.Value is string && KV.Value == "Auto Table Constructor Script Receiver")
+                            {
+                                Console.WriteLine(KV.Key);
+
+                                //if linked to this fkey column
+                                
+                                if (DatabaseFunct.currentData[tableKey][KV.Key + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt] == colName)
+                                {
+                                    string linkedColName = KV.Key;
+                                    int linkedColIndex = senderDGV.Columns.IndexOf(senderDGV.Columns[linkedColName]);
+
+
+
+                                    //if the open subTable of this row is sourcing it's data from the linked column
+                                    if (sourceColNameOfOpenSubTableAtRow == linkedColName)
+                                    {
+                                        
+                                        
+                                        
+
+                                        //remove the subtable at this row due to its table construction script being changed. 
+                                        CloseSubTable( subTableKey, senderDGV, e.RowIndex, linkedColIndex);
+                                        
+                                        //
+                                        RecenterSubTables();
+
+                                    }
+
+                                    string subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, linkedColName, tableData, e.RowIndex);
+                                    //subtableConstructorScript shouldn't be null here unless there's an issue with the new foreign key refrence value being linked.
+                                    if (subtableConstructorScript == null)
+                                    {
+                                        subtableConstructorScript = "";
+                                    }
+
+
+                                    //clear the dictionary's rows
+                                    ((Dictionary<int,Dictionary<string,dynamic>>)tableData[e.RowIndex][linkedColName]).Clear();
+
+                                    //get data within linked subtable
+                                    Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[e.RowIndex][linkedColName];
+                                    //update displayValue of button cell (to empty since there's no rows)
+                                    senderDGV.Rows[e.RowIndex].Cells[linkedColIndex].Value = ColumnTypes.GetSubTableCellDisplay(subtableData, senderDGV.Columns[e.ColumnIndex].Name, tableKey, subtableConstructorScript);
+
+
+
+
+                                }
+                                
+
+                            }
+                        }
+                        DatabaseFunct.loadingTable = false;
+                    }
+
+
+                    //update disabled cells
+                    DatabaseFunct.UpdateStatusOfAllRowCellsInDisablerArrayOfCell(senderDGV, tableKey, KVRow, colName);
+                }
+                
             }
 
             
@@ -317,7 +449,7 @@ namespace MDB
             //store scroll value for later
             //scrollValue = panel1.AutoScrollPosition;
 
-            DataGridView senderDGV = sender as DataGridView;
+            CustomDataGridView senderDGV = sender as CustomDataGridView;
             if (e.Button == MouseButtons.Right)
             {
                 if (e.RowIndex > -1)
@@ -327,7 +459,17 @@ namespace MDB
 
                 else if (e.RowIndex == -1 && e.ColumnIndex > -1)
                 {
-                    ContextMenuPrompt.ShowColumnContextMenu(senderDGV, senderDGV.Columns[e.ColumnIndex].Name);
+                    Dictionary<string,dynamic> DGVTag = senderDGV.Tag as Dictionary<string,dynamic>;
+                    //if this is a constructed table, there is no column related options
+                    if (DGVTag.ContainsKey("tableConstructorScript"))
+                    {
+                        MessageBox.Show("You cannot use column altering functionality within a constructed table.");
+                    }
+                    else
+                    {
+                        ContextMenuPrompt.ShowColumnContextMenu(senderDGV, senderDGV.Columns[e.ColumnIndex].Name);
+                    }
+                    
                 }
             }
 
@@ -342,13 +484,51 @@ namespace MDB
 
                 Dictionary<int, Dictionary<string, dynamic>> tableData = DatabaseFunct.GetTableDataFromDir(tableDir) as Dictionary<int, Dictionary<string, dynamic>>;
 
+                //is this a contructed table
+                bool isConstructedTable = false;
+                
 
-                var colType = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name];
+                //if this is a subtable column within an auto contructed table,then this is a constructed table:
+                Dictionary<string, dynamic> senderDGVTag = senderDGV.Tag as Dictionary<string, dynamic>;
+                if (senderDGVTag.ContainsKey("tableConstructorScript"))
+                {
+                    //this means that this is part of a constructor script
+                    isConstructedTable = true;
+                    
+
+                }
+                string colName = senderDGV.Columns[e.ColumnIndex].Name;
+
+                string colType = null;
+                Dictionary<string, dynamic> colTag = null;
+                dynamic additionalData = null;
+                if (isConstructedTable)
+                {
+                    //fetch the column type from colTag is constructed:
+                    colTag = senderDGV.Columns[e.ColumnIndex].Tag as Dictionary<string, dynamic>;
+                    colType = colTag["columnType"];
+                }
+                else
+                {
+                    colType = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name];
+                }
+
+                
                 if (colType == "Foreign Key Refrence")
                 {
                     string error = "";
 
-                    string refrencedTableKey = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name + DatabaseFunct.RefrenceColumnKeyExt];
+                    string refrencedTableKey = null;
+
+                    if (isConstructedTable)
+                    {
+
+                        refrencedTableKey = colTag[DatabaseFunct.RefrenceColumnKeyExt];
+                    }
+                    else
+                    {
+                        refrencedTableKey = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name + DatabaseFunct.RefrenceColumnKeyExt];
+                    }
 
                     //make sure table still exists and that table still has a primary key col
                     if (!DatabaseFunct.currentData.ContainsKey(refrencedTableKey))
@@ -365,8 +545,7 @@ namespace MDB
                     if (error == "")
                     {
                         //refrenced tables are always main tables
-
-                        var refrencedTable = DatabaseFunct.currentData[DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name + DatabaseFunct.RefrenceColumnKeyExt]];
+                        var refrencedTable = DatabaseFunct.currentData[refrencedTableKey];
                         string primaryKeyCol = "";
 
                         //find primary key column name
@@ -426,11 +605,25 @@ namespace MDB
                 {
                     string error = "";
 
+                    //get the subtable key refrenced
+                    string refrencedSubTableKey = null;
+                    if (isConstructedTable)
+                    {
+
+                        //not a supported column type in constructed tables
+                        MessageBox.Show("what.");
+                    }
+                    else
+                    {
+                        
+                        refrencedSubTableKey = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name + DatabaseFunct.ParentSubTableRefrenceColumnKeyExt];
+                    }
+                    
+                    
+                    //get the table/subtable that contains the refrenced subtable's column
                     string regex = "/(?!.*/).*";
-
-                    string refrencedSubTableKey = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name + DatabaseFunct.ParentSubTableRefrenceColumnKeyExt];
-
                     string tableKeyContainingRefrencedSubTable = Regex.Replace(refrencedSubTableKey, regex, "");
+                    //get the subtable's column name
                     string refrencedSubTableCol = Regex.Matches(refrencedSubTableKey, regex)[0].ToString().TrimStart('/');
 
 
@@ -545,11 +738,11 @@ namespace MDB
         }
 
 
-        private DataGridView lastDGVClicked = null;
+        private CustomDataGridView lastDGVClicked = null;
 
         public void TableMainGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridView senderDGV = sender as DataGridView;
+            CustomDataGridView senderDGV = sender as CustomDataGridView;
             //deselect cells from last selected table (so that their selection doesn't intervene with copy and paste)
             if (lastDGVClicked != null && lastDGVClicked != senderDGV)
             {
@@ -562,7 +755,7 @@ namespace MDB
 
         public void TableMainGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridView senderDGV = sender as DataGridView;
+            CustomDataGridView senderDGV = sender as CustomDataGridView;
             string tableDir = senderDGV.Name;
             string tableKey = DatabaseFunct.ConvertDirToTableKey(tableDir);
 
@@ -573,10 +766,76 @@ namespace MDB
             if (e.ColumnIndex < 0) return;
 
             //if it is a button cell
-            var colType = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name];
+            string colName = senderDGV.Columns[e.ColumnIndex].Name;
+
+            //is this a contructed table
+            bool isConstructedTable = false;
+            // the script used by the table constructed from this cell
+            string subtableConstructorScript = null;
+
+            //if this is a subtable column within an auto contructed table,then this is a constructed table:
+            Dictionary<string, dynamic> senderDGVTag = senderDGV.Tag as Dictionary<string, dynamic>;
+            if (senderDGVTag.ContainsKey("tableConstructorScript"))
+            {
+                //this means that this is part of a constructor script
+                isConstructedTable = true;
+
+                //try to find the constructor script for this column within the column's tag if it exists:
+                if (senderDGV.Columns[colName].Tag != null)
+                {
+                    
+                    Dictionary<string, dynamic> columnTag = senderDGV.Columns[colName].Tag as Dictionary<string, dynamic>;
+                    if (columnTag.ContainsKey("subtableConstructorScript"))
+                    {
+                        subtableConstructorScript = columnTag["subtableConstructorScript"];
+                    }
+                    
+                }
+                
+                
+                
+
+            }
+
+
+            //cannot fetch the colType unless the tableKey exists within currentData 
+            string colType = null;
+            if (!isConstructedTable)
+            {
+                colType = DatabaseFunct.currentData[tableKey][colName];
+                
+                //fetch script for Auto Table Constructor Script Receiver column
+                if (colType == "Auto Table Constructor Script Receiver")
+                {
+
+                    subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, colName, tableData, e.RowIndex);
+                    //if tableConstructorScript is null then an error was shown and cancel function here
+                    if (subtableConstructorScript == null)
+                    {
+                        return;
+                    }
+                }
+
+
+
+            }
+
+           
+
+            if (isConstructedTable)
+            {
+                
+
+                //fetch the column type from colTag is constructed:
+                Dictionary<string, dynamic> colTag = senderDGV.Columns[e.ColumnIndex].Tag as Dictionary<string, dynamic>;
+                colType = colTag["columnType"];
+            }
 
             bool isEnabled = false;
+
+            //selected cell
             var selcell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            //check if enabled
             if (selcell is DataGridViewButtonCell)
             {
                 DataGridViewButtonCell bcell = (DataGridViewButtonCell)selcell;
@@ -590,50 +849,12 @@ namespace MDB
                 
             if (isEnabled)
             {
-                if (colType == "SubTable")
+                
+
+                
+                if (colType == "SubTable" || colType == "Auto Table Constructor Script Receiver")
                 {
-
-                    void colorTabOfOpenTable(int selectedColIndex)
-                    {
-
-
-
-                        foreach (DataGridViewCell cell in senderDGV.Rows[e.RowIndex].Cells)
-                        {
-
-                            if (cell is DataGridViewButtonCell)
-                            {
-                                DataGridViewButtonCell bCell = cell as DataGridViewButtonCell;
-                                if (cell.ColumnIndex == selectedColIndex)
-                                {
-                                    //change cell to where color is visible
-                                    //bCell.FlatStyle = FlatStyle.Popup;
-                                    bCell.Style.BackColor = Color.LightGreen;
-                                    bCell.Style.SelectionBackColor = Color.LightGreen;
-                                }
-                                else if (!bCell.ReadOnly)//change cell to default if not disabled
-                                {
-                                    
-                                    //bCell.FlatStyle = FlatStyle.Standard;
-                                    //default style
-                                    if ((double)e.RowIndex % 2 == 0)
-                                    {
-                                        bCell.Style.BackColor = senderDGV.RowsDefaultCellStyle.BackColor;
-                                    }
-                                    else
-                                    {
-                                        bCell.Style.BackColor = senderDGV.AlternatingRowsDefaultCellStyle.BackColor;
-                                    }
-
-                                    bCell.Style.SelectionBackColor = Color.LightCyan;
-
-
-                                }
-
-
-                            }
-                        }
-                    }
+                    
 
 
                     DatabaseFunct.loadingTable = true;
@@ -642,7 +863,7 @@ namespace MDB
                     //scrollValue = panel1.AutoScrollPosition;
                     
 
-                    Tuple<DataGridView, int> subTableKey = new Tuple<DataGridView, int>(senderDGV, e.RowIndex);
+                    Tuple<CustomDataGridView, int> subTableKey = new Tuple<CustomDataGridView, int>(senderDGV, e.RowIndex);
 
                     //add or replace subtable below row
                     if (!Program.openSubTables.ContainsKey(subTableKey) || Program.openSubTables[subTableKey].Item1 != senderDGV.Columns[e.ColumnIndex].Name)
@@ -651,57 +872,77 @@ namespace MDB
 
                         if (Program.openSubTables.ContainsKey(subTableKey))
                         {
+                            //remove old open table
                             DatabaseFunct.RemoveSubtableFromOpenSubtables(subTableKey);
-
-
 
                         }
 
+                        
 
-                        DataGridView newDGV = Program.GetGridView();
+                        CustomDataGridView newDGV = Program.GetGridView(subtableConstructorScript != null);
                         //-------------------------------------------------setting edits-----
                         newDGV.Dock = DockStyle.None;
                         
 
                         newDGV.Name = senderDGV.Name + "/" + e.RowIndex.ToString() + "," + senderDGV.Columns[e.ColumnIndex].Name;
+
+
+
+                       
+                        //store the table construction data within the DGV tag to be used instead of the table structure from currentData
+                        if (subtableConstructorScript != null)
+                        {
+                            Dictionary<string, dynamic> DGVTag = newDGV.Tag as Dictionary<string, dynamic>;
+                            DGVTag["tableConstructorScript"] = subtableConstructorScript;
+                        }
+                         
+                        
+
                         //-------------------------------------------------------------------
-                        Button[] newButtonArr = Program.GetSubTableButtons();
+                        Button[] newButtonArr = Program.GetSubTableButtons(subtableConstructorScript != null);
 
                         //add newdgv to parent
                         senderDGV.Controls.Add(newDGV);
 
-                        DatabaseFunct.LoadTable(newDGV);
-
-                        //add menu strip to new dgv
-                        foreach (Button b in newButtonArr)
+                        if (subtableConstructorScript != null)
                         {
-                            newDGV.Controls.Add(b);
+                            //load table structure from tableConstructorScript
+                            AutoTableConstructorScriptFunct.ConstructSubTableStructureFromScript(newDGV);
+                        }
+                        else
+                        {
+                            //load table structure from currentData table 
+                            DatabaseFunct.LoadTable(newDGV);
                         }
                         
 
+                        //add buttons to new dgv
+                        newDGV.Controls.AddRange(newButtonArr);
+
+                        
+
+                        // update table buttons (after table is loaded)
+                        DatabaseFunct.UpdateSubTableAddRowButton(newDGV);
+
                         //add to open subtables
-                        Program.openSubTables.Add(subTableKey, new Tuple<string, DataGridView>(senderDGV.Columns[e.ColumnIndex].Name, newDGV));
+                        Program.openSubTables.Add(subTableKey, new Tuple<string, CustomDataGridView>(senderDGV.Columns[e.ColumnIndex].Name, newDGV));
 
                         //change color
-                        colorTabOfOpenTable(e.ColumnIndex);
+                        ColorTabOfOpenTable(e.ColumnIndex,e.RowIndex,senderDGV);
 
 
                     }
                     else // close table
                     {
-                        Console.WriteLine("close subtable");
+                        Console.WriteLine("close subtable/ATCSR table");
 
-                        DatabaseFunct.RemoveSubtableFromOpenSubtables(subTableKey);
+                        //close the subtable of the selected cell
+                        CloseSubTable(subTableKey, senderDGV, e.RowIndex, e.ColumnIndex);
 
-                        senderDGV.Rows[e.RowIndex].Height = senderDGV.RowTemplate.Height;
-                        senderDGV.Rows[e.RowIndex].DividerHeight = 0;
-                        //change color of all to default
-                        colorTabOfOpenTable(-1);
-                        
                         //update displayValue of button cell
                         Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[e.RowIndex][senderDGV.Columns[e.ColumnIndex].Name];
-                        
-                        selcell.Value = ColumnTypes.GetSubTableCellDisplay(subtableData, senderDGV.Columns[e.ColumnIndex].Name, tableKey);
+                        //if constructed, use stored script within column tag
+                        selcell.Value = ColumnTypes.GetSubTableCellDisplay(subtableData, senderDGV.Columns[e.ColumnIndex].Name, tableKey, subtableConstructorScript);
 
                     }
                     RecenterSubTables();
@@ -710,13 +951,72 @@ namespace MDB
                 }
                 else if (colType == "Bool")
                 {
-                    //bools don't disable other cells since they have no null state
+                    
                     senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Convert.ToBoolean(senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue);
                 }
             }
             
 
         }
+        //function for indicating when a cell button is pressed
+        private void ColorTabOfOpenTable(int colIndex, int rowIndex, CustomDataGridView senderDGV)
+        {
+
+
+
+            foreach (DataGridViewCell cell in senderDGV.Rows[rowIndex].Cells)
+            {
+
+                if (cell is DataGridViewButtonCell)
+                {
+                    DataGridViewButtonCell bCell = cell as DataGridViewButtonCell;
+                    if (cell.ColumnIndex == colIndex)
+                    {
+                        //change cell to where color is visible
+                        //bCell.FlatStyle = FlatStyle.Popup;
+                        bCell.Style.BackColor = Color.LightGreen;
+                        bCell.Style.SelectionBackColor = Color.LightGreen;
+                    }
+                    else if (!bCell.ReadOnly)//change cell to default if not disabled
+                    {
+
+                        //bCell.FlatStyle = FlatStyle.Standard;
+                        //default style
+                        if ((double)rowIndex % 2 == 0)
+                        {
+                            bCell.Style.BackColor = senderDGV.RowsDefaultCellStyle.BackColor;
+                        }
+                        else
+                        {
+                            bCell.Style.BackColor = senderDGV.AlternatingRowsDefaultCellStyle.BackColor;
+                        }
+
+                        bCell.Style.SelectionBackColor = Color.LightCyan;
+
+
+                    }
+
+
+                }
+            }
+        }
+
+        private void CloseSubTable( Tuple<CustomDataGridView, int> subTableKey, CustomDataGridView senderDGV, int rowIndex, int colIndex)
+        {
+            DatabaseFunct.RemoveSubtableFromOpenSubtables(subTableKey);
+            //set row height to default
+            senderDGV.Rows[rowIndex].Height = senderDGV.RowTemplate.Height;
+            senderDGV.Rows[rowIndex].DividerHeight = 0;
+
+            //change color of all to default
+            ColorTabOfOpenTable(-1,rowIndex,senderDGV);
+
+            
+
+            
+            
+        }
+
 
         public void MainForm_Resize(object sender, EventArgs e)
         {
@@ -768,7 +1068,7 @@ namespace MDB
         {
             int panelHeight = panel1.Size.Height;
             int windowHeight = ClientRectangle.Height;
-            int space = (windowHeight - tabControl1.Height) - menuStrip1.Height;
+            int space = (windowHeight - customTabControl1.Height) - menuStrip1.Height;
 
 
             if (panelHeight > space)
@@ -821,7 +1121,7 @@ namespace MDB
            
         }*/
 
-        public double GetDataGridViewHeightAtRow(DataGridView DGV, int index)
+        public double GetDataGridViewHeightAtRow(CustomDataGridView DGV, int index)
         {
             double height = DGV.ColumnHeadersHeight;
             if (index <= DGV.Rows.Count - 1 && index > -1)
@@ -854,10 +1154,10 @@ namespace MDB
 
             //Console.WriteLine(scrollValue.Y + " and then: ");
 
-            void subFunctExpandParentLoop(DataGridView DGV)
+            void subFunctExpandParentLoop(CustomDataGridView DGV)
             {
 
-                DataGridView parentDGV = DGV.Parent as DataGridView;
+                CustomDataGridView parentDGV = DGV.Parent as CustomDataGridView;
                 string[] TupleDataArr = DGV.Name.Split('/');
                 Console.WriteLine(DGV.Name + " is the directory being expanded");
 
@@ -881,15 +1181,15 @@ namespace MDB
             }
 
             //Resize rows first
-            foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+            foreach (KeyValuePair<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubTable in Program.openSubTables)
             {
 
 
-                DataGridView subDGV = openSubTable.Value.Item2;
+                CustomDataGridView subDGV = openSubTable.Value.Item2;
                 
                 subFunctExpandParentLoop(subDGV);
 
-                /*DataGridView parentDGV = openSubTable.Key.Item1;
+                /*CustomDataGridView parentDGV = openSubTable.Key.Item1;
                 int row = openSubTable.Key.Item2;
 
                 int subDGVHeight = (int)GetDataGridViewHeightAtRow(subDGV, -1);
@@ -908,10 +1208,10 @@ namespace MDB
             Program.mainForm.TableMainGridView.Width = ClientRectangle.Width - (vScrollBar1.Visible ? vScrollBar1.Width : 0);
 
             //Then move tables into position
-            foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+            foreach (KeyValuePair<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubTable in Program.openSubTables)
             {
-                DataGridView subDGV = openSubTable.Value.Item2;
-                DataGridView parentDGV = openSubTable.Key.Item1;
+                CustomDataGridView subDGV = openSubTable.Value.Item2;
+                CustomDataGridView parentDGV = openSubTable.Key.Item1;
                 int row = openSubTable.Key.Item2;
 
 
@@ -994,6 +1294,13 @@ namespace MDB
                 MessageBox.Show("No columns exist");
             }
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        
 
         /*public void hideUnhideColumnsToolStripMenuItemLostFocus(object sender, EventArgs e)
         {

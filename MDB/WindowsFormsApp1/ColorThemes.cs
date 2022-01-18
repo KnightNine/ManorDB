@@ -34,6 +34,17 @@ namespace MDB
             
         };
 
+        static DataGridViewCellStyle darkdataGridViewConstructedTableColumnHeadersCellStyle = new DataGridViewCellStyle()
+        {
+            Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft,
+            BackColor = Color.DarkBlue,
+            ForeColor = System.Drawing.Color.White,
+            Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
+            SelectionBackColor = Color.DarkBlue,
+            SelectionForeColor = System.Drawing.Color.White,
+            WrapMode = System.Windows.Forms.DataGridViewTriState.True,
+        };
+
         static DataGridViewHeaderBorderStyle darkColumnHeadersBorder = DataGridViewHeaderBorderStyle.Raised;
 
         static DataGridViewCellStyle darkdataGridViewRowHeadersDefaultCellStyle = new DataGridViewCellStyle()
@@ -43,6 +54,18 @@ namespace MDB
             ForeColor = System.Drawing.Color.Black,
             Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
             SelectionBackColor = System.Drawing.Color.DimGray,
+            SelectionForeColor = System.Drawing.Color.Black,
+            WrapMode = System.Windows.Forms.DataGridViewTriState.False,
+
+        };
+
+        static DataGridViewCellStyle darkdataGridViewConstructedTableRowHeadersDefaultCellStyle = new DataGridViewCellStyle()
+        {
+            Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft,
+            BackColor = System.Drawing.Color.LightBlue,
+            ForeColor = System.Drawing.Color.Black,
+            Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
+            SelectionBackColor = System.Drawing.Color.LightBlue,
             SelectionForeColor = System.Drawing.Color.Black,
             WrapMode = System.Windows.Forms.DataGridViewTriState.False,
 
@@ -96,6 +119,9 @@ namespace MDB
         static Color darkDisabledCell = Color.Maroon;
         static Color darkSelectedDisabledCell = Color.Crimson;
 
+        static Color darkInvalidCellOutline = Color.Red;
+
+        static Color darkDisabledText = Color.Gray;
 
         static Brush darkTabBack = new System.Drawing.SolidBrush(System.Drawing.ColorTranslator.FromHtml("#282828"));
         static Brush darkTabSelectedBack = Brushes.LightGreen;
@@ -118,6 +144,20 @@ namespace MDB
             WrapMode = System.Windows.Forms.DataGridViewTriState.True,
 
         };
+
+        static DataGridViewCellStyle lightdataGridViewConstructedTableColumnHeadersCellStyle = new DataGridViewCellStyle()
+        {
+            Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft,
+            BackColor = System.Drawing.Color.Yellow,
+            ForeColor = System.Drawing.Color.Black,
+            Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
+            SelectionBackColor = System.Drawing.Color.Yellow,
+            SelectionForeColor = System.Drawing.Color.Black,
+            WrapMode = System.Windows.Forms.DataGridViewTriState.True,
+        };
+
+
+
         static DataGridViewHeaderBorderStyle lightColumnHeadersBorder = DataGridViewHeaderBorderStyle.Single;
 
         static DataGridViewCellStyle lightdataGridViewRowHeadersDefaultCellStyle = new DataGridViewCellStyle()
@@ -127,6 +167,18 @@ namespace MDB
             ForeColor = System.Drawing.Color.Black,
             Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
             SelectionBackColor = System.Drawing.Color.Gray,
+            SelectionForeColor = System.Drawing.Color.Black,
+            WrapMode = System.Windows.Forms.DataGridViewTriState.False,
+
+        };
+
+        static DataGridViewCellStyle lightdataGridViewConstructedTableRowHeadersDefaultCellStyle = new DataGridViewCellStyle()
+        {
+            Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft,
+            BackColor = System.Drawing.Color.LightYellow,
+            ForeColor = System.Drawing.Color.Black,
+            Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
+            SelectionBackColor = System.Drawing.Color.LightYellow,
             SelectionForeColor = System.Drawing.Color.Black,
             WrapMode = System.Windows.Forms.DataGridViewTriState.False,
 
@@ -176,8 +228,12 @@ namespace MDB
         static Color lightGridColor = Color.Silver;
 
 
-        static Color lightDisabledCell = Color.Black;
+        static Color lightDisabledCell = Color.Maroon;
         static Color lightSelectedDisabledCell = Color.Crimson;
+
+        static Color lightInvalidCellOutline = Color.Red;
+
+        static Color lightDisabledText = Color.Gray;
 
         static Brush lightTabBack = new System.Drawing.SolidBrush(SystemColors.Control);
         static Brush lightTabSelectedBack = Brushes.White;
@@ -192,14 +248,16 @@ namespace MDB
         public static Dictionary<string, Dictionary<string, dynamic>> Themes = new Dictionary<string, Dictionary<string, dynamic>>()
         {
 
-            {"Dark", 
-                new Dictionary<string, dynamic>() 
+            {"Dark",
+                new Dictionary<string, dynamic>()
                 {
                     { "ColumnHeader",darkdataGridViewColumnHeadersDefaultCellStyle },
+                    { "ConstructedTableColumnHeader", darkdataGridViewConstructedTableColumnHeadersCellStyle },
                     {"ColumnHeaderBorder", darkColumnHeadersBorder },
                     { "Cell",darkdataGridViewRowsDefaultCellStyle },
                     {"AltCell",darkdataGridViewAlternatingRowsDefaultCellStyle },
                     {"RowHeader",darkdataGridViewRowHeadersDefaultCellStyle },
+                    {"ConstructedTableRowHeader" , darkdataGridViewConstructedTableRowHeadersDefaultCellStyle },
                     {"RowHeaderBorder", darkRowHeadersBorder },
                     {"PanelBack",darkPanelBackColor },
                     {"PanelFore",darkPanelForeColor },
@@ -212,27 +270,28 @@ namespace MDB
                     {"LabelFore",darkLabelColor },
                     {"GridColor",darkGridColor },
                     {"Disabled",darkDisabledCell },
+                    {"DisabledText",darkDisabledText },
                     {"DisabledSelected",darkSelectedDisabledCell },
-                    {"TabBack",darkTabBack },
-                    {"TabSelectedBack",darkTabSelectedBack },
-                    {"TabFore",darkTabText },
-                    {"TabSelectedFore",darkTabSelectedText },
-                    {"TabControlBack",darkTabControlBack },
+                    { "InvalidCellOutline",darkInvalidCellOutline},
+                    {"TabStyle", System.Windows.Forms.TabStyle.ManorDB },
+                    {"TabTextColor",  darkTabText},
 
                     {"SubTableCellFore",darkSubTableCellText },
                     {"SubTableSelectedCellFore",darkSubTableSelectedCellText },
-                    
 
-                } 
+
+                }
             },
             {"Light",
                 new Dictionary<string, dynamic>()
                 {
                     { "ColumnHeader",lightdataGridViewColumnHeadersDefaultCellStyle },
+                    { "ConstructedTableColumnHeader", lightdataGridViewConstructedTableColumnHeadersCellStyle },
                     {"ColumnHeaderBorder", lightColumnHeadersBorder },
                     { "Cell",lightdataGridViewRowsDefaultCellStyle },
                     {"AltCell",lightdataGridViewAlternatingRowsDefaultCellStyle },
                     {"RowHeader",lightdataGridViewRowHeadersDefaultCellStyle },
+                    {"ConstructedTableRowHeader" , lightdataGridViewConstructedTableRowHeadersDefaultCellStyle },
                     {"RowHeaderBorder", lightRowHeadersBorder },
                     {"PanelBack",lightPanelBackColor },
                     {"PanelFore",lightPanelForeColor },
@@ -245,12 +304,11 @@ namespace MDB
                     {"LabelFore",lightLabelColor },
                     {"GridColor",lightGridColor },
                     {"Disabled",lightDisabledCell },
+                    {"DisabledText",lightDisabledText },
                     {"DisabledSelected",lightSelectedDisabledCell },
-                    {"TabBack",lightTabBack },
-                    {"TabSelectedBack",lightTabSelectedBack },
-                    {"TabFore",lightTabText },
-                    {"TabSelectedFore",lightTabSelectedText },
-                    {"TabControlBack",lightTabControlBack },
+                    { "InvalidCellOutline",lightInvalidCellOutline},
+                    {"TabStyle", System.Windows.Forms.TabStyle.VisualStudio },
+                    {"TabTextColor",  lightTabText},
 
                     {"SubTableCellFore",lightSubTableCellText },
                     {"SubTableSelectedCellFore",lightSubTableSelectedCellText },
@@ -269,8 +327,13 @@ namespace MDB
             Program.mainForm.panel1.BackColor = Themes[currentTheme]["PanelBack"];
             Program.mainForm.panel1.ForeColor = Themes[currentTheme]["PanelFore"];
             Program.mainForm.panel1.BorderStyle = BorderStyle.None;
-            Program.mainForm.tabControl1.BackColor = Themes[currentTheme]["ElseBack"];
-            Program.mainForm.tabControl1.ForeColor = Themes[currentTheme]["ElseFore"];
+
+            Program.mainForm.customTabControl1.DisplayStyle = Themes[currentTheme]["TabStyle"];
+            Program.mainForm.customTabControl1.DisplayStyleProvider.TextColor = Themes[currentTheme]["TabTextColor"];
+
+
+
+
             Program.mainForm.menuStrip1.BackColor = Themes[currentTheme]["ElseBack"];
             Program.mainForm.menuStrip1.ForeColor = Themes[currentTheme]["ElseFore"];
             Program.mainForm.BackColor = Themes[currentTheme]["FormBack"];

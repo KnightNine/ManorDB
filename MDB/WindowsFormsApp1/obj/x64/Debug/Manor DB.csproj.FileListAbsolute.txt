@@ -1,0 +1,17 @@
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\x64\Debug\MDB.exe.config
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\x64\Debug\MDB.exe
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\x64\Debug\MDB.pdb
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\x64\Debug\JacksonSoft.CustomTabControl.dll
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\x64\Debug\Newtonsoft.Json.dll
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\x64\Debug\JacksonSoft.CustomTabControl.pdb
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\bin\x64\Debug\Newtonsoft.Json.xml
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x64\Debug\Manor DB.csproj.AssemblyReference.cache
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x64\Debug\Manor DB.csproj.SuggestedBindingRedirects.cache
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x64\Debug\MDB.Form1.resources
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x64\Debug\MDB.Properties.Resources.resources
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x64\Debug\MDB.Text_Editor_Form.resources
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x64\Debug\Manor DB.csproj.GenerateResource.cache
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x64\Debug\Manor DB.csproj.CoreCompileInputs.cache
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x64\Debug\Manor DB.csproj.CopyComplete
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x64\Debug\MDB.exe
+C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x64\Debug\MDB.pdb

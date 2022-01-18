@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System;
+using System.Reflection;
 
 namespace MDB
 {
@@ -45,14 +46,14 @@ namespace MDB
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newColumnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newRowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideUnhideColumnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel1 = new System.Windows.Forms.Panel();
             this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.customTabControl1 = new System.Windows.Forms.CustomTabControl();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,8 +65,6 @@ namespace MDB
             this.fileToolStripMenuItem,
             this.newTableToolStripMenuItem,
             this.removeTableToolStripMenuItem,
-            this.newColumnToolStripMenuItem,
-            this.newRowToolStripMenuItem,
             this.hideUnhideColumnsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -118,20 +117,6 @@ namespace MDB
             this.removeTableToolStripMenuItem.Text = "Remove Table";
             this.removeTableToolStripMenuItem.Click += new System.EventHandler(this.removeTableToolStripMenuItem_Click);
             // 
-            // newColumnToolStripMenuItem
-            // 
-            this.newColumnToolStripMenuItem.Name = "newColumnToolStripMenuItem";
-            this.newColumnToolStripMenuItem.Size = new System.Drawing.Size(214, 56);
-            this.newColumnToolStripMenuItem.Text = "New Column";
-            this.newColumnToolStripMenuItem.Click += new System.EventHandler(this.newColumnToolStripMenuItem_Click);
-            // 
-            // newRowToolStripMenuItem
-            // 
-            this.newRowToolStripMenuItem.Name = "newRowToolStripMenuItem";
-            this.newRowToolStripMenuItem.Size = new System.Drawing.Size(167, 56);
-            this.newRowToolStripMenuItem.Text = "New Row";
-            this.newRowToolStripMenuItem.Click += new System.EventHandler(this.newRowToolStripMenuItem_Click);
-            // 
             // hideUnhideColumnsToolStripMenuItem
             // 
             this.hideUnhideColumnsToolStripMenuItem.Name = "hideUnhideColumnsToolStripMenuItem";
@@ -151,20 +136,6 @@ namespace MDB
             this.label1.Size = new System.Drawing.Size(864, 69);
             this.label1.TabIndex = 1;
             this.label1.Text = "Open or create a new MDB File";
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tabControl1.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            this.tabControl1.Font = new System.Drawing.Font("Arial", 8.1F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControl1.Location = new System.Drawing.Point(0, 1041);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(2517, 50);
-            this.tabControl1.TabIndex = 1;
-            this.tabControl1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TabControl1_DrawItem);
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            this.tabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabControl1_MouseDown);
             // 
             // panel1
             // 
@@ -187,9 +158,57 @@ namespace MDB
             this.vScrollBar1.Maximum = 0;
             this.vScrollBar1.MaximumSize = new System.Drawing.Size(43, 0);
             this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(43, 981);
+            this.vScrollBar1.Size = new System.Drawing.Size(43, 1031);
             this.vScrollBar1.TabIndex = 1;
             this.vScrollBar1.ValueChanged += new System.EventHandler(this.ScrollBar_ValueChanged);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Location = new System.Drawing.Point(0, 0);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Size = new System.Drawing.Size(200, 100);
+            this.tabPage1.TabIndex = 0;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(0, 0);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Size = new System.Drawing.Size(200, 100);
+            this.tabPage2.TabIndex = 0;
+            // 
+            // customTabControl1
+            // 
+            this.customTabControl1.DisplayStyle = System.Windows.Forms.TabStyle.ManorDB;
+            // 
+            // 
+            // 
+            this.customTabControl1.DisplayStyleProvider.BorderColor = System.Drawing.SystemColors.ControlDark;
+            this.customTabControl1.DisplayStyleProvider.BorderColorHot = System.Drawing.SystemColors.ControlDark;
+            this.customTabControl1.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
+            this.customTabControl1.DisplayStyleProvider.CloserColor = System.Drawing.Color.DarkGray;
+            this.customTabControl1.DisplayStyleProvider.FocusColor = System.Drawing.Color.LightGreen;
+            this.customTabControl1.DisplayStyleProvider.FocusTrack = false;
+            this.customTabControl1.DisplayStyleProvider.HotTrack = true;
+            this.customTabControl1.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.customTabControl1.DisplayStyleProvider.Opacity = 1F;
+            this.customTabControl1.DisplayStyleProvider.Overlap = 9;
+            this.customTabControl1.DisplayStyleProvider.Padding = new System.Drawing.Point(14, 1);
+            this.customTabControl1.DisplayStyleProvider.ShowTabCloser = false;
+            this.customTabControl1.DisplayStyleProvider.TabBookmarkColorsByName = ((System.Collections.Generic.Dictionary<string, System.Drawing.Color>)(resources.GetObject("resource.TabBookmarkColorsByName")));
+            this.customTabControl1.DisplayStyleProvider.TextColor = System.Drawing.Color.White;
+            this.customTabControl1.DisplayStyleProvider.TextColorDisabled = System.Drawing.Color.WhiteSmoke;
+            this.customTabControl1.DisplayStyleProvider.TextColorSelected = System.Drawing.Color.White;
+            this.customTabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.customTabControl1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.customTabControl1.HotTrack = true;
+            this.customTabControl1.Location = new System.Drawing.Point(0, 1031);
+            this.customTabControl1.Name = "customTabControl1";
+            this.customTabControl1.SelectedIndex = 0;
+            this.customTabControl1.Size = new System.Drawing.Size(2474, 60);
+            this.customTabControl1.TabIndex = 0;
+            this.customTabControl1.SelectedIndexChanged += new System.EventHandler(this.customTabControl1_SelectedIndexChanged);
+            this.customTabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.customTabControl1_MouseDown);
+            
             // 
             // Form1
             // 
@@ -197,8 +216,8 @@ namespace MDB
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.ClientSize = new System.Drawing.Size(2517, 1091);
+            this.Controls.Add(this.customTabControl1);
             this.Controls.Add(this.vScrollBar1);
-            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
@@ -214,55 +233,7 @@ namespace MDB
 
         }
 
-        
-        private void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            var tab = tabControl1.TabPages[e.Index];
-            var tabRect = tabControl1.GetTabRect(e.Index);
-            //height so that rect is always touching base of window
-            int extraRectHeight = 10;
-
-            //these offsets don't seem to work, oh well (can't overwrite the bordercolor of tabs)
-            int yOffset = -10;
-            int extraRectWidth = 5;
-
-
-            //Console.WriteLine(tabRect.ToString());
-
-            
-            if (e.Index == tabControl1.SelectedIndex)
-            {
-                //tab color when selected
-                e.Graphics.FillRectangle(ColorThemes.Themes[ColorThemes.currentTheme]["TabSelectedBack"], new Rectangle(e.Bounds.X, e.Bounds.Y + yOffset, e.Bounds.Width, e.Bounds.Height + extraRectHeight));
-                TextRenderer.DrawText(e.Graphics, tab.Text, tabControl1.Font, tabRect, ColorThemes.Themes[ColorThemes.currentTheme]["TabSelectedFore"], TextFormatFlags.VerticalCenter);
-            }
-            else
-            {
-                //tab color when not selected
-                e.Graphics.FillRectangle(ColorThemes.Themes[ColorThemes.currentTheme]["TabBack"], new Rectangle(e.Bounds.X,e.Bounds.Y + yOffset, e.Bounds.Width+ extraRectWidth, e.Bounds.Height + extraRectHeight));
-                TextRenderer.DrawText(e.Graphics, tab.Text, tabControl1.Font, tabRect, ColorThemes.Themes[ColorThemes.currentTheme]["TabFore"], TextFormatFlags.VerticalCenter);
-            }
-            
-            //Pen p = new Pen(Color.White);
-            
-
-
-            //background from left
-
-            Rectangle lasttabrect = tabControl1.GetTabRect(tabControl1.TabPages.Count - 1);
-            Rectangle background = new Rectangle();
-            background.Location = new Point(lasttabrect.Right, 0);
-
-            //pad the rectangle to cover the 1 pixel line between the top of the tabpage and the start of the tabs
-            background.Size = new Size(tabControl1.Right - background.Left, lasttabrect.Height + 1);
-            e.Graphics.FillRectangle(ColorThemes.Themes[ColorThemes.currentTheme]["TabControlBack"], background);
-        }
-
-        private void TabControl1_MouseClick(object sender, MouseEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         #endregion
 
         public System.Windows.Forms.MenuStrip menuStrip1;
@@ -270,7 +241,6 @@ namespace MDB
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         public System.Windows.Forms.Label label1;
-        public System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.ToolStripMenuItem newTableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeTableToolStripMenuItem;
 
@@ -280,18 +250,21 @@ namespace MDB
         public Panel panel1;
 
         //added in Main
-        public System.Windows.Forms.DataGridView TableMainGridView;
+        public CustomDataGridView TableMainGridView;
 
         private ToolStripMenuItem appendFileToolStripMenuItem;
         public ToolStripMenuItem hideUnhideColumnsToolStripMenuItem;
         public VScrollBar vScrollBar1;
+        private TabPage tabPage1;
+        private TabPage tabPage2;
+        public CustomTabControl customTabControl1;
     }
 
 
 
     public static class Prompt
     {
-        
+
 
 
         public static string[] ShowDialog(string text, string caption, bool addTextBox, bool addListBox, string[] listBoxArr)
@@ -326,6 +299,8 @@ namespace MDB
                 {
                     ComboBox1.Items.Add(key);
                 }
+                ComboBox1.SelectedIndex = 0;
+
                 prompt.Controls.Add(ComboBox1);
             }
 
@@ -342,17 +317,69 @@ namespace MDB
             return prompt.ShowDialog() == DialogResult.OK ? new string[] { "T", textBox.Text, ComboBox1.SelectedItem != null ? ComboBox1.SelectedItem.ToString() : "" } : new string[] { "F", "", "" };
         }
 
+
+
+
+        public static dynamic ShowColorDialog(string text, string caption)
+        {
+            Form prompt = new Form()
+            {
+                Width = 500,
+                Height = 200,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = caption,
+                StartPosition = FormStartPosition.CenterScreen,
+                BackColor = ColorThemes.Themes[ColorThemes.currentTheme]["FormBack"],
+                ForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["FormFore"],
+            };
+
+
+
+            Label textLabel = new Label() { Left = 50, Top = 60, Text = text, Width = 400, Height = 40 };
+
+            ColorPicker ColorDropDownButton = new ColorPicker() { Left = 20, Top = 90, Width = 300, Height = 40 };
+            ColorDropDownButton.AddStandardColors();
+
+            
+
+
+
+            Button confirmation = new Button() { Text = "Confirm", Left = 320, Width = 130, Top = 90, DialogResult = DialogResult.OK };
+
+            confirmation.Click += (sender, e) => { prompt.Close(); };
+
+
+            prompt.Controls.Add(ColorDropDownButton);
+            prompt.Controls.Add(confirmation);
+            prompt.Controls.Add(textLabel);
+
+            prompt.AcceptButton = confirmation;
+            prompt.AcceptButton = confirmation;
+
+            
+            
+
+
+
+            return prompt.ShowDialog() == DialogResult.OK ? ColorDropDownButton.SelectedItem : null;
+
+
+
+        }
+
     }
+    
+
 
     public static class ContextMenuPrompt
     {
-        static DataGridView DGV;
+        static CustomDataGridView DGV;
         static int rowIndex;
         static ContextMenu cMenu = new ContextMenu();
         static string colName;
 
 
-        public static void ShowRowContextMenu(DataGridView _DGV, int _rowIndex)
+        public static void ShowRowContextMenu(CustomDataGridView _DGV, int _rowIndex)
         {
             cMenu.MenuItems.Clear();
             DGV = _DGV;
@@ -360,14 +387,25 @@ namespace MDB
 
             
 
-            MenuItem[] options = { new MenuItem() { Name = "Shift Row Up", Text = "Shift Row Up" }, new MenuItem() { Name = "Shift Row Down", Text = "Shift Row Down" }, new MenuItem() { Name = "Delete Row", Text = "Delete Row" }, new MenuItem() { Name = "Insert Row", Text = "Insert Row" } };
+            List<MenuItem> options = new List<MenuItem>(){ new MenuItem(){ Name = "Shift Row Up", Text = "Shift Row Up" }, new MenuItem() { Name = "Shift Row Down", Text = "Shift Row Down" }, new MenuItem() { Name = "Delete Row", Text = "Delete Row" } };
             options[0].Click += new System.EventHandler(shiftUp);
             options[1].Click += new System.EventHandler(shiftDown);
             options[2].Click += new System.EventHandler(deleteRow);
-            options[3].Click += new System.EventHandler(insertRow);
+
+            MenuItem insertRowMenuItem = new MenuItem() { Name = "Insert Row", Text = "Insert Row" };
+            MenuItem duplicateRowMenuItem = new MenuItem() { Name = "Duplicate Row", Text = "Duplicate Row" };
+            insertRowMenuItem.Click += new System.EventHandler(insertRow);
+            duplicateRowMenuItem.Click += new System.EventHandler(duplicateRow);
+
+            //if restricted to a single row, don't add the above two menu items:
+            string tableKey = DatabaseFunct.ConvertDirToTableKey(DGV.Name);
+            if (!DatabaseFunct.DoesSubTableMeetOrExceedRowRestriction(DGV))
+            {
+                options.AddRange(new MenuItem[] { insertRowMenuItem, duplicateRowMenuItem });
+            }
 
 
-            cMenu.MenuItems.AddRange(options);
+            cMenu.MenuItems.AddRange(options.ToArray());
             Rectangle screenRectangle = Program.mainForm.RectangleToScreen(Program.mainForm.ClientRectangle);
 
             int titleHeight = screenRectangle.Top - Program.mainForm.Top;
@@ -375,22 +413,52 @@ namespace MDB
             cMenu.Show(Program.mainForm, new Point(System.Windows.Forms.Cursor.Position.X - Program.mainForm.Location.X, System.Windows.Forms.Cursor.Position.Y - Program.mainForm.Location.Y - titleHeight));
 
         }
-        public static void ShowColumnContextMenu(DataGridView _DGV, string _colName)
+        public static void ShowColumnContextMenu(CustomDataGridView _DGV, string _colName)
         {
             cMenu.MenuItems.Clear();
             DGV = _DGV;
             colName = _colName;
 
 
-            MenuItem[] options = { new MenuItem() { Name = "Shift Column Left", Text = "Shift Column Left" }, new MenuItem() { Name = "Shift Column Right", Text = "Shift Column Right" }, new MenuItem() { Name = "Rename Column", Text = "Rename Column", Tag = new dynamic[] { _DGV, _colName } }, new MenuItem() { Name = "Delete Column", Text = "Delete Column" }, new MenuItem() { Name = "Adjacent Column Disabler Settings", Text = "Adjacent Column Disabler Settings" , Tag = new dynamic[] {_DGV, _colName} } };
+            List<MenuItem> options = new List<MenuItem>{ new MenuItem() { Name = "Shift Column Left", Text = "Shift Column Left" }, new MenuItem() { Name = "Shift Column Right", Text = "Shift Column Right" }, new MenuItem() { Name = "Rename Column", Text = "Rename Column", Tag = new dynamic[] { _DGV, _colName } }, new MenuItem() { Name = "Delete Column", Text = "Delete Column" }, new MenuItem() { Name = "Adjacent Column Disabler Settings", Text = "Adjacent Column Disabler Settings" , Tag = new dynamic[] {_DGV, _colName} } };
             options[0].Click += new System.EventHandler(shiftLeft);
             options[1].Click += new System.EventHandler(shiftRight);
             options[2].Click += new System.EventHandler(renameColumn);
             options[3].Click += new System.EventHandler(deleteColumn);
             options[4].Click += new System.EventHandler(openColumnDisabler);
 
+            string tableKey = DatabaseFunct.ConvertDirToTableKey(_DGV.Name);
+            string colType = DatabaseFunct.currentData[tableKey][_colName];
+            
+            if (colType == "Numerical")
+            {
+                options.Add(new MenuItem() { Name = "Convert To Integer Type Column", Text = "Convert To Integer Type Column", Tag = new dynamic[] { _DGV, _colName } });
+                options[5].Click += new System.EventHandler(convertNumericalColumnToIntegerColumn);
+            }
+            else if (colType == "Integer")
+            {
+                options.Add(new MenuItem() { Name = "Convert To Numerical Type Column", Text = "Convert To Numerical Type Column", Tag = new dynamic[] { _DGV, _colName } });
+                options[5].Click += new System.EventHandler(convertIntegerColumnToNumericalColumn);
+            }
+            else if (colType == "SubTable")
+            {
+                //if row restriction already applied to this column
+                if (DatabaseFunct.currentData[tableKey].ContainsKey(_colName + DatabaseFunct.SubtableRowRestrictionExt))
+                {
+                    options.Add(new MenuItem() { Name = "Apply Subable Single Row Restriction", Text = "Apply Subable Single Row Restriction", Tag = new dynamic[] { _DGV, _colName } });
+                    options[5].Click += new System.EventHandler(removeRowRestrictionFromSubtableColumn);
+                }
+                else //if row restriction not applied
+                {
+                    options.Add(new MenuItem() { Name = "Apply Subable Single Row Restriction", Text = "Apply Subable Single Row Restriction", Tag = new dynamic[] { _DGV, _colName } });
+                    options[5].Click += new System.EventHandler(addRowRestrictionToSubtableColumn);
+                    
+                }
+                
+            }
 
-            cMenu.MenuItems.AddRange(options);
+
+            cMenu.MenuItems.AddRange(options.ToArray());
             Rectangle screenRectangle = Program.mainForm.RectangleToScreen(Program.mainForm.ClientRectangle);
 
             int titleHeight = screenRectangle.Top - Program.mainForm.Top;
@@ -399,7 +467,7 @@ namespace MDB
 
         }
 
-        public static void ShowColumnDisablerContextMenu(DataGridView _DGV, string _colName)
+        public static void ShowColumnDisablerContextMenu(CustomDataGridView _DGV, string _colName)
         {
             cMenu.MenuItems.Clear();
             DGV = _DGV;
@@ -468,9 +536,9 @@ namespace MDB
             cMenu.MenuItems.Clear();
 
 
-            MenuItem[] options = { new MenuItem() { Name = "Rename Table", Text = "Rename Table", Tag = _tableName } };
+            MenuItem[] options = { new MenuItem() { Name = "Rename Table", Text = "Rename Table", Tag = _tableName }, new MenuItem() { Name = "Bookmark Table", Text = "Bookmark Table", Tag = _tableName } };
             options[0].Click += new System.EventHandler(renameTable);
-
+            options[1].Click += new System.EventHandler(bookmarkTable);
 
             cMenu.MenuItems.AddRange(options);
             Rectangle screenRectangle = Program.mainForm.RectangleToScreen(Program.mainForm.ClientRectangle);
@@ -493,22 +561,125 @@ namespace MDB
             }
 
         }
-        
+
+        private static void bookmarkTable(object sender, System.EventArgs e)
+        {
+            MenuItem senderItem = (MenuItem)sender;
+            string tableName = (string)senderItem.Tag;
+            dynamic input = Prompt.ShowColorDialog("Add a Bookmark color to the \"" + tableName + "\" Table:", "Bookmark Color Selection" );
+
+            if (input == null)
+            {
+                //do nothing
+            }
+            else
+            {
+                ColorPicker.ColorInfo selectedItem = input as ColorPicker.ColorInfo;
+
+                if (selectedItem.Text == "No Bookmark")
+                {
+                    DatabaseFunct.RemoveOrChangeTableBookmark(tableName, null);
+                }
+                else
+                {
+                    DatabaseFunct.BookmarkTable(tableName, selectedItem.Color);
+                }    
+
+
+            }
+            
+        }
+
+
         private static void renameColumn(object sender, System.EventArgs e)
         {
             
             MenuItem senderMI = sender as MenuItem;
             dynamic[] dat = senderMI.Tag as dynamic[];
-            DataGridView _DGV = dat[0];
+            CustomDataGridView _DGV = dat[0];
             string _colName = dat[1];
 
-            string[] input = Prompt.ShowDialog("Enter New Column Name:", "Rename \"" + _colName + "\" Column", true, false, null);
+            string[] input = Prompt.ShowDialog("Enter New Column Name:", "Rename \"" + _colName + "\" Column", true, false,  null);
             
             if (input[0] == "T")
             {
                 DatabaseFunct.ChangeColumnName(_colName, input[1],_DGV);
             }
         }
+
+        private static void convertNumericalColumnToIntegerColumn(object sender, System.EventArgs e)
+        {
+            MenuItem senderMI = sender as MenuItem;
+            dynamic[] dat = senderMI.Tag as dynamic[];
+            CustomDataGridView _DGV = dat[0];
+            string _colName = dat[1];
+
+            
+
+            var confirmResult = MessageBox.Show("Are you sure to convert " + _colName + " to an Integer type column ?",
+                                    "Confirm:",
+                                    MessageBoxButtons.YesNo);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                DatabaseFunct.ConvertNumericalColumnToIntegerColumn(_colName, _DGV);
+            }
+        }
+
+        private static void convertIntegerColumnToNumericalColumn(object sender, System.EventArgs e)
+        {
+            MenuItem senderMI = sender as MenuItem;
+            dynamic[] dat = senderMI.Tag as dynamic[];
+            CustomDataGridView _DGV = dat[0];
+            string _colName = dat[1];
+
+            var confirmResult = MessageBox.Show("Are you sure to convert " + _colName + " to an Numerical (double) type column ?",
+                                    "Confirm:",
+                                    MessageBoxButtons.YesNo);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                DatabaseFunct.ConvertIntegerColumnToNumericalColumn(_colName, _DGV);
+            }
+        }
+
+
+        private static void addRowRestrictionToSubtableColumn(object sender, System.EventArgs e)
+        {
+            MenuItem senderMI = sender as MenuItem;
+            dynamic[] dat = senderMI.Tag as dynamic[];
+            CustomDataGridView _DGV = dat[0];
+            string _colName = dat[1];
+
+            var confirmResult = MessageBox.Show("Are you sure to restrict " + _colName + " to a single row entry? \n This will erase all rows after the first row in all subtables of this column!",
+                                    "Confirm:",
+                                    MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                DatabaseFunct.AddRowRestrictionToSubtableColumn(_DGV, _colName, 1);
+
+
+            }
+        }
+
+        private static void removeRowRestrictionFromSubtableColumn(object sender, System.EventArgs e)
+        {
+            MenuItem senderMI = sender as MenuItem;
+            dynamic[] dat = senderMI.Tag as dynamic[];
+            CustomDataGridView _DGV = dat[0];
+            string _colName = dat[1];
+
+            var confirmResult = MessageBox.Show("Are you sure to remove row restriction from " + _colName + "? \n This will allow the subtables of this column to have multiple rows",
+                                    "Confirm:",
+                                    MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                DatabaseFunct.RemoveRowRestrictionFromSubtableColumn(_DGV, _colName);
+
+
+            }
+        }
+
 
 
         private static void addColToDisablerArrEvent(object sender, System.EventArgs e)
@@ -541,6 +712,13 @@ namespace MDB
             Program.mainForm.RecenterSubTables();
             cMenu.Dispose();
 
+        }
+
+        private static void duplicateRow(object sender, System.EventArgs e)
+        {
+            DatabaseFunct.DuplicateRow(DGV,rowIndex);
+            Program.mainForm.RecenterSubTables();
+            cMenu.Dispose();
         }
 
         private static void shiftUp(object sender, System.EventArgs e)
@@ -589,7 +767,7 @@ namespace MDB
         {
             MenuItem senderMI = sender as MenuItem;
             dynamic[] dat = senderMI.Tag as dynamic[];
-            DataGridView _DGV = dat[0];
+            CustomDataGridView _DGV = dat[0];
             string _colName = dat[1];
 
             ShowColumnDisablerContextMenu(_DGV, _colName);

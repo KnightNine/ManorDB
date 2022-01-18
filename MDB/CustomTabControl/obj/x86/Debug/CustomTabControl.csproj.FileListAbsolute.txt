@@ -1,0 +1,13 @@
+C:\Users\Alex\Desktop\flat tab control\CustomTabControl\obj\x86\Debug\CustomTabControl.csproj.AssemblyReference.cache
+C:\Users\Alex\Desktop\flat tab control\CustomTabControl\obj\x86\Debug\CustomTabControl.csproj.CoreCompileInputs.cache
+C:\Users\Alex\Desktop\flat tab control\CustomTabControl\obj\x86\Debug\JacksonSoft.CustomTabControl.dll
+C:\Users\Alex\Desktop\flat tab control\CustomTabControl\obj\x86\Debug\JacksonSoft.CustomTabControl.pdb
+C:\Users\Alex\Desktop\flat tab control\JacksonSoft.CustomTabControl.dll
+C:\Users\Alex\Desktop\flat tab control\JacksonSoft.CustomTabControl.pdb
+C:\Users\Alex\Desktop\MDB\MDB\JacksonSoft.CustomTabControl.dll
+C:\Users\Alex\Desktop\MDB\MDB\JacksonSoft.CustomTabControl.pdb
+C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\obj\x86\Debug\CustomTabControl.csproj.CoreCompileInputs.cache
+C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\obj\x86\Debug\JacksonSoft.CustomTabControl.dll
+C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\obj\x86\Debug\JacksonSoft.CustomTabControl.pdb
+C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\JacksonSoft.CustomTabControl.dll
+C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\JacksonSoft.CustomTabControl.pdb

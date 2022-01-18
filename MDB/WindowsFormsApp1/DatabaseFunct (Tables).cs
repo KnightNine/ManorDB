@@ -12,7 +12,7 @@ namespace MDB
 {
     public static partial class DatabaseFunct
     {
-        internal static void AddTable(string tabName)
+        internal static void AddTable(string tabName, string tableType)
         {
             string error = GenericFunct.ValidateNameInput(tabName);
 
@@ -23,20 +23,30 @@ namespace MDB
                     //add dictionary with empty rowEntry database
                     currentData.Add(tabName, new Dictionary<string, dynamic>() { { RowEntryRefrence, new Dictionary<int, Dictionary<string, dynamic>>() }, { ColumnOrderRefrence, new List<string>() } });
 
-                    Program.mainForm.tabControl1.TabPages.Add(tabName, tabName);
-                    
+                    if (tableType == "File Regex Refrence Table")
+                    {
+                        currentData[tabName][RegexRefrenceTableConstructorDataRefrence] = RegexRefrenceTableConstructorPromptHandler.CreateNewRegexRefrenceTableConstructorData();
+                    }
+
+
+
+                    Program.mainForm.customTabControl1.TabPages.Add(tabName, tabName);
+
                     Program.mainForm.label1.Visible = false;
 
-                    //change color of tab
-                    Program.mainForm.tabControl1.TabPages[Program.mainForm.tabControl1.TabPages.IndexOfKey(tabName)].BackColor = ColorThemes.Themes[ColorThemes.currentTheme]["ElseBack"];
-                    Program.mainForm.tabControl1.TabPages[Program.mainForm.tabControl1.TabPages.IndexOfKey(tabName)].ForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["ElseFore"];
+                    //change color of tab page to not be visible (this absolutely breaks rendering so it's commented out)
+                    //Program.mainForm.customTabControl1.TabPages[Program.mainForm.customTabControl1.TabPages.IndexOfKey(tabName)].BackColor = Color.Transparent;
+                    //Program.mainForm.customTabControl1.TabPages[Program.mainForm.customTabControl1.TabPages.IndexOfKey(tabName)].ForeColor = Color.Transparent;
+
 
                     
 
+
                     //select new tab
-                    Program.mainForm.tabControl1.SelectedTab = Program.mainForm.tabControl1.TabPages[Program.mainForm.tabControl1.TabPages.IndexOfKey(tabName)];
+                    Program.mainForm.customTabControl1.SelectedTab = Program.mainForm.customTabControl1.TabPages[Program.mainForm.customTabControl1.TabPages.IndexOfKey(tabName)];
                     ChangeMainTable(tabName);
 
+                    
 
                 }
                 else
@@ -50,6 +60,46 @@ namespace MDB
             }
         }
 
+
+        //adds a colored bookmark on top of the tab
+        internal static void BookmarkTable(string tabName, Color color)
+        {
+            Dictionary<string,Color> TabBookmarkColorsByName = Program.mainForm.customTabControl1.DisplayStyleProvider.TabBookmarkColorsByName;
+            TabBookmarkColorsByName.Add(tabName, color);
+
+            currentData[tabName][BookmarkColorRefrence] = color;
+
+        }
+        internal static void RemoveOrChangeTableBookmark(string tabName, string newTabName)
+        {
+            Dictionary<string, Color> TabBookmarkColorsByName = Program.mainForm.customTabControl1.DisplayStyleProvider.TabBookmarkColorsByName;
+            if (TabBookmarkColorsByName.ContainsKey(tabName))
+            {
+                Color oldTabNameColor = TabBookmarkColorsByName[tabName];
+                TabBookmarkColorsByName.Remove(tabName);
+
+                //change if newTabName not null:
+                if (newTabName != null)
+                {
+                    TabBookmarkColorsByName.Add(newTabName, oldTabNameColor);
+
+                }
+                else
+                {
+                    //remove BookmarkColorRefrence from table data
+                    if (currentData.ContainsKey(tabName))
+                    {
+                        currentData[tabName].Remove(BookmarkColorRefrence);
+                    }
+                }
+
+            }
+            
+
+
+        }
+
+
         internal static void RemoveTable(string tabName)
         {
 
@@ -59,16 +109,17 @@ namespace MDB
                 {
 
                     //go to a different tab
-                    if (Program.mainForm.tabControl1.TabPages.Count > 1)
+                    if (Program.mainForm.customTabControl1.TabPages.Count > 1)
                     {
-                        //do nothing
-                        /*if (Program.mainForm.tabControl1.SelectedIndex > 0)
+                        //do nothing, this happens automatically
+
+                        /*if (Program.mainForm.customTabControl1.SelectedIndex > 0)
                         {
-                            Program.mainForm.tabControl1.SelectedTab = Program.mainForm.tabControl1.TabPages[Program.mainForm.tabControl1.TabPages.IndexOfKey(tabName) - 1];
+                            Program.mainForm.customTabControl1.SelectedTab = Program.mainForm.customTabControl1.TabPages[Program.mainForm.customTabControl1.TabPages.IndexOfKey(tabName) - 1];
                         }
                         else
                         {
-                            Program.mainForm.tabControl1.SelectedTab = Program.mainForm.tabControl1.SelectedTab = Program.mainForm.tabControl1.TabPages[Program.mainForm.tabControl1.TabPages.IndexOfKey(tabName) + 1];
+                            Program.mainForm.customTabControl1.SelectedTab = Program.mainForm.customTabControl1.SelectedTab = Program.mainForm.customTabControl1.TabPages[Program.mainForm.customTabControl1.TabPages.IndexOfKey(tabName) + 1];
                         }*/
 
                     }
@@ -76,13 +127,18 @@ namespace MDB
                     {
                         loadingTable = true;
                         ClearMainTable();
+                        //update main table controls to remove them
+                        UpdateMainTableControls();
+
                         Program.mainForm.panel1.Visible = false;
                         Program.mainForm.vScrollBar1.Visible = false;
                         Program.mainForm.label1.Visible = true;
                     }
                 }
-                Program.mainForm.tabControl1.TabPages.RemoveAt(Program.mainForm.tabControl1.TabPages.IndexOfKey(tabName));
 
+                Program.mainForm.customTabControl1.TabPages.RemoveAt(Program.mainForm.customTabControl1.TabPages.IndexOfKey(tabName));
+                //remove from bookmarks
+                RemoveOrChangeTableBookmark(tabName, null);
 
                 string[] allKeys = currentData.Keys.ToArray<string>();
                 //remove table and subtables within table from data
@@ -179,19 +235,21 @@ namespace MDB
                             currentData.Add(KV.Key, KV.Value);
                         }
 
-                        if (Program.mainForm.tabControl1.TabPages.ContainsKey(tabName))
+                        if (Program.mainForm.customTabControl1.TabPages.ContainsKey(tabName))
                         {
                             //change tabcontrol data
-                            Program.mainForm.tabControl1.TabPages[tabName].Text = newTabName;
-                            Program.mainForm.tabControl1.TabPages[tabName].Name = newTabName;
+                            Program.mainForm.customTabControl1.TabPages[tabName].Text = newTabName;
+                            Program.mainForm.customTabControl1.TabPages[tabName].Name = newTabName;
                         }
 
                         //refresh table if it is the currently selected table (so that DGVs are renamed)
-                        if (Program.mainForm.tabControl1.SelectedTab.Name == newTabName)
+                        if (Program.mainForm.customTabControl1.SelectedTab.Name == newTabName)
                         {
                             ChangeMainTable(newTabName);
                         }
 
+                        //transfer over bookmark to newTabName
+                        RemoveOrChangeTableBookmark(tabName,newTabName);
 
                     }
                     else
@@ -231,7 +289,7 @@ namespace MDB
         
         
 
-        internal static void LoadTable(DataGridView DGV)
+        internal static void LoadTable(CustomDataGridView DGV)
         {
             string tableDir = DGV.Name;
             string tableKey = ConvertDirToTableKey(tableDir);
@@ -257,7 +315,7 @@ namespace MDB
             {
                 Console.WriteLine("loaded row " + entry.Key.ToString() + ": " + entry.Value);
 
-                LoadRow(entry, DGV);
+                LoadRow(entry, DGV, false);
             }
             Console.WriteLine("---");
 
@@ -280,7 +338,11 @@ namespace MDB
                 ClearMainTable();
                 selectedTable = tabName;
                 Program.mainForm.TableMainGridView.Name = tabName;
+                //load the main table
                 LoadTable(Program.mainForm.TableMainGridView);
+                //update table controls
+                UpdateMainTableControls();
+
                 Program.mainForm.UpdateScrollBar();
                 Program.mainForm.RecenterSubTables();
 
@@ -294,6 +356,7 @@ namespace MDB
         }
         internal static void ClearMainTable()
         {
+            Program.mainForm.TableMainGridView.ClearInvalidCellIndexes();
             Program.mainForm.TableMainGridView.Rows.Clear();
             Program.mainForm.TableMainGridView.Columns.Clear();
             Program.mainForm.TableMainGridView.Controls.Clear();

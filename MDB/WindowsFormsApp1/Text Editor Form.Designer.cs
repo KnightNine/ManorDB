@@ -38,9 +38,9 @@
             // richTextBox
             // 
             this.richTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox.Location = new System.Drawing.Point(0, 52);
+            this.richTextBox.Location = new System.Drawing.Point(0, 60);
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(2088, 1119);
+            this.richTextBox.Size = new System.Drawing.Size(2088, 1111);
             this.richTextBox.TabIndex = 0;
             this.richTextBox.Text = "";
             // 
@@ -52,14 +52,14 @@
             this.saveExitToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(2088, 52);
+            this.menuStrip1.Size = new System.Drawing.Size(2088, 60);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip";
             // 
             // saveExitToolStripMenuItem
             // 
             this.saveExitToolStripMenuItem.Name = "saveExitToolStripMenuItem";
-            this.saveExitToolStripMenuItem.Size = new System.Drawing.Size(161, 48);
+            this.saveExitToolStripMenuItem.Size = new System.Drawing.Size(161, 56);
             this.saveExitToolStripMenuItem.Text = "Save/Exit";
             this.saveExitToolStripMenuItem.Click += new System.EventHandler(this.saveExitToolStripMenuItem_Click);
             // 

@@ -28,11 +28,11 @@ namespace MDB
         //COLUMNS======================================================================================
 
         //used for both loading and adding new columns
-        internal static void AddColumn(string colName, string colType, bool isLoad, DataGridView DGV)
+        internal static void AddColumn(string colName, string colType, bool isLoad, CustomDataGridView DGV)
         {
 
 
-
+            
 
             string tableDir = DGV.Name;
             string tableKey = ConvertDirToTableKey(tableDir);
@@ -50,200 +50,293 @@ namespace MDB
 
                         bool valid = false;
 
-
-
-                        if (colType == "Foreign Key Refrence")
-                        {
-                            string tableRefrence = "";
-
-                            string[] MainTables = GetMainTableKeys();
-
-                            //if no valid refrence already exists
-                            if (!currentData[tableKey].ContainsKey((dynamic)(colName + RefrenceColumnKeyExt)))
-                            {
-
-                                string[] input = Prompt.ShowDialog("Choose a table to refrence from.", "Create Refrence Column", false, true, MainTables.ToArray());
-                                tableRefrence = input[2];
-                            }
-                            else
-                            {
-                                tableRefrence = currentData[tableKey][colName + RefrenceColumnKeyExt];
-                            }
-
-
-                            if (tableRefrence != null && MainTables.Contains(tableRefrence))
-                            {
-                                if (currentData[tableRefrence].ContainsValue("Primary Key"))
-                                {
-
-                                    valid = true;
-                                    //changes made to currentdata can't happen when loading a table
-                                    if (!isLoad)
-                                    {
-                                        //add refrence kv pair
-
-                                        currentData[tableKey][colName + RefrenceColumnKeyExt] = tableRefrence;
-
-                                    }
-
-
-                                }
-                                else
-                                {
-                                    System.Windows.Forms.MessageBox.Show("that table doesn't have a Primary Key column!");
-                                }
-
-                            }
-                            else
-                            {
-                                System.Windows.Forms.MessageBox.Show("that table doesn't exist!");
-
-                            }
-
-
-
-
-
-                        }
-                        else if (colType == "Parent Subtable Foreign Key Refrence")
-                        {
-                            string tableRefrence = "";
-
-                            List<string> ParentSubTables = new List<string>();
-                            string subjectTableKey = tableKey.Clone().ToString();
-
-                            //look through parent table levels starting from current table level
-                            while (subjectTableKey != "")
-                            {
-                                Console.WriteLine(subjectTableKey);
-                                foreach (string key in currentData[subjectTableKey].Keys)
-                                {
-                                    Console.WriteLine(key);
-                                    Console.WriteLine(currentData[subjectTableKey][key]);
-                                    Console.WriteLine("--");
-                                    if (currentData[subjectTableKey][key.ToString()] is String && currentData[subjectTableKey][key.ToString()] == "SubTable")
-                                    {
-
-                                        ParentSubTables.Add(subjectTableKey + "/" + key.ToString());
-                                    }
-
-                                }
-                                Console.WriteLine("-----");
-
-                                //remove everything after and including last '/'
-                                if (subjectTableKey.Contains("/"))
-                                {
-                                    string regex = "/(?!.*/).*";
-                                    subjectTableKey = Regex.Replace(subjectTableKey, regex, "");
-                                }
-                                else
-                                {
-                                    subjectTableKey = "";
-                                }
-
-
-
-                            }
-
-                            //if no valid refrence already exists
-                            if (!currentData[tableKey].ContainsKey((dynamic)(colName + ParentSubTableRefrenceColumnKeyExt)))
-                            {
-
-                                string[] input = Prompt.ShowDialog("Choose a subtable to refrence from.", "Create Parent SubTable Refrence Column", false, true, ParentSubTables.ToArray());
-                                tableRefrence = input[2];
-                            }
-                            else
-                            {
-                                tableRefrence = currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt];
-                            }
-
-
-                            if (tableRefrence != null && ParentSubTables.Contains(tableRefrence))
-                            {
-                                if (currentData[tableRefrence].ContainsValue("Primary Key"))
-                                {
-
-                                    valid = true;
-                                    //changes made to currentdata can't happen when loading a table
-                                    if (!isLoad)
-                                    {
-                                        //add refrence kv pair
-
-                                        currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt] = tableRefrence;
-
-                                    }
-
-
-                                }
-                                else
-                                {
-                                    System.Windows.Forms.MessageBox.Show("that subtable doesn't have a Primary Key column!");
-                                }
-
-                            }
-                            else
-                            {
-                                System.Windows.Forms.MessageBox.Show("that table doesn't exist!");
-
-                            }
-
-                        }
-                        else if (colType == "SubTable")
-                        {
-                            if (isLoad && currentData.ContainsKey(tableKey + "/" + colName))
-                            {
-                                valid = true;
-                            }
-                            else
-                            {
-                                valid = CreateSubTable(tableKey, colName);
-                            }
-
-
-                        }
-                        else if (colType == "Primary Key")
-                        {
-                            if (!currentData[tableKey].ContainsValue("Primary Key") || isLoad)
-                            {
-                                valid = true;
-                            }
-                            else
-                            {
-                                System.Windows.Forms.MessageBox.Show("this table already has a Primary Key Column!");
-                            }
-                        }
-                        else
+                        //if loading the table, the column added is automatically valid since it already exists in currentdata (other errors would handle the columns cells being invalid)
+                        if (isLoad)
                         {
                             valid = true;
                         }
+                        else // if adding a new column
+                        {
+                            switch (colType)
+                            {
 
+                            
+                            
+                                case "Auto Table Constructor Script":
+                                
+                                    // make sure this is the main dgv and not a subtable
+                                    if (DGV == Program.mainForm.TableMainGridView)
+                                    {
+                                        if (!currentData[tableKey].ContainsValue("Auto Table Constructor Script"))
+                                        {
+                                            valid = true;
+                                        }
+                                        else
+                                        {
+
+                                            System.Windows.Forms.MessageBox.Show("There is already an Auto Table Constructor Script Column in this Table!");
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        //currently there's no support for refrencing scripts from a Parent Subtable Foreign Key Refrence column
+                                        System.Windows.Forms.MessageBox.Show("A Auto Table Constructor Script must be placed in the Main Table and not in a Sub Table!");
+                                    }
+                                    break;
+                                
+                                case "Auto Table Constructor Script Receiver":
+                                
+                                    //check if a foreign key refrence exists in the same table to link to
+                                    List<string> foreignKeyRefrenceColumnsInTable = new List<string>();
+                                    foreach (KeyValuePair<string, dynamic> KV in currentData[tableKey])
+                                    {
+                                        if (KV.Value is string && KV.Value == "Foreign Key Refrence")
+                                        {
+                                            //add to valid columns to link to
+                                            foreignKeyRefrenceColumnsInTable.Add(KV.Key);
+
+                                        }
+                                    }
+
+                                    string refrenceColumnLinkedTo = null;
+
+                                    if (foreignKeyRefrenceColumnsInTable.Count > 0)
+                                    {
+                                        // if refrenceColumnLinkedTo doesn't already exist
+                                        if (!currentData[tableKey].ContainsKey((dynamic)(colName + ScriptReceiverLinkToRefrenceColumnExt)))
+                                        {
+                                            string[] input = Prompt.ShowDialog("Choose a Foreign Key Refrence.", "Create Auto Table Constructor Script Receiver Column", false, true, foreignKeyRefrenceColumnsInTable.ToArray());
+                                            refrenceColumnLinkedTo = input[2];
+
+                                            //store the linked column in current data
+                                            currentData[tableKey][colName + ScriptReceiverLinkToRefrenceColumnExt] = refrenceColumnLinkedTo;
+
+                                        }
+                                        else
+                                        {
+                                            refrenceColumnLinkedTo = currentData[tableKey][colName + ScriptReceiverLinkToRefrenceColumnExt];
+                                        }
+
+                                        string tableKeyBeingRefrenced = currentData[tableKey][refrenceColumnLinkedTo + RefrenceColumnKeyExt];
+
+                                        //now check if the selected refrenceColumnLinkedTo is refrencing a table with a "Auto Table Constructor Script" column
+                                        bool refrencedTableContainsScript = false;
+                                        foreach (KeyValuePair<string, dynamic> KV in currentData[tableKeyBeingRefrenced])
+                                        {
+                                            if (KV.Value is string && KV.Value == "Auto Table Constructor Script")
+                                            {
+                                                refrencedTableContainsScript = true;
+                                            }
+                                        }
+
+                                        if (refrencedTableContainsScript)
+                                        {
+
+                                            // add the column
+                                            valid = true;
+
+                                        }
+                                        else
+                                        {
+                                            
+                                            System.Windows.Forms.MessageBox.Show("the foreign key refrence column you are linking this column to does not contain a \"Auto Table Constructor Script Column\" to read from!");
+                                            
+
+                                        }
+
+
+                                    }
+                                    else
+                                    {
+                                        
+                                        
+                                        System.Windows.Forms.MessageBox.Show("the table you are adding this column to must also contain a \"Foreign Key Refrence Column\" to link this column to!");
+                                        
+                                    }
+
+
+
+
+
+                                    break;
+                                case "Foreign Key Refrence":
+                                
+                                    string tableRefrence = "";
+
+                                    string[] MainTables = GetMainTableKeys();
+
+                                    //if no valid refrence already exists
+                                    if (!currentData[tableKey].ContainsKey((dynamic)(colName + RefrenceColumnKeyExt)))
+                                    {
+
+                                        string[] input = Prompt.ShowDialog("Choose a table to refrence from.", "Create Refrence Column", false, true, MainTables.ToArray());
+                                        tableRefrence = input[2];
+                                    }
+                                    else
+                                    {
+                                        tableRefrence = currentData[tableKey][colName + RefrenceColumnKeyExt];
+                                    }
+
+
+                                    if (tableRefrence != null && MainTables.Contains(tableRefrence) )
+                                    {
+                                        if (currentData[tableRefrence].ContainsValue("Primary Key") )
+                                        {
+
+                                            valid = true;
+                                            //changes made to currentdata can't happen when loading a table
+                                            
+                                            //add refrence kv pair
+
+                                            currentData[tableKey][colName + RefrenceColumnKeyExt] = tableRefrence;
+
+                                            
+
+
+
+
+
+                                        }
+                                        else
+                                        {
+                                            System.Windows.Forms.MessageBox.Show("that table doesn't have a Primary Key column!");
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        System.Windows.Forms.MessageBox.Show("that table doesn't exist!");
+
+                                    }
+
+
+
+
+
+                                    break;
+                                case "Parent Subtable Foreign Key Refrence":
+                                
+                                    string parentSubtableRefrence = "";
+
+                                    List<string> ParentSubTables = new List<string>();
+                                    string subjectTableKey = tableKey.Clone().ToString();
+
+                                    //look through parent table levels starting from current table level
+                                    while (subjectTableKey != "")
+                                    {
+                                        Console.WriteLine(subjectTableKey);
+                                        foreach (string key in currentData[subjectTableKey].Keys)
+                                        {
+                                            Console.WriteLine(key);
+                                            Console.WriteLine(currentData[subjectTableKey][key]);
+                                            Console.WriteLine("--");
+                                            if (currentData[subjectTableKey][key.ToString()] is String && currentData[subjectTableKey][key.ToString()] == "SubTable")
+                                            {
+
+                                                ParentSubTables.Add(subjectTableKey + "/" + key.ToString());
+                                            }
+
+                                        }
+                                        Console.WriteLine("-----");
+
+                                        //remove everything after and including last '/'
+                                        if (subjectTableKey.Contains("/"))
+                                        {
+                                            string regex = "/(?!.*/).*";
+                                            subjectTableKey = Regex.Replace(subjectTableKey, regex, "");
+                                        }
+                                        else
+                                        {
+                                            subjectTableKey = "";
+                                        }
+
+
+
+                                    }
+
+                                    //if no valid refrence already exists
+                                    if (!currentData[tableKey].ContainsKey((dynamic)(colName + ParentSubTableRefrenceColumnKeyExt)))
+                                    {
+
+                                        string[] input = Prompt.ShowDialog("Choose a subtable to refrence from.", "Create Parent SubTable Refrence Column", false, true, ParentSubTables.ToArray());
+                                        parentSubtableRefrence = input[2];
+                                    }
+                                    else
+                                    {
+                                        parentSubtableRefrence = currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt];
+                                    }
+
+
+                                    if (parentSubtableRefrence != null && ParentSubTables.Contains(parentSubtableRefrence))
+                                    {
+                                        if (currentData[parentSubtableRefrence].ContainsValue("Primary Key"))
+                                        {
+
+                                            valid = true;
+                                            //changes made to currentdata can't happen when loading a table
+                                            
+                                            
+                                            //add refrence kv pair
+
+                                            currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt] = parentSubtableRefrence;
+
+                                            
+
+
+                                        }
+                                        else
+                                        {
+                                            System.Windows.Forms.MessageBox.Show("that subtable doesn't have a Primary Key column!");
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        System.Windows.Forms.MessageBox.Show("that table doesn't exist!");
+
+                                    }
+
+                                    break;
+                                case "SubTable":
+                                    
+                                    
+                                    valid = CreateSubTable(tableKey, colName);
+                                    
+
+
+                                    break;
+                                case "Primary Key":
+                                
+                                    if (!currentData[tableKey].ContainsValue("Primary Key"))
+                                    {
+                                        valid = true;
+                                    }
+                                    else
+                                    {
+                                        System.Windows.Forms.MessageBox.Show("this table already has a Primary Key Column!");
+                                    }
+                                    break;
+                                default:
+                                
+                                    valid = true;
+                                    break;
+                            }
+                        }
+
+
+
+                    
 
 
 
                         if (valid)
                         {
+                            
 
-                            DataGridViewColumn myDataCol = (DataGridViewColumn)Activator.CreateInstance(ColumnTypes.Types[colType]);
+                            DataGridViewColumn myDataCol = Program.GetDataGridViewColumn(colName, colType);
 
-                            myDataCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                            myDataCol.MinimumWidth = 5;
-                            myDataCol.HeaderText = colName;
-                            myDataCol.Name = colName;
-                            myDataCol.SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                            //set column flatstyle to pupup by default so that colors apear over buttons and comboboxes that are created
-                            if (myDataCol.GetType() == typeof(DataGridViewButtonColumn))
-                            {
-                                DataGridViewButtonColumn x = myDataCol as DataGridViewButtonColumn;
-                                x.FlatStyle = FlatStyle.Popup;
-                                myDataCol = x;
-                            }
-                            else if (myDataCol.GetType() == typeof(DataGridViewComboBoxColumn))
-                            {
-                                DataGridViewComboBoxColumn x = myDataCol as DataGridViewComboBoxColumn;
-                                x.FlatStyle = FlatStyle.Popup;
-                                myDataCol = x;
-                            }
+                           
 
                             //add first
                             DGV.Columns.Add(myDataCol);
@@ -261,12 +354,12 @@ namespace MDB
                                 List<string> DGVKeysList = new List<string>();
                                 //get all subtable data of same column
                                 List<Dictionary<int, Dictionary<string, dynamic>>> TableDataRowsAtSameLevel = GetAllTableDataAtTableLevel(tableKey, ref DGVKeysList);
-                                List<DataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(tableKey);
+                                List<CustomDataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(tableKey);
 
 
                                 //add to other open subtables if any
 
-                                foreach (DataGridView openDGV in openDGVs)
+                                foreach (CustomDataGridView openDGV in openDGVs)
                                 {
 
                                     if (openDGV != DGV)
@@ -279,7 +372,7 @@ namespace MDB
                                         adjDataCol.SortMode = DataGridViewColumnSortMode.NotSortable;
                                         openDGV.Columns.Add(adjDataCol);
                                     }
-
+                                    
 
                                 }
 
@@ -290,9 +383,9 @@ namespace MDB
 
                                     string DGVKeyOfTable = DGVKeysList[tableIndex];
 
-                                    DataGridView openDGVOfTable = null;
+                                    CustomDataGridView openDGVOfTable = null;
                                     //get openDGVOfTable
-                                    foreach (DataGridView openDGV in openDGVs)
+                                    foreach (CustomDataGridView openDGV in openDGVs)
                                     {
                                         if (openDGV.Name == DGVKeyOfTable)
                                         {
@@ -305,32 +398,29 @@ namespace MDB
 
 
 
-                                    //for all row entries add a null row to this column
+                                    //for all row entries add a null entry for this column
                                     foreach (KeyValuePair<int, Dictionary<string, dynamic>> entryData in tableData)
                                     {
+
+                                        
+
+                                        
+
+                                        if (new string[3] { "Bool", "SubTable", "Auto Table Constructor Script Receiver" }.Contains(colType))
+                                        {
+                                            
+                                            //set cell tag to enabled
+                                            if (openDGVOfTable != null)
+                                            {
+                                                openDGVOfTable.Rows[entryData.Key].Cells[colName].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
+                                            }
+
+
+
+                                        }
+
                                         //define the default value
-                                        dynamic defaultVal = null;
-                                        if (myDataCol is DataGridViewCheckBoxColumn)
-                                        {
-                                            defaultVal = false;
-                                            //set cell tag to enabled
-                                            if (openDGVOfTable != null)
-                                            {
-                                                openDGVOfTable.Rows[entryData.Key].Cells[colName].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
-                                            }
-
-
-
-                                        }
-                                        else if (currentData[tableKey][colName] == "SubTable")
-                                        {
-                                            defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
-                                            //set cell tag to enabled
-                                            if (openDGVOfTable != null)
-                                            {
-                                                openDGVOfTable.Rows[entryData.Key].Cells[colName].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
-                                            }
-                                        }
+                                        dynamic defaultVal = ColumnTypes.GetDefaultColumnValue(colType);
                                         //add it to directory
                                         entryData.Value.Add(colName, defaultVal);
                                         //Program.mainForm.TableMainGridView.Rows[entryData.Key].Cells[colName].Value = null;
@@ -379,7 +469,7 @@ namespace MDB
 
 
 
-        internal static void RemoveColumn(string colName, DataGridView DGV)
+        internal static void RemoveColumn(string colName, CustomDataGridView DGV)
         {
 
 
@@ -420,21 +510,44 @@ namespace MDB
                 {
                     currentData[tableKey].Remove(colName + RefrenceColumnKeyExt);
 
+                    //look for Auto Table Constructor Script Receiver columns that link to this column and remove those as well
+                    List<string> removalList = new List<string>();
+                    foreach (KeyValuePair<string,dynamic> KV in currentData[tableKey])
+                    {
+                        if (KV.Value == "Auto Table Constructor Script Receiver")
+                        {
+                            //if linked to this column
+                            if (currentData[tableKey][KV.Key + ScriptReceiverLinkToRefrenceColumnExt] == colName)
+                            {
+                                string linkedColName = KV.Key;
+                                //remove it
+                                removalList.Add(linkedColName);
+                            }
+                            
+
+                        }
+                    }
+                    foreach(string linkedColName in removalList)
+                    {
+                        RemoveColumn(linkedColName, DGV);
+                    }
+
+
                 }
                 else if (colType == "Parent Subtable Foreign Key Refrence")
                 {
                     currentData[tableKey].Remove(colName + ParentSubTableRefrenceColumnKeyExt);
 
                 }
-                else if (colType == "SubTable")
+                else if (colType == "SubTable" || colType == "Auto Table Constructor Script Receiver")
                 {
                     string subTableKey = tableKey + "/" + colName;
 
 
-                    List<Tuple<DataGridView, int>> removalList = new List<Tuple<DataGridView, int>>();
+                    List<Tuple<CustomDataGridView, int>> removalList = new List<Tuple<CustomDataGridView, int>>();
 
                     //close subtables of this column
-                    foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+                    foreach (KeyValuePair<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubTable in Program.openSubTables)
                     {
                         string openTableKey = ConvertDirToTableKey(openSubTable.Value.Item2.Name);
                         //subtable exists at same table level
@@ -449,7 +562,7 @@ namespace MDB
                         }
                     }
                     //remove from opensubtables
-                    foreach (Tuple<DataGridView, int> key in removalList)
+                    foreach (Tuple<CustomDataGridView, int> key in removalList)
                     {
                         RemoveSubtableFromOpenSubtables(key);
 
@@ -457,27 +570,37 @@ namespace MDB
                     }
 
 
-                    //remove subtable data associated with column including it's children
-                    string[] allKeys = GenericFunct.Clone(currentData.Keys.ToArray<string>());
-                    foreach (string tableEntry in allKeys)
+                    //specific functions to either column type:
+
+                    if (colType == "SubTable")
                     {
-                        if (tableEntry.StartsWith(subTableKey + "/") || tableEntry == subTableKey)
+                        //remove subtable data associated with column including it's children
+                        string[] allKeys = GenericFunct.Clone(currentData.Keys.ToArray<string>());
+                        foreach (string tableEntry in allKeys)
                         {
-                            currentData.Remove(tableEntry);
+                            if (tableEntry.StartsWith(subTableKey + "/") || tableEntry == subTableKey)
+                            {
+                                currentData.Remove(tableEntry);
+                            }
                         }
+                    }
+                    else if (colType == "Auto Table Constructor Script Receiver")
+                    {
+                        //remove the adjacent refrence column link data
+                        currentData[tableKey].Remove(colName + ScriptReceiverLinkToRefrenceColumnExt);
                     }
 
 
                 }
-
-
+                
 
 
 
                 currentData[tableKey].Remove(colName);
+
+
+                //remove from ColumnOrderRefrence
                 int index = 0;
-
-
                 foreach (string orderColName in currentData[tableKey][ColumnOrderRefrence])
                 {
                     if (orderColName == colName)
@@ -507,9 +630,9 @@ namespace MDB
                 }
 
                 //remove this column from adjacent open subtables at same level
-                List<DataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(ConvertDirToTableKey(DGV.Name));
+                List<CustomDataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(ConvertDirToTableKey(DGV.Name));
 
-                foreach (DataGridView openDGV in openDGVs)
+                foreach (CustomDataGridView openDGV in openDGVs)
                 {
 
                     if (openDGV != DGV)
@@ -542,6 +665,14 @@ namespace MDB
                     DGV.Rows.Clear();
                     Dictionary<int, Dictionary<string, dynamic>> tableData = GetTableDataFromDir(tableDir) as Dictionary<int, Dictionary<string, dynamic>>;
                     tableData.Clear();
+
+                    //also update Add Row button if this is a Subtable
+                    var ParentObj = DGV.Parent;
+                    if (ParentObj is CustomDataGridView)
+                    {
+                        DatabaseFunct.UpdateSubTableAddRowButton(DGV);
+                    }
+
                 }
 
 
@@ -637,6 +768,25 @@ namespace MDB
                             //remove old entry
                             currentData[tableKey].Remove(colName + RefrenceColumnKeyExt);
 
+                            //if this column has any Auto Table Constructor Script Receiver columns that link to it
+                            //rename the colName used in the ScriptReceiverLinkToRefrenceColumnExt
+                            
+                            foreach (KeyValuePair<string, dynamic> KV in currentData[tableKey])
+                            {
+                                if (KV.Value == "Auto Table Constructor Script Receiver")
+                                {
+                                    //if linked to this column
+                                    if (currentData[tableKey][KV.Key + ScriptReceiverLinkToRefrenceColumnExt] == colName)
+                                    {
+                                        //change the linked column name
+                                        currentData[tableKey][KV.Key + ScriptReceiverLinkToRefrenceColumnExt] = newColName;
+                                    }
+
+
+                                }
+                            }
+                            
+
                         }
                         else if (colType == "Parent Subtable Foreign Key Refrence")
                         {
@@ -646,70 +796,122 @@ namespace MDB
                             //remove old entry
                             currentData[tableKey].Remove(colName + ParentSubTableRefrenceColumnKeyExt);
 
+
+
+
                         }
                         //rename all data branching from the subtable if it is a subtable column being renamed
-                        else if (colType == "SubTable")
+                        else if (colType == "SubTable" || colType == "Auto Table Constructor Script Receiver")
                         {
-
-                            List<string> keysToRemove = new List<string>();
-                            SortedDictionary<string, dynamic> renamedEntries = new SortedDictionary<string, dynamic>();
-
-                            List<dynamic[]> parentSubtableRefrenceEntries = new List<dynamic[]>();
-
-                            //rename the direct table
-
-                            renamedEntries[tableKey + "/" + newColName] = currentData[tableKey + "/" + colName];
 
                             string oldStart = tableKey + "/" + colName + "/";
                             string newStart = tableKey + "/" + newColName + "/";
 
-                            //rename all sub tables below it
-                            foreach (KeyValuePair<string, dynamic> tableKV in currentData)
+                            //table structures in current data are only relevant to subtables
+                            //and parentSubtableRefrenceEntries cannot be made to an adjacent Auto Table Constructor Script Receiver column since Auto Table Constructor Scripts don't support primary keys
+                            if (colType == "SubTable")
                             {
-                                //start with tables that begin with this subtable directory 
-                                if (tableKV.Key.StartsWith(oldStart))
-                                {
-                                    
-                                    //remove old starting directory from the old key string and replace it with the new start the get the key that will be used
-                                    string newKey = newStart + tableKV.Key.Remove(0, oldStart.Length);
-                                    renamedEntries[newKey] = tableKV.Value;
+                                List<string> keysToRemove = new List<string>();
+                                SortedDictionary<string, dynamic> renamedEntries = new SortedDictionary<string, dynamic>();
 
-                                    keysToRemove.Add(tableKV.Key);
-                                }
-                                //look through all keys within table that refrence to this subtable via a ParentSubTableRefrenceColumn
-                                if (tableKV.Key.StartsWith(tableKey + "/") || tableKV.Key == tableKey)
+                                List<dynamic[]> parentSubtableRefrenceEntries = new List<dynamic[]>();
+
+
+
+
+                                
+
+                                //rename the direct table
+
+                                renamedEntries[tableKey + "/" + newColName] = currentData[tableKey + "/" + colName];
+
+
+
+                                //rename all sub tables below it
+                                foreach (KeyValuePair<string, dynamic> tableKV in currentData)
                                 {
-                                    Console.WriteLine("Searching for subtable refrence columns to alter directories in: " + tableKV.Key);
-                                    foreach (KeyValuePair<string, dynamic> KV in tableKV.Value)
+                                    //start with tables that begin with this subtable directory 
+                                    if (tableKV.Key.StartsWith(oldStart))
                                     {
-                                        if (KV.Key.EndsWith(ParentSubTableRefrenceColumnKeyExt))
-                                        {
-                                            bool added = false;
 
-                                            if (KV.Value.StartsWith(oldStart))
-                                            {
-                                                string newValue = newStart + tableKV.Value.Remove(0, oldStart.Length);
-                                                parentSubtableRefrenceEntries.Add(new dynamic[] { tableKV.Key, KV.Key, newValue });
-                                                added = true;
-                                            }
-                                            else if (KV.Value == tableKey + "/" + colName) //if refrencing this table directly
-                                            {
+                                        //remove old starting directory from the old key string and replace it with the new start the get the key that will be used
+                                        string newKey = newStart + tableKV.Key.Remove(0, oldStart.Length);
+                                        renamedEntries[newKey] = tableKV.Value;
 
-                                                string newValue = tableKey + "/" + newColName;
-                                                parentSubtableRefrenceEntries.Add(new dynamic[] { tableKV.Key, KV.Key, newValue });
-                                                added = true;
-                                            }
-                                            Console.WriteLine(KV.Value + (added ? "- added" : ""));
-                                        }
-
+                                        keysToRemove.Add(tableKV.Key);
                                     }
-                                    Console.WriteLine("---");
+                                    //look through all keys within table that refrence to this subtable via a ParentSubTableRefrenceColumn
+                                    if (tableKV.Key.StartsWith(tableKey + "/") || tableKV.Key == tableKey)
+                                    {
+                                        Console.WriteLine("Searching for subtable refrence columns to alter directories in: " + tableKV.Key);
+                                        foreach (KeyValuePair<string, dynamic> KV in tableKV.Value)
+                                        {
+                                            if (KV.Key.EndsWith(ParentSubTableRefrenceColumnKeyExt))
+                                            {
+                                                bool added = false;
+
+                                                if (KV.Value.StartsWith(oldStart))
+                                                {
+                                                    string newValue = newStart + tableKV.Value.Remove(0, oldStart.Length);
+                                                    parentSubtableRefrenceEntries.Add(new dynamic[] { tableKV.Key, KV.Key, newValue });
+                                                    added = true;
+                                                }
+                                                else if (KV.Value == tableKey + "/" + colName) //if refrencing this table directly
+                                                {
+
+                                                    string newValue = tableKey + "/" + newColName;
+                                                    parentSubtableRefrenceEntries.Add(new dynamic[] { tableKV.Key, KV.Key, newValue });
+                                                    added = true;
+                                                }
+                                                Console.WriteLine(KV.Value + (added ? "- added" : ""));
+                                            }
+
+                                        }
+                                        Console.WriteLine("---");
+                                    }
+
+
+
                                 }
 
+                                //---------------------------------
+                                //apply changes
 
+                                //apply altered refrence entries (this should also change entries within renamedEntries)
+                                foreach (dynamic[] refEnt in parentSubtableRefrenceEntries)
+                                {
+                                    string key = refEnt[0];
+                                    string subKey = refEnt[1];
+                                    string refAlt = refEnt[2];
+
+                                    Console.WriteLine("within \"" + key + "\" altering subtale refrence entry column \"" + subKey + "\" from \"" + currentData[key][subKey] + "\" to \"" + refAlt + "\"");
+                                    currentData[key][subKey] = refAlt;
+                                }
+
+                                //
+                                foreach (string key in keysToRemove)
+                                {
+                                    //remove old keys
+                                    currentData.Remove(key);
+                                }
+
+                                //concat current data with renamed entries
+                                foreach (KeyValuePair<string, dynamic> KV in renamedEntries)
+                                {
+                                    currentData.Add(KV.Key, KV.Value);
+                                }
+
+                                //change sub table key
+                                dynamic dat = currentData[tableKey + "/" + colName];
+                                currentData[tableKey + "/" + newColName] = dat;
+                                currentData.Remove(tableKey + "/" + colName);
 
                             }
+                            
+                            
 
+                            
+                            
                             //get "/" index of old colName in directory string
                             char ch = '/';
                             //the old column name should always be after the number of "/" equivalent to oldDirIndex within the directories.
@@ -720,7 +922,7 @@ namespace MDB
 
                             List<dynamic[]> replacer = new List<dynamic[]>();
                             //change all open DGV names that start with or are subtable directory
-                            foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+                            foreach (KeyValuePair<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubTable in Program.openSubTables)
                             {
                                 string openTableDir = openSubTable.Value.Item2.Name;
                                 string openTableKey = ConvertDirToTableKey(openTableDir);
@@ -779,39 +981,10 @@ namespace MDB
 
 
                             }
-                            //---------------------------------
-                            //apply changes
-
-                            //apply altered refrence entries (this should also change entries within renamedEntries)
-                            foreach (dynamic[] refEnt in parentSubtableRefrenceEntries)
-                            {
-                                string key = refEnt[0];
-                                string subKey = refEnt[1];
-                                string refAlt = refEnt[2];
-
-                                Console.WriteLine("within \"" + key + "\" altering subtale refrence entry column \"" + subKey + "\" from \"" + currentData[key][subKey] + "\" to \"" + refAlt + "\"");
-                                currentData[key][subKey] = refAlt;
-                            }
-
-                            //
-                            foreach (string key in keysToRemove)
-                            {
-                                //remove old keys
-                                currentData.Remove(key);
-                            }
-
-                            //concat current data with renamed entries
-                            foreach (KeyValuePair<string, dynamic> KV in renamedEntries)
-                            {
-                                currentData.Add(KV.Key, KV.Value);
-                            }
-
-                            //change sub table key
-                            dynamic dat = currentData[tableKey + "/" + colName];
-                            currentData[tableKey + "/" + newColName] = dat;
-                            currentData.Remove(tableKey + "/" + colName);
+                            
 
                         }
+                        
 
                         //change all data at table level
                         List<string> DGVKeysList = new List<string>();
@@ -830,11 +1003,11 @@ namespace MDB
 
 
                         //change column name on open dgvs
-                        List<DataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(tableKey);
+                        List<CustomDataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(tableKey);
 
                         //change column within open dgvs
 
-                        foreach (DataGridView openDGV in openDGVs)
+                        foreach (CustomDataGridView openDGV in openDGVs)
                         {
                             openDGV.Columns[colName].HeaderText = newColName;
                             openDGV.Columns[colName].Name = newColName;
@@ -865,86 +1038,15 @@ namespace MDB
                 System.Windows.Forms.MessageBox.Show("column name entered " + error);
             }
 
-            /*if (currentData.Keys.Contains(tabName))
-            {
-                string error = GenericFunct.ValidateNameInput(newTabName);
 
-
-                if (error == "")
-                {
-                    if (!currentData.Keys.Contains(newTabName))
-                    {
-                        List<string> keysToRemove = new List<string>();
-                        foreach (string key in currentData.Keys)
-                        {
-                            //change refrences to renamed table
-                            foreach (string subKey in currentData[key].Keys)
-                            {
-                                //foregn key refrence to this table
-                                if (subKey.EndsWith(RefrenceColumnKeyExt) && currentData[key][subKey] == tabName)
-                                {
-                                    currentData[key][subKey] = newTabName;
-                                }
-                                //change subtable refrences with this as the main table
-                                if (subKey.EndsWith(ParentSubTableRefrenceColumnKeyExt) && currentData[key][subKey].StartsWith(tabName + "/"))
-                                {
-                                    currentData[key][subKey] = newTabName + currentData[key][subKey].Remove(0, tabName.Length);
-                                }
-                            }
-                            //for all table data
-                            if (key.StartsWith(tabName + "/") || key == tabName)
-                            {
-                                string newKey = newTabName + key.Remove(0, tabName.Length);
-                                //old keys to be removed
-                                keysToRemove.Add(key);
-                                //re-implement under new name
-                                currentData[newKey] = currentData[key];
-
-                            }
-
-
-                        }
-                        foreach (string key in keysToRemove)
-                        {
-                            //remove old keys
-                            currentData.Remove(key);
-                        }
-
-                        if (Program.mainForm.tabControl1.TabPages.ContainsKey(tabName))
-                        {
-                            //change tabcontrol data
-                            Program.mainForm.tabControl1.TabPages[tabName].Text = newTabName;
-                            Program.mainForm.tabControl1.TabPages[tabName].Name = newTabName;
-
-                        }
-
-                        //refresh table if it is the currently selected table (so that DGVs are renamed)
-                        if (Program.mainForm.tabControl1.SelectedTab.Name == newTabName)
-                        {
-                            ChangeMainTable(newTabName);
-                        }
-
-
-                    }
-                    else
-                    {
-                        System.Windows.Forms.MessageBox.Show("that table name already exists");
-                    }
-                }
-                else
-                {
-                    System.Windows.Forms.MessageBox.Show("table entered " + error);
-                }
-            }
-            else
-            {
-                System.Windows.Forms.MessageBox.Show("table entered doesn't exist!");
-            }*/
 
         }
 
 
-        internal static void HideUnhideColumn(string colName, DataGridView DGV)
+        
+
+        //---
+        internal static void HideUnhideColumn(string colName, CustomDataGridView DGV)
         {
             if (DGV.Columns[colName].Width != 2)
             {
@@ -961,7 +1063,7 @@ namespace MDB
 
         }
 
-        internal static void ShiftColumn(string colName, DataGridView DGV, bool isLeft)
+        internal static void ShiftColumn(string colName, CustomDataGridView DGV, bool isLeft)
         {
             string tableDir = DGV.Name;
             string tableKey = ConvertDirToTableKey(tableDir);
@@ -980,20 +1082,56 @@ namespace MDB
 
             if (newIndex > -1 && newIndex < orderList.Count)
             {
+                //duplicate orderList
+                List<string> oldOrderList = new List<string>(orderList);
+
+
                 orderList.Remove(colName);
                 orderList.Insert(newIndex, colName);
-                DGV.Columns[colName].DisplayIndex = newIndex;
+                
 
-                for (int colI = newIndex + 1; colI < orderList.Count; colI++)
+                
+
+                //for all columns which have shifted position due to this change
+                
+                //if shifted right, a single column to the right has been shifted before the new index
+                int colI = newIndex - 1;
+                if (isLeft)
                 {
-                    Console.WriteLine(orderList[colI]);
-                    DGV.Columns[orderList[colI]].DisplayIndex = colI;
+                    //if shifted to the left, only the new index and indexes after it have been shifted
+                    colI = newIndex;
                 }
 
+                //shift column DisplayIndexes
+                while ( colI < orderList.Count)
+                {
+                    string thisColName = orderList[colI];
+                    int thisOldIndex = oldOrderList.IndexOf(thisColName);
+                    int thisNewIndex = colI;
+                    DGV.Columns[thisColName].DisplayIndex = thisNewIndex;
+
+
+                    colI++;
+                }
+
+                //shift cell outlines
+                //DGV.ShiftColumnsOfInvalidCellIndexes(oldOrderList, orderList);
+
+                /*
+                //for all column indexes after the new shifted column index
+                for (int colI = newIndex + 1; colI < orderList.Count; colI++)
+                {
+                    //adjust the display index
+                    Console.WriteLine(orderList[colI]);
+                    DGV.Columns[orderList[colI]].DisplayIndex = colI;
+
+                }
+                */
+
+
+
+
             }
-
-
-
 
         }
 
@@ -1011,7 +1149,7 @@ namespace MDB
 
 
 
-        internal static void AddRow(DataGridView DGV, bool isInsert, int index)
+        internal static void AddRow(CustomDataGridView DGV, bool isInsert, int index)
         {
             string tableDir = DGV.Name;
             string tableKey = ConvertDirToTableKey(tableDir);
@@ -1024,6 +1162,9 @@ namespace MDB
             {
                 DGV.Rows.Insert(index);
                 int i = tableData.Count() - 1;
+
+                
+
                 //iterate all tabledata from index
                 while (i >= index)
                 {
@@ -1054,6 +1195,7 @@ namespace MDB
             }
             else
             {
+                Console.WriteLine("Table Row Index: " + tableData.Count);
                 index = tableData.Count;
                 DGV.Rows.Add();
 
@@ -1069,29 +1211,47 @@ namespace MDB
             DGV.Rows[index].HeaderCell.Value = String.Format("{0}", index);
 
 
+            //check if table is constructed
+            bool isConstructed = false;
+            string tableConstructorScript = null;
+            Dictionary<string, dynamic> DGVTag = DGV.Tag as Dictionary<string, dynamic>;
+            if (DGVTag.ContainsKey("tableConstructorScript"))
+            {
+                isConstructed = true;
+                tableConstructorScript = DGVTag["tableConstructorScript"];
+            }
+
+
+
             //add entity to row entry refrences
             foreach (DataGridViewColumn column in columns)
             {
+                
+
+                string colType = null;
+
+                if (isConstructed)
+                {
+                    //fetch the column type from colTag is constructed:
+                    Dictionary<string, dynamic> colTag = column.Tag as Dictionary<string, dynamic>;
+                    colType = colTag["columnType"];
+                }
+                else
+                {
+                    colType = currentData[tableKey][column.Name];
+                }
+
+                
+
+
+                //set cell tag to be enabled if it's one of these column types
+                if (new string[3] { "Bool", "SubTable", "Auto Table Constructor Script Receiver" }.Contains(colType))
+                {
+                    DGV.Rows[index].Cells[column.Index].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
+                }
+
                 //define default value
-                dynamic defaultVal = null;
-
-                //Default checkBox true and false values are the same and must be set to true and false
-                if (DGV.Columns[column.Name] is DataGridViewCheckBoxColumn)
-                {
-                    defaultVal = false;
-                    //check box is enabled by default
-                    DataGridViewCheckBoxCell cbcell = (DataGridViewCheckBoxCell)DGV.Rows[index].Cells[column.Name];
-                    //unsure if this is needed as cbcell is readonly when disabled
-                    cbcell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
-                }
-                if (currentData[tableKey][column.Name] == "SubTable")
-                {
-                    defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
-                    //button is enabled by default
-                    DataGridViewButtonCell bcell = (DataGridViewButtonCell)DGV.Rows[index].Cells[column.Name];
-                    bcell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
-                }
-
+                dynamic defaultVal = ColumnTypes.GetDefaultColumnValue(colType);
                 //add default value to tabledata
                 tableData[index].Add(column.Name, defaultVal);
 
@@ -1103,15 +1263,15 @@ namespace MDB
             //if this is a subtable of a column with disabler conditions, check those conditions.
             //i need to get the column and row index from the DGV's parent
             var ParentObj = DGV.Parent;
-            if (ParentObj is DataGridView && !isInsert)
+            if (ParentObj is CustomDataGridView && !isInsert)
             {
-                DataGridView ParentDGV = (DataGridView)ParentObj;
+                CustomDataGridView ParentDGV = (CustomDataGridView)ParentObj;
                 //how do i get the row index in which this subtable resides
                 //i could use regex and stuff but this is easier
 
                 int RowIndex = 0;
                 string ColName = "";
-                foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+                foreach (KeyValuePair<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubTable in Program.openSubTables)
                 {
                     if (openSubTable.Value.Item2 == DGV)
                     {
@@ -1122,17 +1282,85 @@ namespace MDB
 
                 KeyValuePair<int, Dictionary<string, dynamic>> KVRow = new KeyValuePair<int, Dictionary<string, dynamic>>(RowIndex, GetTableDataFromDir(ParentDGV.Name)[RowIndex]);
 
+                //get if parent dgv is constructed
+                bool isParentConstructed = false;
+                
+                Dictionary<string, dynamic> ParentDGVTag = ParentObj.Tag as Dictionary<string, dynamic>;
+                if (ParentDGVTag.ContainsKey("tableConstructorScript"))
+                {
+                    isParentConstructed = true;
+                    
+                }
 
-
-
-                UpdateStatusOfAllRowCellsInDisablerArrayOfCell(ParentDGV, ConvertDirToTableKey(ParentDGV.Name), KVRow, ColName);
+                //constructed tables don't have disabler array functionality.
+                if (!isParentConstructed)
+                {
+                    UpdateStatusOfAllRowCellsInDisablerArrayOfCell(ParentDGV, ConvertDirToTableKey(ParentDGV.Name), KVRow, ColName);
+                }
+                
             }
+            
+            
+            // if this is a Subtable
+            if (ParentObj is CustomDataGridView)
+            {
+                DatabaseFunct.UpdateSubTableAddRowButton(DGV);
+            }
+
+        }
+
+
+        internal static void DuplicateRow(CustomDataGridView DGV, int rowIndex)
+        {
+            string tableDir = DGV.Name;
+            string tableKey = ConvertDirToTableKey(tableDir);
+
+            Dictionary<int, Dictionary<string, dynamic>> tableData = GetTableDataFromDir(tableDir) as Dictionary<int, Dictionary<string, dynamic>>;
+
+            //collect duplicate data
+            //pass the source dictionary into the destination's constructor:
+            Dictionary<string, dynamic> dupedRowData = GenericFunct.Clone(tableData[rowIndex]);
+
+            
+            //insert a new row above the subject row
+            AddRow(DGV, true, rowIndex);
+            
+
+            List<string> invalidColNames = new List<string>();
+
+            //If the row has a primary key column, erase its data
+            foreach (string colName in dupedRowData.Keys)
+            {
+                var colType = DatabaseFunct.currentData[tableKey][colName];
+                if (colType == "Primary Key")
+                {
+                    invalidColNames.Add(colName);
+                    
+                }
+            }
+
+            foreach (string colName in invalidColNames)
+            {
+                dupedRowData[colName] = null;
+            }
+
+            //then write all data to that new row
+            tableData[rowIndex] = dupedRowData;
+
+            //set loadingTable to true
+            DatabaseFunct.loadingTable = true;
+            //reload the row
+            List<string> columnOrderRefrence = currentData[tableKey][ColumnOrderRefrence] as List<string>;
+            LoadRow(new KeyValuePair<int, Dictionary<string, dynamic>>(rowIndex, tableData[rowIndex]), DGV, false);
+            //set it back to false
+            DatabaseFunct.loadingTable = false;
+            
 
 
         }
 
 
-        internal static void LoadRow(KeyValuePair<int, Dictionary<string, dynamic>> entryData, DataGridView DGV)
+        internal static void LoadRow(KeyValuePair<int, Dictionary<string, dynamic>> entryData, CustomDataGridView DGV, bool isConstructed)
         {
             string tableDir = DGV.Name;
             string tableKey = ConvertDirToTableKey(tableDir);
@@ -1142,40 +1370,104 @@ namespace MDB
             var columns = DGV.Columns;
 
 
-            var index = entryData.Key;
+            var rowIndex = entryData.Key;
 
 
-            if (DGV.Rows.Count - 1 < index)
+            if (DGV.Rows.Count - 1 < rowIndex)
             {
                 DGV.Rows.Add();
             }
 
 
+            //if constructed, remove all row data that is from columns that don't exist
+            //and fetch the tableConstructorScript
+            string tableConstructorScript = null;
+            if (isConstructed)
+            {
+                List<string> removalList = new List<string>();
+                foreach (string colKey in tableData[rowIndex].Keys)
+                {
+                    //key doesn't exist within columns and must be old data
+                    if (!columns.Contains(colKey))
+                    {
+                        removalList.Add(colKey);
+                    }
+                }
+                //erase from entryData.Value/tableData[index]
+                foreach (string colKey in removalList)
+                {
+                    tableData[rowIndex].Remove(colKey);
+                }
+
+
+                //fetch script
+                Dictionary<string, dynamic> DGVTag = DGV.Tag as Dictionary<string, dynamic>;
+                tableConstructorScript = DGVTag["tableConstructorScript"];
+            }
+
+
 
             //add row header
-            DGV.Rows[index].HeaderCell.Value = String.Format("{0}", index);
+            DGV.Rows[rowIndex].HeaderCell.Value = String.Format("{0}", rowIndex);
 
             foreach (DataGridViewColumn column in columns)
             {
+                int colIndex = columns.IndexOf(column);
 
-
-                if (tableData[index].ContainsKey(column.Name))
+                //get column type
+                string colType = null;
+                if (isConstructed)
                 {
-                    var value = tableData[index][column.Name];
+
+                    //fetch the constructed column type:
+                    Dictionary<string, dynamic> colTag = column.Tag as Dictionary<string, dynamic>;
+                    colType = colTag["columnType"];
+                }
+                else
+                {
+                    colType = currentData[tableKey][column.Name];
+                }
+
+                //if row data contains column
+                if (tableData[rowIndex].ContainsKey(column.Name))
+                {
+                    var value = tableData[rowIndex][column.Name];
                     var displayValue = value;
                     Console.WriteLine("loaded row value: " + value);
 
 
+                    
 
+                    
+                    
+                        
+
+                    //if the column type is an Auto Table Constructor Script, confirm that the script is valid
+                    if (colType == "Auto Table Constructor Script" && value != null)
+                    {
+                        
+
+                        string scriptError = AutoTableConstructorScriptFunct.ValidateScript(value);
+                        if (scriptError != "")
+                        {
+                            //give the cell a red outline
+                            DGV.AddInvalidCellIndexes(colIndex, rowIndex);
+                        }
+                        else
+                        {
+                            //remove the cell's red outline
+                            DGV.RemoveInvalidCellIndexes(colIndex, rowIndex);
+                        }
+                    }
                     //if it's a comboboxcolumn add the item to the cell
-                    if (DGV.Columns[column.Name] is DataGridViewComboBoxColumn)
+                    else if (DGV.Columns[column.Name] is DataGridViewComboBoxColumn)
                     {
                         if (value != null)
                         {
                             DataGridViewComboBoxCell cell = new DataGridViewComboBoxCell() { Items = { value } };
-                            DataGridViewComboBoxCell x = DGV.Rows[index].Cells[column.Name] as DataGridViewComboBoxCell;
+                            DataGridViewComboBoxCell x = DGV.Rows[rowIndex].Cells[column.Name] as DataGridViewComboBoxCell;
                             cell.FlatStyle = x.FlatStyle;
-                            DGV.Rows[index].Cells[column.Name] = cell;
+                            DGV.Rows[rowIndex].Cells[column.Name] = cell;
                         }
 
 
@@ -1194,49 +1486,77 @@ namespace MDB
                             cellVal = cell.TrueValue;
                         }
 
+                        
+
                         displayValue = cellVal;
 
-                        DGV.Rows[index].Cells[column.Name] = cell;
+                        DGV.Rows[rowIndex].Cells[column.Name] = cell;
                     }
                     else if (DGV.Columns[column.Name] is DataGridViewButtonColumn)
                     {
 
-                        DataGridViewButtonCell bcell = (DataGridViewButtonCell)DGV.Rows[index].Cells[column.Name];
+                        DataGridViewButtonCell bcell = (DataGridViewButtonCell)DGV.Rows[rowIndex].Cells[column.Name];
                         bcell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
                         bcell.Style.ForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["SubTableCellFore"];
                         bcell.Style.SelectionForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["SubTableSelectedCellFore"];
 
                         //get abreviated sub table data and set text to that
-                        Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[index][column.Name] as Dictionary<int, Dictionary<string, dynamic>>;
+                        Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[rowIndex][column.Name] as Dictionary<int, Dictionary<string, dynamic>>;
                         Console.WriteLine(subtableData);
-                        Console.WriteLine(tableData);
+                        Console.WriteLine(tableData[rowIndex]);
 
-                        displayValue = ColumnTypes.GetSubTableCellDisplay(subtableData,column.Name,tableKey);
+                        //this is left null if isConstructed is false so that the subtable structure would be pulled from currentData instead.
+                        string subtableConstructorScript = null;
+                        if (isConstructed)
+                        {
+                            Dictionary<string,dynamic> columnTag = column.Tag as Dictionary<string,dynamic>;
+                            subtableConstructorScript = columnTag["subtableConstructorScript"];
+                        }
+                        else if (colType == "Auto Table Constructor Script Receiver") //get receiver script 
+                        {
+                            subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, column.Name, tableData, rowIndex);
+
+                            // if the primary key being refrenced is changed to a key that doesn't exist in the table being refrenced, set the subtableConstructorScript to be empty instead of null
+                            // since giving a null subtableConstructorScript to GetSubTableCellDisplay() will cause issues
+                            if (subtableConstructorScript == null)
+                            {
+                                subtableConstructorScript = "";
+                                // and clear the constructed subtable's data
+                                tableData[rowIndex][column.Name].Clear();
+                            }
+                        }
+
+                        //get the display string that will show a few rows of the subtable's internal structure
+                        displayValue = ColumnTypes.GetSubTableCellDisplay(subtableData,column.Name, tableKey, subtableConstructorScript);
 
                     }
 
                     //assign data to column entry
-                    DGV.Rows[index].Cells[column.Name].Value = displayValue;
+                    DGV.Rows[rowIndex].Cells[column.Name].Value = displayValue;
 
-                    //check if cell is enabled
-                    bool isDisabled = IsDataRowCellStillDisabled(tableKey, new KeyValuePair<int, Dictionary<string, dynamic>>(index, tableData[index]), column.Name);
-                    if (isDisabled)
+                    //constructed tables don't have an adjacentcolumndisabler
+                    if (!isConstructed)
                     {
-                        DisableCellAtColAndRow(DGV, column.Name, index);
+                        
+                        //check if cell is enabled
+                        bool isDisabled = IsDataRowCellStillDisabled(tableKey, new KeyValuePair<int, Dictionary<string, dynamic>>(rowIndex, tableData[rowIndex]), column.Name);
+                        if (isDisabled)
+                        {
+                            DisableCellAtColAndRow(DGV, column.Name, rowIndex);
+                        }
                     }
+                    
 
                 }
-                else
+                else // if it doesn't already exist in row data
                 {
-                    dynamic defaultVal = null;
-                    if (DGV.Columns[column.Name] is DataGridViewCheckBoxColumn)
-                    {
-                        defaultVal = false;
-                    }
+                    //set to default 
+                    dynamic defaultVal = ColumnTypes.GetDefaultColumnValue(colType);
+                    
                     Console.WriteLine("load row create null value");
                     //just add the column to the entry as null and set entry data to such
-                    tableData[index].Add(column.Name, null);
-                    DGV.Rows[index].Cells[column.Name].Value = defaultVal;
+                    tableData[rowIndex].Add(column.Name, defaultVal);
+                    DGV.Rows[rowIndex].Cells[column.Name].Value = defaultVal;
                 }
 
 
@@ -1248,7 +1568,7 @@ namespace MDB
 
 
         //removes row from data
-        internal static void RemoveRow(DataGridView DGV, int rowIndex)
+        internal static void RemoveRow(CustomDataGridView DGV, int rowIndex)
         {
             string tableDir = DGV.Name;
             string tableKey = ConvertDirToTableKey(tableDir);
@@ -1258,15 +1578,15 @@ namespace MDB
 
 
             //remove open subtables at index
-            if (Program.openSubTables.ContainsKey(new Tuple<DataGridView, int>(DGV, rowIndex)))
+            if (Program.openSubTables.ContainsKey(new Tuple<CustomDataGridView, int>(DGV, rowIndex)))
             {
 
-                RemoveSubtableFromOpenSubtables(new Tuple<DataGridView, int>(DGV, rowIndex));
+                RemoveSubtableFromOpenSubtables(new Tuple<CustomDataGridView, int>(DGV, rowIndex));
             }
 
             DGV.Rows.RemoveAt(rowIndex);
 
-            //shift higher indexes down by 1
+            //shift larger indexes down by 1
             int index = rowIndex + 1;
             while (index < tableData.Count())
             {
@@ -1302,15 +1622,15 @@ namespace MDB
             //i need to get the column and row index from the DGV's parent
             //also only check if this is the last row to be removed
             var ParentObj = DGV.Parent;
-            if (ParentObj is DataGridView && tableData.Count() == 0)
+            if (ParentObj is CustomDataGridView && tableData.Count() == 0)
             {
-                DataGridView ParentDGV = (DataGridView)ParentObj;
+                CustomDataGridView ParentDGV = (CustomDataGridView)ParentObj;
                 //how do i get the row index in which this subtable resides
                 //i could use regex and stuff but this is easier
 
                 int RowIndex = 0;
                 string ColName = "";
-                foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+                foreach (KeyValuePair<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubTable in Program.openSubTables)
                 {
                     if (openSubTable.Value.Item2 == DGV)
                     {
@@ -1325,10 +1645,17 @@ namespace MDB
                 UpdateStatusOfAllRowCellsInDisablerArrayOfCell(ParentDGV, ConvertDirToTableKey(ParentDGV.Name), KVRow, ColName);
             }
 
+            // if this is a Subtable
+            if (ParentObj is CustomDataGridView)
+            {
+                DatabaseFunct.UpdateSubTableAddRowButton(DGV);
+            }
+            
+
 
         }
 
-        internal static void ShiftRow(DataGridView DGV, int rowIndex, bool isUp)
+        internal static void ShiftRow(CustomDataGridView DGV, int rowIndex, bool isUp)
         {
             string tableDir = DGV.Name;
             string tableKey = ConvertDirToTableKey(tableDir);

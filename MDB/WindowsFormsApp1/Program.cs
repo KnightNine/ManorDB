@@ -19,10 +19,12 @@ namespace MDB
     {
         public static Form1 mainForm;
         //<<parentDGV,row>,<column,childDGV>> (only one subtable can be open at a time per row)
-        public static Dictionary<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTables = new Dictionary<Tuple<DataGridView, int>, Tuple<string, DataGridView>>();
+        public static Dictionary<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubTables = new Dictionary<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>>();
 
 
         
+
+
 
         /// <summary>
         /// The main entry point for the application.
@@ -32,20 +34,24 @@ namespace MDB
 
         static void Main()
         {
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            
+
             mainForm = new Form1();
+            
 
             //set initial control colors
             ColorThemes.ChangeTheme(ColorThemes.currentTheme);
 
             //add post-init control
-            mainForm.TableMainGridView = GetGridView();
-
+            mainForm.TableMainGridView = GetGridView(false);
 
             
-            
+
+
 
             mainForm.Resize += new EventHandler(mainForm.MainForm_Resize);
 
@@ -54,6 +60,7 @@ namespace MDB
            // mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.AutoClose = false;
             /*mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.LostFocus += new EventHandler(mainForm.hideUnhideColumnsToolStripMenuItemLostFocus);*/
             ((System.ComponentModel.ISupportInitialize)(mainForm.TableMainGridView)).EndInit();
+
 
             
 
@@ -67,7 +74,7 @@ namespace MDB
 
         }
 
-        public static void DoubleBuffered(this DataGridView dgv, bool setting)
+        public static void DoubleBuffered(this CustomDataGridView dgv, bool setting)
         {
             Type dgvType = dgv.GetType();
             PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
@@ -76,14 +83,13 @@ namespace MDB
         }
 
 
-       
 
-
-        public static DataGridView GetGridView()//(int tableDepth)
+        //isConstructedTable is true if the DataGridView Table is constructed from an Auto Table Constructor script
+        public static CustomDataGridView GetGridView(bool isConstructedTable)//(int tableDepth)
         {
 
 
-            DataGridView TableMainGridView = new DataGridView();
+            CustomDataGridView TableMainGridView = new CustomDataGridView();
 
             TableMainGridView.AllowUserToAddRows = false;
             TableMainGridView.AllowUserToDeleteRows = false;
@@ -99,7 +105,17 @@ namespace MDB
             string currentTheme = ColorThemes.currentTheme;
 
             //header
-            TableMainGridView.ColumnHeadersDefaultCellStyle = ColorThemes.Themes[currentTheme]["ColumnHeader"];
+            if (isConstructedTable)
+            {
+                //indicate that the headers are read-only on constructed tables
+
+                TableMainGridView.ColumnHeadersDefaultCellStyle = ColorThemes.Themes[currentTheme]["ConstructedTableColumnHeader"];
+            }
+            else
+            {
+                TableMainGridView.ColumnHeadersDefaultCellStyle = ColorThemes.Themes[currentTheme]["ColumnHeader"];
+            }
+            
 
             TableMainGridView.ColumnHeadersBorderStyle = ColorThemes.Themes[currentTheme]["ColumnHeaderBorder"];
             TableMainGridView.ColumnHeadersHeight = 58;
@@ -167,24 +183,64 @@ namespace MDB
 
             DoubleBuffered(TableMainGridView, true);
 
+            //the Tag is used to define different table types based on what is within this dictionary
+            TableMainGridView.Tag = new Dictionary<string, dynamic>();
+
 
             return TableMainGridView;
 
         }
 
-        public static Button[] GetSubTableButtons() 
+        public static DataGridViewColumn GetDataGridViewColumn(string colName, string colType)
         {
-            Button newColumnButton = new Button();
-            // 
-            // newColumnButton
-            // 
-            newColumnButton.Location = new System.Drawing.Point(0, 0);
-            newColumnButton.ForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["ElseFore"];
-            newColumnButton.BackColor = ColorThemes.Themes[ColorThemes.currentTheme]["ElseBack"];
-            newColumnButton.Name = "newColumnButton";
-            newColumnButton.Text = "New Column";
-            newColumnButton.Size = new System.Drawing.Size(100, 20);
-            newColumnButton.Click += new System.EventHandler(mainForm.subTableNewColumnButton_Click);
+            DataGridViewColumn myDataCol = (DataGridViewColumn)Activator.CreateInstance(ColumnTypes.Types[colType]);
+
+            myDataCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            myDataCol.MinimumWidth = 5;
+            myDataCol.HeaderText = colName;
+            myDataCol.Name = colName;
+            myDataCol.SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            //set column flatstyle to pupup by default so that colors apear over buttons and comboboxes that are created
+            if (myDataCol.GetType() == typeof(DataGridViewButtonColumn))
+            {
+                DataGridViewButtonColumn x = myDataCol as DataGridViewButtonColumn;
+                x.FlatStyle = FlatStyle.Popup;
+                myDataCol = x;
+            }
+            else if (myDataCol.GetType() == typeof(DataGridViewComboBoxColumn))
+            {
+                DataGridViewComboBoxColumn x = myDataCol as DataGridViewComboBoxColumn;
+                x.FlatStyle = FlatStyle.Popup;
+                myDataCol = x;
+            }
+
+            return myDataCol;
+        }
+
+        public static Button[] GetSubTableButtons(bool isConstructedTable) 
+        {
+            List<Button> buttons = new List<Button>();
+
+            //you cannot add columns to constructed tables
+            if (!isConstructedTable)
+            {
+                Button newColumnButton = new Button();
+                // 
+                // newColumnButton
+                // 
+                newColumnButton.Location = new System.Drawing.Point(0, 0);
+                newColumnButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+                newColumnButton.ForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["ElseFore"];
+                newColumnButton.BackColor = ColorThemes.Themes[ColorThemes.currentTheme]["ElseBack"];
+                newColumnButton.Name = "newColumnButton";
+                newColumnButton.Text = "New Column";
+                newColumnButton.Size = new System.Drawing.Size(100, 20);
+                newColumnButton.Click += new System.EventHandler(mainForm.subTableNewColumnButton_Click);
+
+                buttons.Add(newColumnButton);
+            }
+            
 
 
             Button newRowButton = new Button();
@@ -193,20 +249,24 @@ namespace MDB
             //
 
             newRowButton.Location = new System.Drawing.Point(0, 20);
+            newRowButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             newRowButton.ForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["ElseFore"];
             newRowButton.BackColor = ColorThemes.Themes[ColorThemes.currentTheme]["ElseBack"];
             newRowButton.Name = "newRowButton";
             newRowButton.Text = "New Row";
             newRowButton.Size = new System.Drawing.Size(100, 20);
             newRowButton.Click += new System.EventHandler(mainForm.subTableNewRowButton_Click);
+            //the tag is used for setting the cell click event to be enabled or disabled.
+            newRowButton.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
+
+            buttons.Add((newRowButton));
 
 
-            
-
-            
 
 
-            return new Button[2] { newColumnButton, newRowButton };
+
+
+            return buttons.ToArray();
         }
 
     }

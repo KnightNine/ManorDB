@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Drawing;
+using System.Reflection;
 
 namespace MDB
 {
@@ -20,16 +21,35 @@ namespace MDB
         //used as a entry in the column that determines it's type
         public static string RowEntryRefrence = "@RowEntries";
         public static string ColumnOrderRefrence = "@ColumnOrder";
+        public static string BookmarkColorRefrence = "@BookmarkColor";
         public static string ColumnDisablerArrayExt = ".ColumnsToDisable";
         public static string RefrenceColumnKeyExt = ".Refrence";
+        public static string SubtableRowRestrictionExt = ".RowRestrictionInt";
         public static string ParentSubTableRefrenceColumnKeyExt = ".ParentSTRefrence";
+        //if the table contains this key then it is a "File Regex Refrence" Table that will be read-only and source entries from the file refrenced.
+        public static string RegexRefrenceTableConstructorDataRefrence = "@RegexRefrenceTableConstructorData";
+
+        public static string ScriptReceiverLinkToRefrenceColumnExt = ".RefrenceColumnLinked";
+
         public static string selectedTable = "";
 
 
-        
 
-    
 
+
+
+        //add all the colors
+        public static Dictionary<string, object> GetStaticPropertyBag(Type t)
+        {
+            const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+
+            var map = new Dictionary<string, object>();
+            foreach (var prop in t.GetProperties(flags))
+            {
+                map[prop.Name] = prop.GetValue(null, null);
+            }
+            return map;
+        }
 
 
         //entire Loaded MDB file data
@@ -60,8 +80,12 @@ namespace MDB
                 string[] strings = tupleKey.Split(',');
                 keys.Add(new Tuple<int, string>(Convert.ToInt32(strings[0]), strings[1]));
             }
-
+            //main table name is the selectedTable
             var currentDir = currentData[selectedTable][RowEntryRefrence];
+
+            
+
+
             Console.WriteLine("Get tableData. \n From table rows:");
             foreach (Tuple<int, string> key in keys)
             {
@@ -72,7 +96,9 @@ namespace MDB
                 //get column
                 currentDir = currentDir[key.Item2];
             }
-            Console.WriteLine("Returning... ");
+            
+
+            Console.WriteLine("Returning TableData of: " + dir);
             return currentDir;
 
         }
@@ -89,9 +115,9 @@ namespace MDB
 
 
         //get all open Datagridviews of table key
-        internal static List<DataGridView> GetAllOpenDGVsAtTableLevel(string tableKey)
+        internal static List<CustomDataGridView> GetAllOpenDGVsAtTableLevel(string tableKey)
         {
-            List<DataGridView> OpenDGVs = new List<DataGridView>() { };
+            List<CustomDataGridView> OpenDGVs = new List<CustomDataGridView>() { };
 
             if (tableKey == Program.mainForm.TableMainGridView.Name)
             {
@@ -99,7 +125,7 @@ namespace MDB
             }
             else
             {
-                foreach (KeyValuePair<Tuple<DataGridView, int>, Tuple<string, DataGridView>> openSubTable in Program.openSubTables)
+                foreach (KeyValuePair<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubTable in Program.openSubTables)
                 {
                     string openTableKey = ConvertDirToTableKey(openSubTable.Value.Item2.Name);
                     if (tableKey == openTableKey)
@@ -165,7 +191,7 @@ namespace MDB
                         }
                         catch
                         {
-                            Console.WriteLine("subtable collecter could not find " + lvlKeys[0] + " in " + tableKey);
+                            Console.WriteLine("subtable collector could not find " + lvlKeys[0] + " in " + tableKey);
                         }
 
 

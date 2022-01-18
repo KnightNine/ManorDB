@@ -1,0 +1,3 @@
+C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\bin\Release\JacksonSoft.CustomTabControl.dll
+C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\obj\x86\Release\CustomTabControl.csproj.CoreCompileInputs.cache
+C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\obj\x86\Release\JacksonSoft.CustomTabControl.dll

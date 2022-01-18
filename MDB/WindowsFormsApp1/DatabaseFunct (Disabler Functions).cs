@@ -13,11 +13,11 @@ namespace MDB
     public static partial class DatabaseFunct
     {
         //======================================================================================================================
-        // Disable and Enable Cells in a DataGridView
+        // Disable and Enable Cells in a CustomDataGridView
 
 
 
-        internal static void DisableCellAtColAndRow(DataGridView DGV, string ColKey, int RowIndex)
+        internal static void DisableCellAtColAndRow(CustomDataGridView DGV, string ColKey, int RowIndex)
         {
 
 
@@ -80,7 +80,7 @@ namespace MDB
 
         }
 
-        internal static void EnableCellAtColAndRow(DataGridView DGV, string ColKey, int RowIndex)
+        internal static void EnableCellAtColAndRow(CustomDataGridView DGV, string ColKey, int RowIndex)
         {
             int ColumnIndex = DGV.Columns.IndexOf(DGV.Columns[ColKey]);
 
@@ -150,7 +150,7 @@ namespace MDB
         }
 
         //when a change is made to a cell of a column with a disabler array, update all cells in the same row of columns within the disabler array
-        internal static void UpdateStatusOfAllRowCellsInDisablerArrayOfCell(DataGridView DGV, string tableKey, KeyValuePair<int, Dictionary<string, dynamic>> KVRow, string ColumnKey)
+        internal static void UpdateStatusOfAllRowCellsInDisablerArrayOfCell(CustomDataGridView DGV, string tableKey, KeyValuePair<int, Dictionary<string, dynamic>> KVRow, string ColumnKey)
         {
             Console.WriteLine("in " + DGV.Name + " at row index " + KVRow.Key.ToString());
             Console.WriteLine("Checking Row Cells if Disabled:");
@@ -173,6 +173,11 @@ namespace MDB
                 }
             }
         }
+
+
+        
+
+
 
         //add new disabler array connection between two columns
         internal static void addColToDisablerArr(string tableKey, string selectedColKey1, string selectedColKey2)
@@ -225,7 +230,7 @@ namespace MDB
             List<Dictionary<int, Dictionary<string, dynamic>>> TableDataWithRow = GetAllTableDataAtTableLevel(tableKey, ref DGVKeysList);
 
             //how can i tell if a cell is in an open table
-            List<DataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(tableKey);
+            List<CustomDataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(tableKey);
 
 
 
@@ -246,9 +251,9 @@ namespace MDB
                 {
                     string DGVKeyOfTable = DGVKeysList[tableIndex];
 
-                    DataGridView openDGVOfTable = null;
+                    CustomDataGridView openDGVOfTable = null;
                     //get openDGVOfTable
-                    foreach (DataGridView openDGV in openDGVs)
+                    foreach (CustomDataGridView openDGV in openDGVs)
                     {
                         if (openDGV.Name == DGVKeyOfTable)
                         {
@@ -312,7 +317,7 @@ namespace MDB
                                     //close the subtable if subtable open
                                     if (openDGVOfTable != null)
                                     {
-                                        Tuple<DataGridView, int> openSubTableKey = new Tuple<DataGridView, int>(openDGVOfTable, KVRow.Key);
+                                        Tuple<CustomDataGridView, int> openSubTableKey = new Tuple<CustomDataGridView, int>(openDGVOfTable, KVRow.Key);
                                         //open subtable exists
                                         if (Program.openSubTables.ContainsKey(openSubTableKey))
                                         {
@@ -380,9 +385,9 @@ namespace MDB
                 {
                     string DGVKeyOfTable = DGVKeysList[tableIndex];
 
-                    DataGridView openDGVOfTable = null;
+                    CustomDataGridView openDGVOfTable = null;
                     //get openDGVOfTable
-                    foreach (DataGridView openDGV in openDGVs)
+                    foreach (CustomDataGridView openDGV in openDGVs)
                     {
                         if (openDGV.Name == DGVKeyOfTable)
                         {
