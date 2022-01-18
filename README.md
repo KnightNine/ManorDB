@@ -50,16 +50,20 @@ The game I am working on relies on complex repeating data structures to define i
 <hr>
 <h4>Goals/Nice-to-Haves:</h4>
 <p>
-  There are some minor features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
+  There are some features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
+  <li>Duplicate Rows (excluding primary key column if there is one)</li>
   <li>Bugfix needed: the arrow keys within subtables seem to prioritize dataGridView navigation of the parent table over the table that is actually in focus, meaning they don't work for text navigation, i hope theres a fix without having to rework the entire structure of how my DataGridViews are organized.</li>
+  <li>Option to Color Text of Table names</li>
+  <li>Dynamic Subtable Creation Based Upon Template Row String (A template row would contain a key and the script required to generate a subtable, and a template refrencer row would contain both a dropdown of the different template keys available and a subtable button which contains the subtable generated from the script tied to the key)</li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>Image Columns</li>
   <li>Undo/Redo</li>
-  <li>Int Restriction Setting on Numeric Column</li>
+  <li>Int Restriction Setting on Numeric Column/ Int Column</li>
   <li> an option to set a subtable to be restricted to a number of rows </li>
   <li>an option to expand all rows so that text is readable</li>
+  <li> Normalized Numeric Column (all values are restricted to total 1 across all rows in the same table/sub-table)</li>
   <li>color coding tables by their depth</li>
   <li>A "Foreign Key Refrence Primary Key" column (to base a table around foreign keys that can't have duplicate refrences)</li>
   <li>A "force adjecent cell to value when cell is filled" setting, similar to the feature that disallows two cells from being filled at the same time, except instead of disabling the other cell entirely, the cell is set to a specific value and becomes read only. </li>
@@ -70,6 +74,7 @@ The game I am working on relies on complex repeating data structures to define i
   <li>Detailed Commentation</li>
   <li>Export to Index Removal (removal of indexes that store the order of rows in the dictionary and replacing them with that row's primary key, in order to further simplify data)</li>
   <li>Separators (equivalent to CDB's "separator")</li>
+  <li>Column Input Limiter (An option to limit the number of rows that can be filled within a certain column before the rest become disabled)</li>
  
  
 </ul>
