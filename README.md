@@ -2,7 +2,7 @@
 <hr>
 <p>
 Open Source Json Database Manager Made in WinForms that copies <a href = "https://github.com/ncannasse/castle">CastleDB's</a> UI structure. 
-This Database Manager also has features which are unique to it for managing 
+This Database Manager also has features which are unique to it for the purpose of further automating database management, features like: adding additional restrictions to how data can be entered, dynamically constructed tables, and refrencing data from non-database files via regex.
 </p>
 
 <h2>What it looks like (outdated):</h2>
@@ -32,6 +32,7 @@ The game I am working on relies on complex repeating data structures to define i
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>Key Shortcuts</li>
   <li>Image Columns</li>
+  <li>File Directory Primary Key List Table Type (a table that refrences a file directory and generates a table with the file names as row data for a Primary Key column.)</li>
   <li>Undo/Redo</li>
   <li>an option to expand all rows so that text is readable</li>
   <li> Normalized Numeric Column (all values are restricted to total 1 across all rows in the same table/sub-table)</li>
