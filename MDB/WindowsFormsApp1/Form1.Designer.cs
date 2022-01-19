@@ -445,12 +445,12 @@ namespace MDB
                 //if row restriction already applied to this column
                 if (DatabaseFunct.currentData[tableKey].ContainsKey(_colName + DatabaseFunct.SubtableRowRestrictionExt))
                 {
-                    options.Add(new MenuItem() { Name = "Apply Subable Single Row Restriction", Text = "Apply Subable Single Row Restriction", Tag = new dynamic[] { _DGV, _colName } });
+                    options.Add(new MenuItem() { Name = "Remove Subable Single Row Restriction", Text = "Remove SubTable Single Row Restriction", Tag = new dynamic[] { _DGV, _colName } });
                     options[5].Click += new System.EventHandler(removeRowRestrictionFromSubtableColumn);
                 }
                 else //if row restriction not applied
                 {
-                    options.Add(new MenuItem() { Name = "Apply Subable Single Row Restriction", Text = "Apply Subable Single Row Restriction", Tag = new dynamic[] { _DGV, _colName } });
+                    options.Add(new MenuItem() { Name = "Apply Subable Single Row Restriction", Text = "Apply SubTable Single Row Restriction", Tag = new dynamic[] { _DGV, _colName } });
                     options[5].Click += new System.EventHandler(addRowRestrictionToSubtableColumn);
                     
                 }

@@ -79,6 +79,22 @@ namespace MDB
             string tableKey = ConvertDirToTableKey(DGV.Name);
             currentData[tableKey].Remove(ColKey + SubtableRowRestrictionExt);
 
+            string subTableKey = tableKey+"/"+ColKey;
+
+            //re-enable addrow buttons
+            List<string> DGVKeysPool = new List<string>();
+            
+            List<CustomDataGridView> openDGVs = GetAllOpenDGVsAtTableLevel(subTableKey);
+
+            foreach (CustomDataGridView openDGV in openDGVs)
+            {
+
+                
+                //update the addRow button for openDGV
+                UpdateSubTableAddRowButton(openDGV);
+
+
+            }
         }
 
         internal static bool DoesSubTableMeetOrExceedRowRestriction(CustomDataGridView subDGV)

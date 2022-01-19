@@ -87,6 +87,7 @@ namespace MDB
             {
                 if (isReplace)
                 {
+                    
                     DatabaseFunct.currentData = new SortedDictionary<string, dynamic>() { };
                     DatabaseFunct.ClearMainTable();
                     Program.mainForm.customTabControl1.TabPages.Clear();
@@ -270,12 +271,20 @@ namespace MDB
                     {
                         DatabaseFunct.currentData = cd;
 
+                        // clear tabs
                         Program.mainForm.customTabControl1.TabPages.Clear();
+                        //clear bookmarks
+                        Dictionary<string, Color> TabBookmarkColorsByName = Program.mainForm.customTabControl1.DisplayStyleProvider.TabBookmarkColorsByName;
+                        TabBookmarkColorsByName.Clear();
+
 
                         //load tables
                         string[] mainTableKeys = DatabaseFunct.GetMainTableKeys();
                         foreach (string mainTableKey in mainTableKeys)
                         {
+
+                            
+                            
                             Program.mainForm.customTabControl1.TabPages.Add(mainTableKey, mainTableKey);
 
                             //change color of tab page to not be visible (this absolutely breaks rendering)
@@ -285,11 +294,13 @@ namespace MDB
                             //add tab bookmark if it exists
                             if (cd[mainTableKey].ContainsKey(DatabaseFunct.BookmarkColorRefrence))
                             {
-                                
+
 
                                 DatabaseFunct.BookmarkTable(mainTableKey, cd[mainTableKey][DatabaseFunct.BookmarkColorRefrence]);
 
                             }
+                            
+                            
                             
 
                             
