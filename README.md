@@ -40,8 +40,8 @@ The game I am working on relies on complex repeating data structures to define i
   <li>A "Foreign Key Refrence Primary Key" column (to base a table around foreign keys that can't have duplicate refrences)</li>
   <li>A "force adjecent cell to value when cell is filled" setting, similar to the feature that disallows two cells from being filled at the same time, except instead of disabling the other cell entirely, the cell is set to a specific value and becomes read only. </li>
   <li>Table Shifting (re-ordering of Tables)</li>
-  <li>Further Organization of Code</li>
-  <li>Detailed Commentation</li>
+  <li>Further Organization of Code (in progress)</li>
+  <li>Detailed Commentation (in progress)</li>
   <li>Export to Index Removal (removal of indexes that store the order of rows in the dictionary and replacing them with that row's primary key, in order to further simplify data)</li>
   <li>Separators (equivalent to CDB's "separator")</li>
   <li>Column Input Limiter (An option to limit the number of rows that can be filled within a certain column before the rest become disabled)</li>
