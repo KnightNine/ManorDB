@@ -2,7 +2,7 @@
 <hr>
 <p>
 Open Source Json Database Manager Made in WinForms that copies <a href = "https://github.com/ncannasse/castle">CastleDB's</a> UI structure. 
-This Database Manager also has features which are unique to it for the purpose of further automating database management, features like: adding additional restrictions to how data can be entered, dynamically constructed tables, and refrencing data from non-database files via regex.
+This Database Manager also has features which are unique to it for the purpose of further automating database management, features like: adding additional restrictions to how data can be entered, automatically constructed tables, and refrencing data from non-database files via regex.
 </p>
 
 <h2>What it looks like (outdated):</h2>
