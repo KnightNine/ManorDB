@@ -27,6 +27,7 @@ The game I am working on relies on complex repeating data structures to define i
     <li>Primary Key</li>
     <li>Text</li>
     <li>Numerical</li>
+    <li>Integer</li>
     <li>Bool</li>
     <li>Subtable (the equivalent of CDB's "list" column type)</li>
     <li>Foreign Key Reference (the equivalent of CDB's "Reference" column type)</li>
@@ -46,6 +47,7 @@ The game I am working on relies on complex repeating data structures to define i
  You can clarify columns that aren't meant to be filled out at the same time <a href = "https://github.com/KnightNine/ManorDB/releases/tag/v1.4.11-beta">Adjacent Column Disabler Settings</a> </ul> 
 <ul>You can have a <a href = "https://github.com/KnightNine/ManorDB/releases/tag/v1.5.12-beta"> foreign key reference column that is linked to a parent subtable</a>. </ul>
 <ul>You can create a table that refrences its row data from an external file via regex in the form of a <a href = "https://github.com/KnightNine/ManorDB/releases/tag/untagged-f94b59212570e2b9e662">"File Regex Refrence Table"</a>. </ul>
+
 
     
   </ul>
