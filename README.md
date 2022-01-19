@@ -1,4 +1,4 @@
-<center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/MDB%20Full%20Text.png" alt="Logo" width="400" > </center>
+<center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/logowback.png" alt="Logo" width="400" > </center>
 <hr>
 <p>
 Open Source Json Database Manager Made in WinForms that copies <a href = "https://github.com/ncannasse/castle">CastleDB's</a> UI structure.
@@ -31,6 +31,8 @@ The game I am working on relies on complex repeating data structures to define i
     <li>Subtable (the equivalent of CDB's "list" column type)</li>
     <li>Foreign Key Reference (the equivalent of CDB's "Reference" column type)</li>
     <li><a href = "https://github.com/KnightNine/ManorDB/releases/tag/v1.5.12-beta">Parent Subtable Foreign Key Reference</a></li>
+    <li><a href = "https://github.com/KnightNine/ManorDB/releases/tag/untagged-f94b59212570e2b9e662">Auto Table Constructor Script</a></li>
+    <li><a href = "https://github.com/KnightNine/ManorDB/releases/tag/untagged-f94b59212570e2b9e662">Auto Table Constructor Script Reader</a></li>
   </ul>
   <li><b>Object Oriented Data:</b></li>
   <ul>
@@ -43,6 +45,8 @@ The game I am working on relies on complex repeating data structures to define i
 <ul>
  You can clarify columns that aren't meant to be filled out at the same time <a href = "https://github.com/KnightNine/ManorDB/releases/tag/v1.4.11-beta">Adjacent Column Disabler Settings</a> </ul> 
 <ul>You can have a <a href = "https://github.com/KnightNine/ManorDB/releases/tag/v1.5.12-beta"> foreign key reference column that is linked to a parent subtable</a>. </ul>
+<ul>You can create a table that refrences its row data from an external file via regex in the form of a <a href = "https://github.com/KnightNine/ManorDB/releases/tag/untagged-f94b59212570e2b9e662">"File Regex Refrence Table"</a>. </ul>
+
     </li>
   </ul>
 </ul>
@@ -53,21 +57,14 @@ The game I am working on relies on complex repeating data structures to define i
   There are some features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least (the first three may or may not be added soon):
 <p/>
 <ul>
-  <li>Duplicate Rows (excluding primary key column if there is one)</li>
-  <li>Bugfix needed: the arrow keys within subtables seem to prioritize dataGridView navigation of the parent table over the table that is actually in focus, meaning they don't work for text navigation, i hope theres a fix without having to rework the entire structure of how my DataGridViews are organized.</li>
-  <li>Option to Color Text of Table names</li>
-  <li>Dynamic Subtable Creation Based Upon Template Row String (A template row would contain a key and the script required to generate a subtable, and a template refrencer row would contain both a dropdown of the different template keys available and a subtable button which contains the subtable generated from the script tied to the key)</li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>Image Columns</li>
   <li>Undo/Redo</li>
-  <li>Int Restriction Setting on Numeric Column/ Int Column</li>
-  <li> an option to set a subtable to be restricted to a number of rows </li>
   <li>an option to expand all rows so that text is readable</li>
   <li> Normalized Numeric Column (all values are restricted to total 1 across all rows in the same table/sub-table)</li>
   <li>color coding tables by their depth</li>
   <li>A "Foreign Key Refrence Primary Key" column (to base a table around foreign keys that can't have duplicate refrences)</li>
   <li>A "force adjecent cell to value when cell is filled" setting, similar to the feature that disallows two cells from being filled at the same time, except instead of disabling the other cell entirely, the cell is set to a specific value and becomes read only. </li>
-  <li>"File Regex Refrence Column": What if you wanted to refrence functions of a script? wouldn't it be much more convenient to have the database manager scan through that script file and update its data automatically. For each column you'd need to define layers of regex on what you want to search for within the script file and the table would create rows and fill in the extracted data for you.</li>
   <li>Key Shortcuts</li>
   <li>Table Shifting (re-ordering of Tables)</li>
   <li>Further Organization of Code</li>
