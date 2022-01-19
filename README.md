@@ -47,7 +47,7 @@ The game I am working on relies on complex repeating data structures to define i
 <ul>You can have a <a href = "https://github.com/KnightNine/ManorDB/releases/tag/v1.5.12-beta"> foreign key reference column that is linked to a parent subtable</a>. </ul>
 <ul>You can create a table that refrences its row data from an external file via regex in the form of a <a href = "https://github.com/KnightNine/ManorDB/releases/tag/untagged-f94b59212570e2b9e662">"File Regex Refrence Table"</a>. </ul>
 
-    </li>
+    
   </ul>
 </ul>
 
