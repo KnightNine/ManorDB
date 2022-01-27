@@ -514,7 +514,7 @@ namespace MDB
                     List<string> removalList = new List<string>();
                     foreach (KeyValuePair<string,dynamic> KV in currentData[tableKey])
                     {
-                        if (KV.Value == "Auto Table Constructor Script Receiver")
+                        if (KV.Value is string && KV.Value == "Auto Table Constructor Script Receiver")
                         {
                             //if linked to this column
                             if (currentData[tableKey][KV.Key + ScriptReceiverLinkToRefrenceColumnExt] == colName)
@@ -773,7 +773,7 @@ namespace MDB
                             
                             foreach (KeyValuePair<string, dynamic> KV in currentData[tableKey])
                             {
-                                if (KV.Value == "Auto Table Constructor Script Receiver")
+                                if (KV.Value is string && KV.Value == "Auto Table Constructor Script Receiver")
                                 {
                                     //if linked to this column
                                     if (currentData[tableKey][KV.Key + ScriptReceiverLinkToRefrenceColumnExt] == colName)
