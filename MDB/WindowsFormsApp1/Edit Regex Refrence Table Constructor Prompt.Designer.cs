@@ -55,6 +55,7 @@ namespace MDB
             this.fileDirectoryButton = new System.Windows.Forms.Button();
             this.constructTableButton = new System.Windows.Forms.Button();
             this.autoResizePanel = new System.Windows.Forms.Panel();
+            this.folderDirectoryButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -72,9 +73,10 @@ namespace MDB
             this.panel1.Controls.Add(this.regexTextBox);
             this.panel1.Controls.Add(this.columnNameTextBox);
             this.panel1.Controls.Add(this.dataGridView);
-            this.panel1.Location = new System.Drawing.Point(53, 368);
+            this.panel1.Location = new System.Drawing.Point(20, 154);
+            this.panel1.Margin = new System.Windows.Forms.Padding(1);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1918, 849);
+            this.panel1.Size = new System.Drawing.Size(719, 356);
             this.panel1.TabIndex = 0;
             // 
             // addColumnButton
@@ -83,9 +85,10 @@ namespace MDB
             this.addColumnButton.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.addColumnButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.addColumnButton.Font = new System.Drawing.Font("Arial", 11.1F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.addColumnButton.Location = new System.Drawing.Point(638, 133);
+            this.addColumnButton.Location = new System.Drawing.Point(239, 56);
+            this.addColumnButton.Margin = new System.Windows.Forms.Padding(1);
             this.addColumnButton.Name = "addColumnButton";
-            this.addColumnButton.Size = new System.Drawing.Size(656, 56);
+            this.addColumnButton.Size = new System.Drawing.Size(246, 28);
             this.addColumnButton.TabIndex = 7;
             this.addColumnButton.Text = "Add Column";
             this.addColumnButton.UseVisualStyleBackColor = false;
@@ -94,27 +97,30 @@ namespace MDB
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1423, 22);
+            this.label2.Location = new System.Drawing.Point(534, 9);
+            this.label2.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(104, 32);
+            this.label2.Size = new System.Drawing.Size(41, 13);
             this.label2.TabIndex = 6;
             this.label2.Text = "Regex:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(29, 22);
+            this.label1.Location = new System.Drawing.Point(11, 9);
+            this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(202, 32);
+            this.label1.Size = new System.Drawing.Size(76, 13);
             this.label1.TabIndex = 5;
             this.label1.Text = "Column Name:";
             // 
             // isAutoTableConstructorScriptCheckBox
             // 
             this.isAutoTableConstructorScriptCheckBox.AutoSize = true;
-            this.isAutoTableConstructorScriptCheckBox.Location = new System.Drawing.Point(846, 67);
+            this.isAutoTableConstructorScriptCheckBox.Location = new System.Drawing.Point(317, 28);
+            this.isAutoTableConstructorScriptCheckBox.Margin = new System.Windows.Forms.Padding(1);
             this.isAutoTableConstructorScriptCheckBox.Name = "isAutoTableConstructorScriptCheckBox";
-            this.isAutoTableConstructorScriptCheckBox.Size = new System.Drawing.Size(535, 36);
+            this.isAutoTableConstructorScriptCheckBox.Size = new System.Drawing.Size(205, 17);
             this.isAutoTableConstructorScriptCheckBox.TabIndex = 4;
             this.isAutoTableConstructorScriptCheckBox.Text = "Is AutoTableConstructorScript Column";
             this.isAutoTableConstructorScriptCheckBox.UseVisualStyleBackColor = true;
@@ -122,26 +128,29 @@ namespace MDB
             // isPrimaryKeyCheckBox
             // 
             this.isPrimaryKeyCheckBox.AutoSize = true;
-            this.isPrimaryKeyCheckBox.Location = new System.Drawing.Point(484, 65);
+            this.isPrimaryKeyCheckBox.Location = new System.Drawing.Point(182, 27);
+            this.isPrimaryKeyCheckBox.Margin = new System.Windows.Forms.Padding(1);
             this.isPrimaryKeyCheckBox.Name = "isPrimaryKeyCheckBox";
-            this.isPrimaryKeyCheckBox.Size = new System.Drawing.Size(338, 36);
+            this.isPrimaryKeyCheckBox.Size = new System.Drawing.Size(130, 17);
             this.isPrimaryKeyCheckBox.TabIndex = 3;
             this.isPrimaryKeyCheckBox.Text = "Is Primary Key Column";
             this.isPrimaryKeyCheckBox.UseVisualStyleBackColor = true;
             // 
             // regexTextBox
             // 
-            this.regexTextBox.Location = new System.Drawing.Point(1414, 65);
+            this.regexTextBox.Location = new System.Drawing.Point(530, 27);
+            this.regexTextBox.Margin = new System.Windows.Forms.Padding(1);
             this.regexTextBox.Name = "regexTextBox";
-            this.regexTextBox.Size = new System.Drawing.Size(434, 38);
+            this.regexTextBox.Size = new System.Drawing.Size(165, 20);
             this.regexTextBox.TabIndex = 2;
             this.regexTextBox.WordWrap = false;
             // 
             // columnNameTextBox
             // 
-            this.columnNameTextBox.Location = new System.Drawing.Point(18, 67);
+            this.columnNameTextBox.Location = new System.Drawing.Point(7, 28);
+            this.columnNameTextBox.Margin = new System.Windows.Forms.Padding(1);
             this.columnNameTextBox.Name = "columnNameTextBox";
-            this.columnNameTextBox.Size = new System.Drawing.Size(434, 38);
+            this.columnNameTextBox.Size = new System.Drawing.Size(165, 20);
             this.columnNameTextBox.TabIndex = 1;
             this.columnNameTextBox.WordWrap = false;
             // 
@@ -176,7 +185,8 @@ namespace MDB
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.dataGridView.EnableHeadersVisualStyles = false;
             this.dataGridView.GridColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.dataGridView.Location = new System.Drawing.Point(0, 207);
+            this.dataGridView.Location = new System.Drawing.Point(0, 87);
+            this.dataGridView.Margin = new System.Windows.Forms.Padding(1);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
@@ -190,7 +200,7 @@ namespace MDB
             this.dataGridView.RowHeadersWidth = 102;
             this.dataGridView.RowTemplate.Height = 40;
             this.dataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataGridView.Size = new System.Drawing.Size(1918, 642);
+            this.dataGridView.Size = new System.Drawing.Size(719, 269);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_RowHeaderMouseClick);
             this.dataGridView.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dataGridView_RowPostPaint);
@@ -230,46 +240,51 @@ namespace MDB
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(65, 294);
+            this.label3.Location = new System.Drawing.Point(24, 123);
+            this.label3.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(1438, 96);
+            this.label3.Size = new System.Drawing.Size(692, 52);
             this.label3.TabIndex = 1;
             this.label3.Text = resources.GetString("label3.Text");
             // 
             // fileDirectoryTextBox
             // 
-            this.fileDirectoryTextBox.Location = new System.Drawing.Point(290, 84);
+            this.fileDirectoryTextBox.Location = new System.Drawing.Point(147, 37);
+            this.fileDirectoryTextBox.Margin = new System.Windows.Forms.Padding(1);
             this.fileDirectoryTextBox.Name = "fileDirectoryTextBox";
             this.fileDirectoryTextBox.ReadOnly = true;
-            this.fileDirectoryTextBox.Size = new System.Drawing.Size(1254, 38);
+            this.fileDirectoryTextBox.Size = new System.Drawing.Size(473, 20);
             this.fileDirectoryTextBox.TabIndex = 2;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(82, 84);
+            this.label4.Location = new System.Drawing.Point(24, 38);
+            this.label4.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(198, 36);
+            this.label4.Size = new System.Drawing.Size(119, 15);
             this.label4.TabIndex = 3;
-            this.label4.Text = "File Directory:";
+            this.label4.Text = "File/Folder Directory:";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(64, 243);
+            this.label5.Location = new System.Drawing.Point(24, 102);
+            this.label5.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(821, 39);
+            this.label5.Size = new System.Drawing.Size(343, 17);
             this.label5.TabIndex = 4;
             this.label5.Text = "Add columns to your File Regex Refrence table Here:";
             // 
             // fileDirectoryButton
             // 
             this.fileDirectoryButton.AutoSize = true;
-            this.fileDirectoryButton.Location = new System.Drawing.Point(1574, 84);
+            this.fileDirectoryButton.Location = new System.Drawing.Point(628, 37);
+            this.fileDirectoryButton.Margin = new System.Windows.Forms.Padding(1);
             this.fileDirectoryButton.Name = "fileDirectoryButton";
-            this.fileDirectoryButton.Size = new System.Drawing.Size(315, 42);
+            this.fileDirectoryButton.Size = new System.Drawing.Size(118, 23);
             this.fileDirectoryButton.TabIndex = 5;
             this.fileDirectoryButton.Text = "Search for File";
             this.fileDirectoryButton.UseVisualStyleBackColor = true;
@@ -279,9 +294,10 @@ namespace MDB
             // 
             this.constructTableButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.constructTableButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.constructTableButton.Location = new System.Drawing.Point(1319, 1237);
+            this.constructTableButton.Location = new System.Drawing.Point(495, 519);
+            this.constructTableButton.Margin = new System.Windows.Forms.Padding(1);
             this.constructTableButton.Name = "constructTableButton";
-            this.constructTableButton.Size = new System.Drawing.Size(652, 72);
+            this.constructTableButton.Size = new System.Drawing.Size(244, 30);
             this.constructTableButton.TabIndex = 0;
             this.constructTableButton.Text = "Construct Table";
             this.constructTableButton.UseVisualStyleBackColor = true;
@@ -289,38 +305,54 @@ namespace MDB
             // 
             // autoResizePanel
             // 
+            this.autoResizePanel.Controls.Add(this.folderDirectoryButton);
+            this.autoResizePanel.Controls.Add(this.fileDirectoryButton);
             this.autoResizePanel.Controls.Add(this.label6);
+            this.autoResizePanel.Controls.Add(this.fileDirectoryTextBox);
             this.autoResizePanel.Controls.Add(this.label4);
             this.autoResizePanel.Location = new System.Drawing.Point(0, 0);
+            this.autoResizePanel.Margin = new System.Windows.Forms.Padding(1);
             this.autoResizePanel.Name = "autoResizePanel";
-            this.autoResizePanel.Size = new System.Drawing.Size(2036, 1333);
+            this.autoResizePanel.Size = new System.Drawing.Size(764, 559);
             this.autoResizePanel.TabIndex = 6;
+            // 
+            // folderDirectoryButton
+            // 
+            this.folderDirectoryButton.AutoSize = true;
+            this.folderDirectoryButton.Location = new System.Drawing.Point(571, 62);
+            this.folderDirectoryButton.Margin = new System.Windows.Forms.Padding(1);
+            this.folderDirectoryButton.Name = "folderDirectoryButton";
+            this.folderDirectoryButton.Size = new System.Drawing.Size(175, 23);
+            this.folderDirectoryButton.TabIndex = 7;
+            this.folderDirectoryButton.Text = "Search for Folder Containing Files";
+            this.folderDirectoryButton.UseVisualStyleBackColor = true;
+            this.folderDirectoryButton.Click += new System.EventHandler(this.folderDirectoryButton_Click);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(284, 35);
+            this.label6.Location = new System.Drawing.Point(106, 15);
+            this.label6.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(754, 32);
+            this.label6.Size = new System.Drawing.Size(282, 13);
             this.label6.TabIndex = 7;
             this.label6.Text = "This directory exists relative to to last Database file loaded.";
             // 
             // EditRegexRefrenceTableConstructorPrompt
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(2036, 1333);
+            this.ClientSize = new System.Drawing.Size(763, 558);
             this.Controls.Add(this.constructTableButton);
-            this.Controls.Add(this.fileDirectoryButton);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.fileDirectoryTextBox);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.autoResizePanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MinimumSize = new System.Drawing.Size(2068, 1421);
+            this.Margin = new System.Windows.Forms.Padding(1);
+            this.MinimumSize = new System.Drawing.Size(729, 475);
             this.Name = "EditRegexRefrenceTableConstructorPrompt";
             this.Text = "Regex Refrence Table Constructor Editor";
             this.panel1.ResumeLayout(false);
@@ -364,5 +396,6 @@ namespace MDB
         private System.Windows.Forms.Button constructTableButton;
         private System.Windows.Forms.Panel autoResizePanel;
         private System.Windows.Forms.Label label6;
+        private Button folderDirectoryButton;
     }
 }

@@ -83,6 +83,26 @@ namespace MDB
             }
         }
 
+        private string GetPathRelativeToSelectedPath(string path)
+        {
+            //get the path relative to the application
+            Uri mainDir = new Uri(InputOutput.selectedPath + "\\");
+
+            Uri absoluteFileDirectoryPath = new Uri(path);
+
+            Uri diff = mainDir.MakeRelativeUri(absoluteFileDirectoryPath);
+
+            Console.WriteLine("Getting Path: \"" + path + "\" relative to path: \"" + InputOutput.selectedPath + "\\\"");
+
+            //converting to Uri replaces characters like spaces with character codes so UrlDecode() is needed to undo this change
+            string relativePath = HttpUtility.UrlDecode(diff.OriginalString);
+            // flip slashes to backslashes 
+            relativePath = relativePath.Replace("/", "\\");
+
+            return relativePath;
+        }
+
+
         private void fileDirectoryButton_Click(object sender, EventArgs e)
         {
 
@@ -104,19 +124,8 @@ namespace MDB
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                //get the path relative to the application
-                Uri mainDir = new Uri(InputOutput.selectedPath + "\\");
                 
-                Uri absoluteFileDirectoryPath = new Uri(openFileDialog1.FileName);
-
-                Uri diff = mainDir.MakeRelativeUri(absoluteFileDirectoryPath);
-
-                Console.WriteLine("Getting Path: \"" + openFileDialog1.FileName + "\" relative to path: \"" + InputOutput.selectedPath + "\\\"");
-
-                //converting to Uri replaces characters like spaces with character codes so UrlDecode() is needed to undo this change
-                string relativePath = HttpUtility.UrlDecode(diff.OriginalString);
-                // flip slashes to backslashes 
-                relativePath = relativePath.Replace("/", "\\");
+                string relativePath = GetPathRelativeToSelectedPath(openFileDialog1.FileName);
 
                 //show path in the textbox
                 fileDirectoryTextBox.Text = relativePath;
@@ -131,14 +140,33 @@ namespace MDB
             }
         }
 
+        private void folderDirectoryButton_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
+            folderBrowserDialog1.SelectedPath = InputOutput.selectedPath;
 
 
-        
-        
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string relativePath = GetPathRelativeToSelectedPath(folderBrowserDialog1.SelectedPath);
+
+                //show path in the textbox
+                fileDirectoryTextBox.Text = relativePath;
 
 
 
-        
+
+                //store path
+                RegexRefrenceTableConstructorPromptHandler.RegexRefrenceTableConstructorData[RegexRefrenceTableConstructorPromptHandler.FileDirectoryRefrence] = relativePath;
+            }
+        }
+
+
+
+
+
+
+
 
         private void dataGridView_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {

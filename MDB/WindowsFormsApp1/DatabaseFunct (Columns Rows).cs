@@ -1507,14 +1507,11 @@ namespace MDB
 
                         //this is left null if isConstructed is false so that the subtable structure would be pulled from currentData instead.
                         string subtableConstructorScript = null;
-                        if (isConstructed)
+                        
+                        if (colType == "Auto Table Constructor Script Receiver") //get receiver script 
                         {
-                            Dictionary<string,dynamic> columnTag = column.Tag as Dictionary<string,dynamic>;
-                            subtableConstructorScript = columnTag["subtableConstructorScript"];
-                        }
-                        else if (colType == "Auto Table Constructor Script Receiver") //get receiver script 
-                        {
-                            subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, column.Name, tableData, rowIndex);
+                            
+                            subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, column.Name, tableData, rowIndex,DGV);
 
                             // if the primary key being refrenced is changed to a key that doesn't exist in the table being refrenced, set the subtableConstructorScript to be empty instead of null
                             // since giving a null subtableConstructorScript to GetSubTableCellDisplay() will cause issues
@@ -1524,6 +1521,11 @@ namespace MDB
                                 // and clear the constructed subtable's data
                                 tableData[rowIndex][column.Name].Clear();
                             }
+                        }
+                        else if (isConstructed)
+                        {
+                            Dictionary<string, dynamic> columnTag = column.Tag as Dictionary<string, dynamic>;
+                            subtableConstructorScript = columnTag["subtableConstructorScript"];
                         }
 
                         //get the display string that will show a few rows of the subtable's internal structure

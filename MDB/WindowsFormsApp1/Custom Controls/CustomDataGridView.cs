@@ -186,7 +186,7 @@ With that addition, the final custom class would be like this:
                 {
                     DataGridViewCell cell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-                    Console.WriteLine("painting: Row " + e.RowIndex.ToString() + ", column " + e.ColumnIndex.ToString());
+                    
                     e.Paint(e.CellBounds, DataGridViewPaintParts.All & ~DataGridViewPaintParts.Border);
                     using (Pen p = new Pen(ColorThemes.Themes[ColorThemes.currentTheme]["InvalidCellOutline"], 1))
                     {

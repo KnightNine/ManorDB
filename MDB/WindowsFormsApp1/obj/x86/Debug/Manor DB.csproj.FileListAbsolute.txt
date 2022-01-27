@@ -16,3 +16,6 @@ C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\Manor DB.csproj.Cop
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.exe
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.pdb
 C:\Users\Alex\Desktop\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.EditRegexRefrenceTableConstructorPrompt.resources
+C:\Users\Alex\Desktop\MDB Built\MDB.exe.config
+C:\Users\Alex\Desktop\MDB Built\MDB.exe
+C:\Users\Alex\Desktop\MDB Built\MDB.pdb

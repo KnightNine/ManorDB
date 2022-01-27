@@ -163,20 +163,40 @@ namespace MDB
             Dictionary<string, dynamic> RegexRefrenceTableConstructorData = DatabaseFunct.currentData[DatabaseFunct.selectedTable][DatabaseFunct.RegexRefrenceTableConstructorDataRefrence];
             //the stored directory is the relative directory that is combined with the absolute directory
             string fileDirectory = Path.Combine(InputOutput.selectedPath, RegexRefrenceTableConstructorData[FileDirectoryRefrence]);
-            
+
+            string fileText = null;
 
 
             if (String.IsNullOrWhiteSpace(RegexRefrenceTableConstructorData[FileDirectoryRefrence]))
             {
-                MessageBox.Show("File directory is empty, a directory to a file must be defined first to read from.");
+                MessageBox.Show("File directory is empty, a directory to a file or folder must be defined first to read from.");
 
+            }
+            else if (Directory.Exists(fileDirectory)) // if directory read all files within directory
+            {
+
+
+                fileText = "";
+                //add text from all files within directory
+                foreach (string fileFullName in Directory.GetFiles(fileDirectory))
+                {
+                    fileText += File.ReadAllText(fileFullName) + "/n";
+                }
             }
             else if (File.Exists(fileDirectory))
             {
-                string fileText = File.ReadAllText(fileDirectory);
+                fileText = File.ReadAllText(fileDirectory);
                 
-            
+            }
+            else
+            {
+                MessageBox.Show("File does not exist at file directory (" + fileDirectory + ") to construct table from.");
 
+            }
+
+            //construct table
+            if (fileText != null)
+            {
                 //add in order of column order list
                 foreach (string colKey in RegexRefrenceTableConstructorData[ColumnOrderRefrence])
                 {
@@ -217,8 +237,8 @@ namespace MDB
                         //write to cell at row index
                         DataGridViewCell cell = TableMainGridView.Rows[rowIndex].Cells[TableMainGridView.Columns.IndexOf(TableMainGridView.Columns[colName])];
 
-                        
-                        
+
+
 
 
                         //this should trigger the TableMainGridView_CellValueChanged event so that it is added to currentData and any errors will be triggered
@@ -231,13 +251,8 @@ namespace MDB
 
 
                 }
-
             }
-            else
-            {
-                MessageBox.Show("File does not exist at file directory (" + fileDirectory + ") to construct table from.");
 
-            }
 
         }
 

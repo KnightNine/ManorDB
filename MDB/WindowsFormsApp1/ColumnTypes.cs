@@ -178,13 +178,13 @@ namespace MDB
             string colName = DGV.Columns[e.ColumnIndex].Name;
 
 
-            bool isConstructedTable = false;
+            bool isConstructed = false;
             //if this is a subtable column within an auto contructed table,then this is a constructed table:
             Dictionary<string, dynamic> DGVTag = DGV.Tag as Dictionary<string, dynamic>;
             if (DGVTag.ContainsKey("tableConstructorScript"))
             {
                 //this means that this is part of a constructor script
-                isConstructedTable = true;
+                isConstructed = true;
 
 
             }
@@ -192,7 +192,7 @@ namespace MDB
 
             string colType = null;
             
-            if (isConstructedTable)
+            if (isConstructed)
             {
                 Dictionary<string , dynamic> colTag = DGV.Columns[e.ColumnIndex].Tag as Dictionary<string , dynamic>;
                 //fetch the constructed column type:

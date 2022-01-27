@@ -84,8 +84,8 @@ namespace MDB
 
 
 
-        //isConstructedTable is true if the DataGridView Table is constructed from an Auto Table Constructor script
-        public static CustomDataGridView GetGridView(bool isConstructedTable)//(int tableDepth)
+        //isConstructed is true if the DataGridView Table is constructed from an Auto Table Constructor script
+        public static CustomDataGridView GetGridView(bool isConstructed)//(int tableDepth)
         {
 
 
@@ -105,7 +105,7 @@ namespace MDB
             string currentTheme = ColorThemes.currentTheme;
 
             //header
-            if (isConstructedTable)
+            if (isConstructed)
             {
                 //indicate that the headers are read-only on constructed tables
 
@@ -218,12 +218,12 @@ namespace MDB
             return myDataCol;
         }
 
-        public static Button[] GetSubTableButtons(bool isConstructedTable) 
+        public static Button[] GetSubTableButtons(bool isConstructed) 
         {
             List<Button> buttons = new List<Button>();
 
             //you cannot add columns to constructed tables
-            if (!isConstructedTable)
+            if (!isConstructed)
             {
                 Button newColumnButton = new Button();
                 // 

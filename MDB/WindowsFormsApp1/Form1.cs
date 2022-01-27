@@ -314,7 +314,7 @@ namespace MDB
 
                 string displayVal = Convert.ToString(val);
 
-                //get if the table is constructed by script
+                //get if this table is constructed by script
                 Dictionary<string,dynamic> DGVTag = senderDGV.Tag as Dictionary<string,dynamic>;
                 bool isConstructed = false;
                 if (DGVTag.ContainsKey("tableConstructorScript"))
@@ -347,86 +347,152 @@ namespace MDB
                 Console.WriteLine("value of entry " + rowIndex + " of column \"" + colName + "\" changed to: " + displayVal);
 
                 KeyValuePair<int, Dictionary<string, dynamic>> KVRow = new KeyValuePair<int, Dictionary<string, dynamic>>(rowIndex, tableData[rowIndex]);
-                //if it isn't constructed
-                if (!isConstructed)
+
+                //get colType
+                string colType = null;
+                if (isConstructed)
                 {
-                    //if the column type is a foreign key refrence
-                    
-                    if (DatabaseFunct.currentData[tableKey][colName] == "Foreign Key Refrence")
+                    //fetch the column type from colTag is constructed:
+                    Dictionary<string, dynamic> colTag = senderDGV.Columns[e.ColumnIndex].Tag as Dictionary<string, dynamic>;
+                    colType = colTag["columnType"];
+                }
+                else
+                {
+                    colType = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name];
+                }
+
+
+                //if the column type is a foreign key refrence
+
+                if (colType == "Foreign Key Refrence")
+                {
+                    //if this row has an open subtable
+                    //get the columnname that subtable is being sourced from
+                    string sourceColNameOfOpenSubTableAtRow = null;
+                    Tuple<CustomDataGridView, int> subTableKey = new Tuple<CustomDataGridView, int>(senderDGV, rowIndex);
+                    if (Program.openSubTables.ContainsKey(subTableKey))
                     {
-                        //if this row has an open subtable
-                        //get the columnname that subtable is being sourced from
-                        string sourceColNameOfOpenSubTableAtRow = null;
-                        Tuple<CustomDataGridView, int> subTableKey = new Tuple<CustomDataGridView, int>(senderDGV, rowIndex);
-                        if (Program.openSubTables.ContainsKey(subTableKey))
-                        {
-                            Tuple<string, CustomDataGridView> openSubTableAtRow = Program.openSubTables[subTableKey];
-                            sourceColNameOfOpenSubTableAtRow = openSubTableAtRow.Item1;
-                        }
-
-                        
-                        //look for Auto Table Constructor Script Receiver columns that link to this column and close their tables
-                        List<string> removalList = new List<string>();
-
-                        DatabaseFunct.loadingTable = true;
-                        foreach (KeyValuePair<string, dynamic> KV in DatabaseFunct.currentData[tableKey])
-                        {
-                            if (KV.Value is string && KV.Value == "Auto Table Constructor Script Receiver")
-                            {
-                                Console.WriteLine(KV.Key);
-
-                                //if linked to this fkey column
-                                
-                                if (DatabaseFunct.currentData[tableKey][KV.Key + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt] == colName)
-                                {
-                                    string linkedColName = KV.Key;
-                                    int linkedColIndex = senderDGV.Columns.IndexOf(senderDGV.Columns[linkedColName]);
-
-
-
-                                    //if the open subTable of this row is sourcing it's data from the linked column
-                                    if (sourceColNameOfOpenSubTableAtRow == linkedColName)
-                                    {
-                                        
-                                        
-                                        
-
-                                        //remove the subtable at this row due to its table construction script being changed. 
-                                        CloseSubTable( subTableKey, senderDGV, e.RowIndex, linkedColIndex);
-                                        
-                                        //
-                                        RecenterSubTables();
-
-                                    }
-
-                                    string subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, linkedColName, tableData, e.RowIndex);
-                                    //subtableConstructorScript shouldn't be null here unless there's an issue with the new foreign key refrence value being linked.
-                                    if (subtableConstructorScript == null)
-                                    {
-                                        subtableConstructorScript = "";
-                                    }
-
-
-                                    //clear the dictionary's rows
-                                    ((Dictionary<int,Dictionary<string,dynamic>>)tableData[e.RowIndex][linkedColName]).Clear();
-
-                                    //get data within linked subtable
-                                    Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[e.RowIndex][linkedColName];
-                                    //update displayValue of button cell (to empty since there's no rows)
-                                    senderDGV.Rows[e.RowIndex].Cells[linkedColIndex].Value = ColumnTypes.GetSubTableCellDisplay(subtableData, senderDGV.Columns[e.ColumnIndex].Name, tableKey, subtableConstructorScript);
-
-
-
-
-                                }
-                                
-
-                            }
-                        }
-                        DatabaseFunct.loadingTable = false;
+                        Tuple<string, CustomDataGridView> openSubTableAtRow = Program.openSubTables[subTableKey];
+                        sourceColNameOfOpenSubTableAtRow = openSubTableAtRow.Item1;
                     }
 
 
+                    //look for Auto Table Constructor Script Receiver columns that link to this column and close their tables
+                    List<string> removalList = new List<string>();
+
+
+
+                    DatabaseFunct.loadingTable = true;
+
+                    Dictionary<string, dynamic> relevantTableColumnData;
+                    if (isConstructed)
+                    {
+                        relevantTableColumnData = new Dictionary<string, dynamic>();
+                        //fetch column names and types from the table constructor scripts
+                        string tableConstructorScript = DGVTag["tableConstructorScript"];
+
+                        //get column scripts
+                        Tuple<MatchCollection, bool, string[]> dat = AutoTableConstructorScriptFunct.FetchTopLevelScriptData(tableConstructorScript);
+                        string[] columnScripts = dat.Item3;
+
+                        //store name and type within relevantTableColumnData
+                        foreach (string columnScript in columnScripts)
+                        {
+                            string[] columnDat = columnScript.Split(':');
+                            //get name within <>
+                            string columnName = Regex.Match(columnDat[0], @"(?<=\<)[^}]*(?=\>)").Value;
+                            //get type from shorthand
+                            string columnType = AutoTableConstructorScriptFunct.columnTypeShorthandDict[columnDat[1].Trim()];
+
+                            relevantTableColumnData.Add(columnName, columnType);
+                        }
+                    }
+                    else
+                    {
+                        //use currentData if not constructed
+                        relevantTableColumnData = DatabaseFunct.currentData[tableKey];
+                    }
+
+                    foreach (KeyValuePair<string, dynamic> KV in relevantTableColumnData)
+                    {
+                        if (KV.Value is string && KV.Value == "Auto Table Constructor Script Receiver")
+                        {
+                            Console.WriteLine(KV.Key);
+
+                            //if linked to this fkey column
+                            bool isLinked = false;
+
+                            if (isConstructed)
+                            {
+                                //check if linked column from ATCSR tag
+                                Dictionary<string, dynamic> ATCSRColumnTag = senderDGV.Columns[KV.Key].Tag as Dictionary<string, dynamic>;
+                                isLinked = ATCSRColumnTag[DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt] == colName;
+                               
+                            }
+                            else
+                            {
+                                isLinked = relevantTableColumnData[KV.Key + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt] == colName;
+                            }
+
+
+                            if (isLinked)
+                            {
+                                string linkedColName = KV.Key;
+                                int linkedColIndex = senderDGV.Columns.IndexOf(senderDGV.Columns[linkedColName]);
+
+
+
+                                //if the open subTable of this row is sourcing it's data from the linked column
+                                if (sourceColNameOfOpenSubTableAtRow == linkedColName)
+                                {
+
+
+
+
+                                    //remove the subtable at this row due to its table construction script being changed. 
+                                    CloseSubTable(subTableKey, senderDGV, e.RowIndex, linkedColIndex);
+
+                                    //
+                                    RecenterSubTables();
+
+                                }
+
+                                string subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, linkedColName, tableData, e.RowIndex, senderDGV);
+                                //subtableConstructorScript shouldn't be null here unless there's an issue with the new foreign key refrence value being linked.
+                                if (subtableConstructorScript == null)
+                                {
+                                    subtableConstructorScript = "";
+                                }
+
+
+                                //clear the linked column's data
+                                ((Dictionary<int, Dictionary<string, dynamic>>)tableData[e.RowIndex][linkedColName]).Clear();
+
+                                //get data within linked subtable
+                                Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[e.RowIndex][linkedColName];
+                                //update displayValue of button cell (to empty since there's no rows)
+                                senderDGV.Rows[e.RowIndex].Cells[linkedColIndex].Value = ColumnTypes.GetSubTableCellDisplay(subtableData, senderDGV.Columns[e.ColumnIndex].Name, tableKey, subtableConstructorScript);
+
+
+
+
+                            }
+
+
+                        }
+                    }
+                    DatabaseFunct.loadingTable = false;
+                }
+
+
+
+
+
+
+
+                //if it isn't constructed
+                if (!isConstructed)
+                {
                     //update disabled cells
                     DatabaseFunct.UpdateStatusOfAllRowCellsInDisablerArrayOfCell(senderDGV, tableKey, KVRow, colName);
                 }
@@ -485,7 +551,7 @@ namespace MDB
                 Dictionary<int, Dictionary<string, dynamic>> tableData = DatabaseFunct.GetTableDataFromDir(tableDir) as Dictionary<int, Dictionary<string, dynamic>>;
 
                 //is this a contructed table
-                bool isConstructedTable = false;
+                bool isConstructed = false;
                 
 
                 //if this is a subtable column within an auto contructed table,then this is a constructed table:
@@ -493,7 +559,7 @@ namespace MDB
                 if (senderDGVTag.ContainsKey("tableConstructorScript"))
                 {
                     //this means that this is part of a constructor script
-                    isConstructedTable = true;
+                    isConstructed = true;
                     
 
                 }
@@ -501,8 +567,8 @@ namespace MDB
 
                 string colType = null;
                 Dictionary<string, dynamic> colTag = null;
-                dynamic additionalData = null;
-                if (isConstructedTable)
+                
+                if (isConstructed)
                 {
                     //fetch the column type from colTag is constructed:
                     colTag = senderDGV.Columns[e.ColumnIndex].Tag as Dictionary<string, dynamic>;
@@ -520,7 +586,7 @@ namespace MDB
 
                     string refrencedTableKey = null;
 
-                    if (isConstructedTable)
+                    if (isConstructed)
                     {
 
                         refrencedTableKey = colTag[DatabaseFunct.RefrenceColumnKeyExt];
@@ -607,63 +673,109 @@ namespace MDB
 
                     //get the subtable key refrenced
                     string refrencedSubTableKey = null;
-                    if (isConstructedTable)
-                    {
+                    string subjectDirectory = "";
+                    string tableKeyContainingRefrencedSubTable = "";
+                    string refrencedSubTableCol = "";
 
-                        //not a supported column type in constructed tables
-                        MessageBox.Show("what.");
+                    if (isConstructed)
+                    {
+                        string outwardDirectory = colTag[DatabaseFunct.ParentSubTableRefrenceColumnKeyExt];
+                        subjectDirectory = AutoTableConstructorScriptFunct.FetchDirectoryFromOutwardDirectory(outwardDirectory, tableDir);
+
+
+                        if (subjectDirectory == null)//end execution if error is thrown
+                        {
+                            
+                            return;
+                        }
+
+                        refrencedSubTableKey = DatabaseFunct.ConvertDirToTableKey(subjectDirectory);
+
+                        //match all after last '/'
+                        string regex = @"[^/]*$";
+                        //get the subtable's column name
+                        refrencedSubTableCol = Regex.Match(refrencedSubTableKey, regex).Value;
+
+                        // match everything after and including last '/'
+                        regex = @"/[^/]*$";
+                        //get the table/subtable that contains the refrenced subtable's column
+                        tableKeyContainingRefrencedSubTable = Regex.Replace(refrencedSubTableKey, regex, "");
+
+
                     }
                     else
                     {
-                        
+
                         refrencedSubTableKey = DatabaseFunct.currentData[tableKey][senderDGV.Columns[e.ColumnIndex].Name + DatabaseFunct.ParentSubTableRefrenceColumnKeyExt];
-                    }
-                    
-                    
-                    //get the table/subtable that contains the refrenced subtable's column
-                    string regex = "/(?!.*/).*";
-                    string tableKeyContainingRefrencedSubTable = Regex.Replace(refrencedSubTableKey, regex, "");
-                    //get the subtable's column name
-                    string refrencedSubTableCol = Regex.Matches(refrencedSubTableKey, regex)[0].ToString().TrimStart('/');
+
+                        //match everything after and including last '/'
+                        string regex = @"/[^/]*$";     // note:  this does the same thing> "/(?!.*/).*";
+                        //get the table/subtable that contains the refrenced subtable's column
+
+                        tableKeyContainingRefrencedSubTable = Regex.Replace(refrencedSubTableKey, regex, "");
+
+                        //match all after last '/'
+                        regex = @"[^/]*$";
+                        //get the subtable's column name
+                        refrencedSubTableCol = Regex.Match(refrencedSubTableKey, regex).Value;
 
 
-                    string rowIndexOfRefrencedSubTable = "";
-                    string subjectDirectory = tableDir.Clone().ToString();
+                        string rowIndexOfRefrencedSubTable = "";
+                        subjectDirectory = tableDir.Clone().ToString();
 
-                    //remove from subject until dir is equivalent to tableKeyContainingRefrencedSubTable
+                        //remove from subject until dir is equivalent to tableKeyContainingRefrencedSubTable
 
-                    while (DatabaseFunct.ConvertDirToTableKey(subjectDirectory) != tableKeyContainingRefrencedSubTable )
-                    {
-                        if (!subjectDirectory.Contains("/"))
+                        while (DatabaseFunct.ConvertDirToTableKey(subjectDirectory) != tableKeyContainingRefrencedSubTable)
                         {
-                            throw new Exception("subject directory not found");
+                            if (!subjectDirectory.Contains("/"))
+                            {
+                                throw new Exception("subject directory not found");
+                            }
+
+                            //i also need to get the index for the row of this subtable 
+                            //get after '/'
+                            regex = @"([^\/]+$)";
+                            string output = Regex.Matches(subjectDirectory, regex)[0].ToString();
+                            //get before ','
+                            regex = @"^[^,]+";
+                            rowIndexOfRefrencedSubTable = Regex.Matches(output, regex)[0].ToString();
+
+                            // remove past and including last '/'
+                            regex = "/(?!.*/).*";
+                            subjectDirectory = Regex.Replace(subjectDirectory, regex, "");
+
+
                         }
 
-                        //i also need to get the index for the row of this subtable 
-                        //get after '/'
-                            regex = @"([^\/]+$)";
-                        string output = Regex.Matches(subjectDirectory, regex)[0].ToString();
-                        //get before ','
-                        regex = @"^[^,]+";
-                        rowIndexOfRefrencedSubTable = Regex.Matches(output, regex)[0].ToString();
-                        
-                        // remove past and including last '/'
-                        regex = "/(?!.*/).*";
-                        subjectDirectory = Regex.Replace(subjectDirectory, regex, "");
-                        
 
+                        subjectDirectory = subjectDirectory + "/" + rowIndexOfRefrencedSubTable + "," + refrencedSubTableCol;
                     }
 
-                    
 
-                    
 
-                    //make sure table still exists and that table still has a primary key col
-                    if (!DatabaseFunct.currentData[tableKeyContainingRefrencedSubTable].ContainsKey(refrencedSubTableCol))
+
+
+
+
+                    if (!DatabaseFunct.currentData.ContainsKey(tableKeyContainingRefrencedSubTable))//check if tableKeyContainingRefrencedSubTable exists in currentData
+                    {
+                        //cannot refrence to a constructed table
+                        error += "Table Structure Data for \"" + tableKeyContainingRefrencedSubTable + "\" does not exist, the refrenced subtable cannot be a constructed table!";
+
+                    }
+                    //make sure refrenced subtable column still exists 
+                    else if (!DatabaseFunct.currentData[tableKeyContainingRefrencedSubTable].ContainsKey(refrencedSubTableCol))
                     {
 
-                        error += "The subtable column being refrenced, \"" + refrencedSubTableCol + "\" within \""+ tableKeyContainingRefrencedSubTable + " no longer exists.";
+                        error += "The subtable column being refrenced, \"" + refrencedSubTableCol + "\" within \"" + tableKeyContainingRefrencedSubTable + "\" doesn't exist.";
                     }
+                    //check if refrenced column is a subtable column
+                    else if (DatabaseFunct.currentData[tableKeyContainingRefrencedSubTable][refrencedSubTableCol] != "SubTable")
+                    {
+
+                        error += "The column being refrenced, \"" + refrencedSubTableCol + "\" within \"" + tableKeyContainingRefrencedSubTable + "\" is not a subtable column.";
+                    }
+                    //check if the table still has a primary key col
                     else if (!DatabaseFunct.currentData[refrencedSubTableKey].ContainsValue("Primary Key"))
                     {
                         error += "The subtable being refrenced, \"" + refrencedSubTableKey + "\", no longer contains a primary key columnn, add one or delete this column.";
@@ -690,7 +802,7 @@ namespace MDB
                         if (primaryKeyCol != "")
                         {
                             // append the missing directory string of the same row and get the data
-                            Dictionary<int, Dictionary<string, dynamic>> refrencedTableData = DatabaseFunct.GetTableDataFromDir(subjectDirectory + "/" + rowIndexOfRefrencedSubTable + "," + refrencedSubTableCol) as Dictionary<int, Dictionary<string, dynamic>>;
+                            Dictionary<int, Dictionary<string, dynamic>> refrencedTableData = DatabaseFunct.GetTableDataFromDir(subjectDirectory) as Dictionary<int, Dictionary<string, dynamic>>;
 
                             List<string> primaryKeys = new List<string>();
                             primaryKeys.Add("");
@@ -769,7 +881,7 @@ namespace MDB
             string colName = senderDGV.Columns[e.ColumnIndex].Name;
 
             //is this a contructed table
-            bool isConstructedTable = false;
+            bool isConstructed = false;
             // the script used by the table constructed from this cell
             string subtableConstructorScript = null;
 
@@ -778,7 +890,7 @@ namespace MDB
             if (senderDGVTag.ContainsKey("tableConstructorScript"))
             {
                 //this means that this is part of a constructor script
-                isConstructedTable = true;
+                isConstructed = true;
 
                 //try to find the constructor script for this column within the column's tag if it exists:
                 if (senderDGV.Columns[colName].Tag != null)
@@ -797,39 +909,47 @@ namespace MDB
 
             }
 
-
-            //cannot fetch the colType unless the tableKey exists within currentData 
+            //get column type
             string colType = null;
-            if (!isConstructedTable)
-            {
-                colType = DatabaseFunct.currentData[tableKey][colName];
-                
-                //fetch script for Auto Table Constructor Script Receiver column
-                if (colType == "Auto Table Constructor Script Receiver")
-                {
 
-                    subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, colName, tableData, e.RowIndex);
-                    //if tableConstructorScript is null then an error was shown and cancel function here
-                    if (subtableConstructorScript == null)
-                    {
-                        return;
-                    }
-                }
-
-
-
-            }
-
-           
-
-            if (isConstructedTable)
+            if (isConstructed)
             {
                 
-
-                //fetch the column type from colTag is constructed:
+                //fetch the column type from colTag if constructed:
                 Dictionary<string, dynamic> colTag = senderDGV.Columns[e.ColumnIndex].Tag as Dictionary<string, dynamic>;
                 colType = colTag["columnType"];
             }
+            else
+            {
+                //fetch from currentData
+                colType = DatabaseFunct.currentData[tableKey][colName];
+            }
+
+
+            
+            
+            
+                
+                
+            //fetch script for Auto Table Constructor Script Receiver column
+            if (colType == "Auto Table Constructor Script Receiver")
+            {
+
+                subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, colName, tableData, e.RowIndex,senderDGV);
+                //if tableConstructorScript is null then an error was shown and cancel function here
+                if (subtableConstructorScript == null)
+                {
+                    return;
+                }
+            }
+
+
+
+            
+
+           
+
+            
 
             bool isEnabled = false;
 
@@ -877,8 +997,9 @@ namespace MDB
 
                         }
 
-                        
 
+                        //get the DGV setup for new subtable
+                        //make columns read only if new subtable is constructed via subtableConstructorScript
                         CustomDataGridView newDGV = Program.GetGridView(subtableConstructorScript != null);
                         //-------------------------------------------------setting edits-----
                         newDGV.Dock = DockStyle.None;
@@ -904,6 +1025,7 @@ namespace MDB
                         //add newdgv to parent
                         senderDGV.Controls.Add(newDGV);
 
+                        //if the new subtable is constructed
                         if (subtableConstructorScript != null)
                         {
                             //load table structure from tableConstructorScript

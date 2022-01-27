@@ -20,6 +20,26 @@ namespace MDB
             -Subtable: " <column_name>:S:{...internal_column_structure...}" "
             -Bool: " <column_name>:B "
             -Foreign Key Refrence: " <column_name>:F:<table_name> "
+            -Parent Subtable Foreign Key Refrence: " <column_name>:PF:<outward_directory> "
+                to define the "outward_directory" you can assume that the table is a file directory and the current directory/base directory is where the Parent Subtable Foreign Key Refrence column is located.
+                you must travel outwards in the directory to reach the desired subtable, to escape the current directory by one table level use '-'
+                
+                example: if the AutoTableConstructorScriptReceiver column subtable containing this column is located in: < "SCol Name0"/"SCol Name1"/"AutoTableConstructorScriptReceiver Column Name" > (quotations included)
+                and you want to reach an adjacent subtable in <"SCol Name0"/"SCol Name1"/...>  called "Adjacent SCol Name1", you can enter the directory as < -/"Adjacent SCol Name1" >.
+                    - with '-' you are escaping once to the previous table level ("SCol Name1") 
+                    - then you are entering a different subtable column called "Adjacent SCol Name1"
+                
+                Note1: you don't necessarily need to enter an adjacent subtable, <-/-> is a valid outward_directory.
+                Note2: you cannot escape to nor beyond the main table directory and must reference a subtable column.
+                Note3: only the immediate table level of Adjacent subtable columns to the base directory referenced is used, so <-/"Adj Sub"/"Sub2"> is invalid.
+                Note4: spacing outside of quotes is trimmed.
+                Note5: you cannot reference a subtable column within a constructed table (this is mostly irrelevant though as there are is no primary key support within TableConstructorScript).
+                
+                This "outward directory method" is designed to consider that, if any columnnames in the directory are changed, it won't affect the directory within the script unless it's the name of an adjacent subtable columnname that is being referenced.
+                
+
+
+            -Auto Table Constructor Script Receiver: " <column_name>:A:<linked_fKey_column_name> "
 
         -if you want to add a single row restriction to a constructed table or sub-table, add a hashtag "#" at the beginning of the script (there cannot be spaces before this hashtag)
 
@@ -43,7 +63,9 @@ namespace MDB
             {"I", "Integer" },
             {"B", "Bool" },
             {"F", "Foreign Key Refrence" },
+            {"PF", "Parent Subtable Foreign Key Refrence" },
             {"S", "SubTable" },
+            {"A","Auto Table Constructor Script Receiver" }
         };
         public static Dictionary<string, Type> columnCellValueValidType = new Dictionary<string, Type>()
         {
@@ -52,9 +74,91 @@ namespace MDB
             {"Integer",typeof(int) },
             {"Bool",typeof(bool) },
             {"Foreign Key Refrence",typeof(string) },
-            {"SubTable", typeof(Dictionary<int, Dictionary<string, dynamic>>)}
+            {"Parent Subtable Foreign Key Refrence",typeof(string) },
+            {"SubTable", typeof(Dictionary<int, Dictionary<string, dynamic>>)},
+            {"Auto Table Constructor Script Receiver", typeof(Dictionary<int, Dictionary<string, dynamic>>) }
         };
-        
+
+
+
+
+        public static string FetchDirectoryFromOutwardDirectory(string outwardDirectory, string currentDirectory)
+        {
+            string selectedDirectory = currentDirectory + "";
+            
+
+            //remove from selectedDirectory while outwarDirectory uses -
+            string[] splitOutwardDirectory = outwardDirectory.Split('/');
+
+            bool selectedDirectoryComplete = false;
+
+            foreach (string command in splitOutwardDirectory)
+            {
+                string c = command.Trim();
+                if (c == "-")
+                {
+
+                    if (!selectedDirectory.Contains(","))
+                    {
+                        MessageBox.Show("outward directory escapes into or beyond main-table! you must reference a subtable column.");
+                        return null;
+                    }
+
+                    //remove from selectedDirectory
+                    // match everything after and including last ','
+                    string regex = @",[^,]*$";
+                    selectedDirectory = Regex.Replace(selectedDirectory, regex, "");
+
+                    
+
+
+
+
+                }
+                else// c is subtable column name in quotes
+                {
+
+
+
+                    //match within quotes ""
+                    //without escaping quotes: "(?<=")[^"]*(?= ")"
+                    string regex = "(?<=\")[^\"]*(?=\")";
+
+                    string subColName = Regex.Match(c, regex).Value;
+                    //re-add the removed ','
+                    selectedDirectory += "," + subColName;
+
+                    selectedDirectoryComplete = true;
+
+                    break;
+                    
+
+                }
+
+            }
+
+            //clip the row index of the remaining directory
+            if (!selectedDirectoryComplete)
+            {
+                // match everything after and including last '/'
+                string regex = @"/[^/]*$";
+
+                selectedDirectory = Regex.Replace(selectedDirectory, regex,"");
+
+                if (!selectedDirectory.Contains(","))
+                {
+                    MessageBox.Show("outward directory escapes into main-table! you must reference a subtable column.");
+                    return null;
+                }
+
+            }
+
+            
+
+
+            return selectedDirectory;
+        }
+
 
 
         public static void LoadConstructedColumn(string colName, string colType, CustomDataGridView DGV, Dictionary<int, Dictionary<string, dynamic>> tableData, Tuple<string,dynamic> additionalColumnData)
@@ -68,7 +172,7 @@ namespace MDB
 
             Dictionary<string, dynamic>  colTag = new Dictionary<string, dynamic>();
 
-            //store the subtableConstructorScript in the column tag if this is a subtable column
+            //store additional data specific to certain column types
             if (additionalColumnData != null)
             {
 
@@ -77,7 +181,7 @@ namespace MDB
                 
             }
 
-
+            //store the column type within the tag in order to refrence the column types within constructed tables
             colTag.Add("columnType", colType);
 
 
@@ -196,8 +300,23 @@ namespace MDB
 
         }
 
+        
+        public static Tuple<MatchCollection,bool, string[]> FetchTopLevelScriptData(string tableConstructorScript)
+        {
+            //collect subscripts within "subtable column" curly brackets and includes nested curly brackets
+            MatchCollection subtableScripts = Regex.Matches(tableConstructorScript, @"(?<=\{)(?>\{(?<c>)|[^{}]+|\}(?<-c>))*(?(c)(?!))(?=\})");
 
-            //whenever a AutoTableConstructorScriptReader button (or a subtable button within the AutoTableConstructorScriptReader subtable) is pressed, instead of referring to the currentData table structure, refer to the script that the button is refrencing
+            //ignore these subscripts
+            string scriptAtCurrentLevel = Regex.Replace(tableConstructorScript, @"(?<=\{)(?>\{(?<c>)|[^{}]+|\}(?<-c>))*(?(c)(?!))(?=\})", "");
+            //get if single row restriction:
+            bool singleRowRestriction = scriptAtCurrentLevel.StartsWith("#");
+
+            string[] columnScripts = scriptAtCurrentLevel.Split(',');
+
+            return new Tuple<MatchCollection,bool, string[]>(subtableScripts, singleRowRestriction, columnScripts);
+        }
+
+        //whenever a AutoTableConstructorScriptReader button (or a subtable button within the AutoTableConstructorScriptReader subtable) is pressed, instead of referring to the currentData table structure, refer to the script that the button is refrencing
         public static void ConstructSubTableStructureFromScript(CustomDataGridView DGV)
         {
             Dictionary<string,dynamic> DGVTag = DGV.Tag as Dictionary<string,dynamic>;
@@ -213,17 +332,14 @@ namespace MDB
 
             DatabaseFunct.loadingTable = true;
 
-            //collect subscripts within "subtable column" curly brackets and includes nested curly brackets
-            MatchCollection subtableScripts = Regex.Matches(tableConstructorScript, @"(?<=\{)(?>\{(?<c>)|[^{}]+|\}(?<-c>))*(?(c)(?!))(?=\})");
-            
-            //ignore these subscripts
-            string scriptAtCurrentLevel = Regex.Replace(tableConstructorScript, @"(?<=\{)(?>\{(?<c>)|[^{}]+|\}(?<-c>))*(?(c)(?!))(?=\})", "");
 
-            bool singleRowRestriction = scriptAtCurrentLevel.StartsWith("#");
-            
+            Tuple<MatchCollection,bool, string[]>  dat = FetchTopLevelScriptData(tableConstructorScript);
+            MatchCollection subtableScripts = dat.Item1;
+            bool singleRowRestriction = dat.Item2;
+            string[] columnScripts = dat.Item3;
 
-            //then split script into it's columns by commas
-            string[] columnScripts = scriptAtCurrentLevel.Split(',');
+
+            
 
             List<string> columnNames = new List<string>();
 
@@ -242,7 +358,7 @@ namespace MDB
 
                 //add subtableConstructorScript to tag if type is SubTable
                 Tuple<string, dynamic> additionalColumnData = null;
-                
+
                 if (columnType == "SubTable")
                 {
                     string subtableConstructorScript = subtableScripts[subtableScriptIndex].Value;
@@ -250,11 +366,26 @@ namespace MDB
                     additionalColumnData = new Tuple<string, dynamic>("subtableConstructorScript", subtableConstructorScript);
                     subtableScriptIndex += 1;
                 }
+                else if (columnType == "Auto Table Constructor Script Receiver")
+                {
+                    //get string within <>
+                    string linkedFKeyColumn = Regex.Match(columnDat[2].Trim(), @"(?<=\<)[^}]*(?=\>)").Value;
+                    additionalColumnData = new Tuple<string, dynamic>(DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt, linkedFKeyColumn);
+
+                }
                 else if (columnType == "Foreign Key Refrence")
                 {
-                    string tableBeingRefrenced = Regex.Match(columnDat[2].Trim(), @"(?<=\<)[^}]*(?=\>)").Value;
                     //get string within <>
+                    string tableBeingRefrenced = Regex.Match(columnDat[2].Trim(), @"(?<=\<)[^}]*(?=\>)").Value;
+
                     additionalColumnData = new Tuple<string, dynamic>(DatabaseFunct.RefrenceColumnKeyExt, tableBeingRefrenced);
+                }
+                else if (columnType == "Parent Subtable Foreign Key Refrence")
+                {
+                    //get string within <>
+                    string outwardDirectory = Regex.Match(columnDat[2].Trim(), @"(?<=\<)[^}]*(?=\>)").Value;
+
+                    additionalColumnData = new Tuple<string, dynamic>(DatabaseFunct.ParentSubTableRefrenceColumnKeyExt, outwardDirectory);
                 }
 
                 LoadConstructedColumn(columnName, columnType,DGV,tableData, additionalColumnData);
@@ -289,16 +420,13 @@ namespace MDB
 
             void recursiveScriptValidator(string scriptToValidate, List<string> parentColumnDirectory)
             {
+
+                Tuple<MatchCollection, bool, string[]> dat = FetchTopLevelScriptData(scriptToValidate);
+                MatchCollection subtableScripts = dat.Item1;
+                bool singleRowRestriction = dat.Item2;
+                string[] columnScripts = dat.Item3;
+
                 
-
-
-                //collect subscripts within "subtable column" curly brackets and includes nested curly brackets
-                MatchCollection subtableScripts = Regex.Matches(scriptToValidate, @"(?<=\{)(?>\{(?<c>)|[^{}]+|\}(?<-c>))*(?(c)(?!))(?=\})");
-                //ignore these subscripts
-                string scriptAtCurrentLevel = Regex.Replace(scriptToValidate, @"(?<=\{)(?>\{(?<c>)|[^{}]+|\}(?<-c>))*(?(c)(?!))(?=\})", "");
-
-                //then split script into it's columns by commas
-                string[] columnScripts = scriptAtCurrentLevel.Split(',');
 
                 int subtableScriptIndex = 0;
 
@@ -385,9 +513,77 @@ namespace MDB
                             //break the error loop if subtable formatting is invalid because the error loop will start considering the data within the subtable to be at the current table level when it isn't.
                             breakloop = true;
                         }
+
+
+
+                    }
+                    else if (columnType == "Auto Table Constructor Script Receiver")
+                    {
+                        //get string within <>
                         
+                        string linkedFKeyColumn = columnDat[2].Trim();
+                        //get string within <>
+                        MatchCollection x = Regex.Matches(linkedFKeyColumn, @"(?<=\<)[^}]*(?=\>)");
+                        if (x.Count == 0)
+                        {
+                            columnError += "    linkedForeignKeyColumn name is missing <> brackets \n";
+                        }
+                        else
+                        {
+                            //check if adjacent column of Fkey type exists
+                            linkedFKeyColumn = x[0].Value;
+
+                            bool linkedFKeyColumnIsFound = false;
+
+                            foreach (string columnScriptAtCurrentLevel in columnScripts)
+                            {
+                                try
+                                {
+                                    string[] _columnDat = columnScriptAtCurrentLevel.Split(':');
+                                    string _columnName = Regex.Match(_columnDat[0], @"(?<=\<)[^}]*(?=\>)").Value;
+                                    string _columnTypeShorthand = _columnDat[1].Trim();
+
+                                    Console.WriteLine(_columnName +"=="+ linkedFKeyColumn+" ?");
+
+                                    if (_columnName == linkedFKeyColumn)
+                                    {
+                                        if (columnTypeShorthandDict.ContainsKey(_columnTypeShorthand))
+                                        {
+
+                                            string _columnType = columnTypeShorthandDict[_columnTypeShorthand];
+                                            if (_columnType != "Foreign Key Refrence")
+                                            {
+                                                columnError += "    linked column is not a Foreign Key Refrence column \n";
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                linkedFKeyColumnIsFound = true;
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            columnError += "    could not read a column type of linkedFKeyColumn \n";
+                                            break;
+                                        }
+                                    }
+
+                                }
+                                catch
+                                {
+                                    columnError += "    could not read a column name or type when checking for the linked Foreign key refrence column \n";
+                                }
+                               
+                            }
+
+                            if (!linkedFKeyColumnIsFound)
+                            {
+                                columnError += "    could not find linkedForeignKeyColumn \n";
+                            }
 
 
+                        }
                     }
                     else if (columnType == "Foreign Key Refrence")
                     {
@@ -410,7 +606,38 @@ namespace MDB
 
                         }
 
-                        
+
+                    }
+                    else if (columnType == "Parent Subtable Foreign Key Refrence")
+                    {
+                        string outwardDirectory = columnDat[2].Trim();
+                        //get string within <>
+                        MatchCollection x = Regex.Matches(outwardDirectory, @"(?<=\<)[^}]*(?=\>)");
+                        if (x.Count == 0)
+                        {
+                            columnError += "    outwardDirectory is missing <> brackets \n";
+                        }
+                        else
+                        {
+                            //check that all directory syntax is valid:
+                            string[] splitOutwardDirectory = x[0].Value.Split('/');
+                            foreach (string s in splitOutwardDirectory)
+                            {
+                                string ts = s.Trim();
+                                if (ts != "-" )
+                                {
+                                    MatchCollection y = Regex.Matches(outwardDirectory, "(?<=\")[^\"]*(?=\")");
+                                    if (y.Count == 0)
+                                    {
+                                        columnError += "    outwardDirectory entry \""+ ts + "\" is missing \"\" quotes \n";
+                                    }
+                                   
+                                }
+                            }
+
+                        }
+
+
                     }
 
 
@@ -434,8 +661,8 @@ namespace MDB
                         {
 
                             //relevant match to subtable column should line up with subtableScriptIndex
-                            Match dat = subtableScripts[subtableScriptIndex];
-                            string subtableScriptToValidate = dat.Value;
+                            Match match = subtableScripts[subtableScriptIndex];
+                            string subtableScriptToValidate = match.Value;
                             subtableScriptIndex += 1;
                             //duplicate parentColumnDirectory
                             List<string> subtableParentColumnDirectory = new List<string>(parentColumnDirectory);
@@ -469,15 +696,38 @@ namespace MDB
         }
 
         //get tableConstructorScript from Auto Table Constructor Script that the Receiver column fetches
-        public static string FetchTableConstructorScriptForReceiverColumn(string tableKey, string colName, Dictionary<int, Dictionary<string, dynamic>> tableData, int rowIndex)
+        public static string FetchTableConstructorScriptForReceiverColumn(string tableKey, string colName, Dictionary<int, Dictionary<string, dynamic>> tableData, int rowIndex, CustomDataGridView senderDGV)
         {
             string tableConstructorScript = null;
 
+            //get if the table is constructed by script
+            Dictionary<string, dynamic> DGVTag = senderDGV.Tag as Dictionary<string, dynamic>;
+            bool isConstructed = false;
+            if (DGVTag.ContainsKey("tableConstructorScript"))
+            {
+                isConstructed = true;
+            }
+
 
             //get foreign key refrence column this column is linked to 
-            string linkedRefrenceColumnName = DatabaseFunct.currentData[tableKey][colName + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
+            string linkedRefrenceColumnName = "";
             //get the table being refrenced by that foreign key refrence column
-            string tableBeingRefrenced = DatabaseFunct.currentData[tableKey][linkedRefrenceColumnName + DatabaseFunct.RefrenceColumnKeyExt];
+            string tableBeingRefrenced = "";
+
+            if (isConstructed)
+            {
+                Dictionary<string, dynamic> colTag = senderDGV.Columns[colName].Tag as Dictionary<string, dynamic>;
+                linkedRefrenceColumnName = colTag[DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
+                Dictionary<string, dynamic> refColTag = senderDGV.Columns[linkedRefrenceColumnName].Tag as Dictionary<string, dynamic>;
+                tableBeingRefrenced = refColTag[DatabaseFunct.RefrenceColumnKeyExt];
+
+            }
+            else
+            {
+                linkedRefrenceColumnName = DatabaseFunct.currentData[tableKey][colName + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
+                tableBeingRefrenced = DatabaseFunct.currentData[tableKey][linkedRefrenceColumnName + DatabaseFunct.RefrenceColumnKeyExt];
+            }
+
             //get the value of the cell of the foreign key refrence column at the same row
             string tablePKSelected = tableData[rowIndex][linkedRefrenceColumnName];
 
