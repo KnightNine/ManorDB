@@ -85,13 +85,7 @@ namespace MDB
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (isReplace)
-                {
-                    
-                    DatabaseFunct.currentData = new SortedDictionary<string, dynamic>() { };
-                    DatabaseFunct.ClearMainTable();
-                    Program.mainForm.customTabControl1.TabPages.Clear();
-                }
+                
 
                 if (openFileDialog1.FileName != "" && openFileDialog1.FileName.EndsWith(".mdb"))
                 {
@@ -134,6 +128,7 @@ namespace MDB
                         else
                         {
                             Console.WriteLine("unhandled table/object type: " + currentTable.GetType().ToString());
+                            MessageBox.Show("unhandled table/object type: " + currentTable.GetType().ToString());
                             valid = false;
                         }
 
@@ -148,24 +143,24 @@ namespace MDB
                                 Console.WriteLine("key is: " + key);
                                 //Console.WriteLine("Value Type is: " + ct[key].GetType().ToString());
 
-                                //remove old table if duplicate:
-                                if (tableLevel == 0 && DatabaseFunct.currentData.ContainsKey(key))
-                                {
-                                    DatabaseFunct.currentData.Remove(key);
-                                    Console.WriteLine("removing old table: " + key);
-
-                                }
+                                
 
 
                                 
                                 if (ct[key] is Newtonsoft.Json.Linq.JArray)
                                 {
-                                    if (key == DatabaseFunct.ColumnOrderRefrence || key.EndsWith(DatabaseFunct.ColumnDisablerArrayExt))
+                                    if (key == DatabaseFunct.ColumnOrderRefrence || key.EndsWith(DatabaseFunct.ColumnDisablerArrayExt) || key == RegexRefrenceTableConstructorPromptHandler.ColumnOrderRefrence)
                                     {
                                         //column order list OR disabler array
                                         // and column order list within regex constructor data
                                         tableLevelKVs[key] = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(ct[key].ToString());
 
+                                    }
+                                    else
+                                    {
+                                        
+                                        Console.WriteLine("\"" + key + "\" key Array value not handled.");
+                                        valid = false;
                                     }
                                 }
                                 else if (ct[key] is Newtonsoft.Json.Linq.JObject)
@@ -217,6 +212,10 @@ namespace MDB
 
 
                                     }
+                                    else
+                                    {
+                                        //do nothing
+                                    }
 
 
 
@@ -249,15 +248,14 @@ namespace MDB
                     }
 
 
-                    defaultPath = openFileDialog1.FileName;
-                    selectedPath = Path.GetDirectoryName(openFileDialog1.FileName);
+                    
 
 
                     js = File.ReadAllText(openFileDialog1.FileName);
                     Console.WriteLine(js);
                     SortedDictionary<string, dynamic> cd;
 
-
+                    //appended/opened table data
                     cd = Newtonsoft.Json.JsonConvert.DeserializeObject<SortedDictionary<string, dynamic>>(js);
                     
                     subFunct(0, cd);
@@ -269,8 +267,90 @@ namespace MDB
 
                     if (valid)
                     {
-                        DatabaseFunct.currentData = cd;
+                        
 
+                        DatabaseFunct.ClearMainTable();
+
+                        if (isReplace)
+                        {
+                            defaultPath = openFileDialog1.FileName;
+                            selectedPath = Path.GetDirectoryName(openFileDialog1.FileName);
+
+                            DatabaseFunct.currentData = cd;
+                        }
+                        else
+                        {
+                            if (String.IsNullOrEmpty(selectedPath))
+                            {
+                                defaultPath = openFileDialog1.FileName;
+                                selectedPath = Path.GetDirectoryName(openFileDialog1.FileName);
+                            }
+
+                            SortedDictionary<string,dynamic> fetchAllDataAssociatedWithMainTableInCD(string mainTabName)
+                            {
+                                SortedDictionary<string, dynamic> dat = new SortedDictionary<string, dynamic>();
+                                foreach (KeyValuePair<string,dynamic> tabDat in cd)
+                                {
+                                    if (tabDat.Key.StartsWith(mainTabName + "/") || tabDat.Key == mainTabName)
+                                    {
+                                        dat.Add(tabDat.Key,tabDat.Value);
+                                    }
+
+                                }
+                                return dat;
+                            }
+                            //if duplicate maintables exist overwrite them and indicate that they were overwritten
+                            foreach (string tabKey in cd.Keys)
+                            {
+                                //if is maintable
+                                if (!tabKey.Contains("/"))
+                                {
+
+                                    bool add = false;
+                                    if (DatabaseFunct.currentData.ContainsKey(tabKey))
+                                    {
+
+                                        DialogResult dr = MessageBox.Show("Duplicate Maintable \""+ tabKey + "\" exists in appended mdb file. Overwrite current maintable data?", "Alert!", MessageBoxButtons.YesNo);
+
+                                        switch (dr)
+                                        {
+                                            case DialogResult.Yes:
+                                                
+                                                //remove currentData table data and replace it with the appended file's table data
+                                                DatabaseFunct.RemoveTable(tabKey);
+                                                add = true;
+
+
+                                                break;
+                                            case DialogResult.No:
+                                                //do nothing
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        add = true;
+                                    }
+
+                                    if (add)
+                                    {
+                                        Console.WriteLine("Added new table from appended file: \"" + tabKey + "\"");
+                                        // add the table data from the appended file:
+                                        SortedDictionary<string, dynamic> dat = fetchAllDataAssociatedWithMainTableInCD(tabKey);
+                                        DatabaseFunct.currentData = new SortedDictionary<string, dynamic>(DatabaseFunct.currentData.Concat(dat).ToDictionary(x => x.Key, x => x.Value));
+                                    }
+
+                                }
+                            }
+                        }
+                        /*string z = "";
+                        foreach (string tabKey in DatabaseFunct.currentData.Keys.ToArray())
+                        {
+                            z += "\n" + tabKey;
+                        }
+
+                        MessageBox.Show(z);
+                        */
                         // clear tabs
                         Program.mainForm.customTabControl1.TabPages.Clear();
                         //clear bookmarks
@@ -299,11 +379,14 @@ namespace MDB
                                 DatabaseFunct.BookmarkTable(mainTableKey, cd[mainTableKey][DatabaseFunct.BookmarkColorRefrence]);
 
                             }
-                            
-                            
-                            
 
-                            
+
+                            //if this is a File Regex Reference Table update its referenced data  
+                            if (cd[mainTableKey].ContainsKey(DatabaseFunct.RegexRefrenceTableConstructorDataRefrence))
+                            {
+                                RegexRefrenceTableConstructorPromptHandler.UpdateRegexRefrenceTableData(mainTableKey);
+                            }
+
 
 
                         }
@@ -311,7 +394,7 @@ namespace MDB
 
 
 
-                        //change table
+                        //change table to first table
 
                         DatabaseFunct.ChangeMainTable(Program.mainForm.customTabControl1.TabPages[0].Name);
 

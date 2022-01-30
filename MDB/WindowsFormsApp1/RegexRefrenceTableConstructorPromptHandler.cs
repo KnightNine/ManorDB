@@ -27,18 +27,28 @@ namespace MDB
     EXAMPLES:
     In my project i'll be using these regular expressions:
 
-    - this one is to match the string that comes after my static paramters description (parameters that are unique to the function)
-    The description looks like this in the script file: "#static-parameters: [data]" and the matched text is "[data]".
-    "(?<=#static-parameters:\s*)\[.*\]"
+    - this one is to match the name of the function itself to function as the table's primary key:
+    A function looks like this in the script file: "func function_name():" and this will match "function_name" if the previous line doesn't contain "#-hide-" nor will it match if the line is commented out with '#' at its start:
+    "(?m)(?<=(?<!#-hide-\s*[\r\n]+|#)func\s+).+?(?=\s*\()"
 
-    - this one is to match the name of the function itself:
-    A function looks like this in the script file: "func function_name():" and this will match "function_name" if the previous line doesn't contain "#-hide-":
-    "(?m)(?<=(?<!^#-hide-[\r\n]+)func\s+).+?(?=\s*\()"
+    - and this one is to match the Auto Table Contructor Script that will be used in setting the static Params (parameters that are function specific)
+    The description looks like this in the script file: "static_param_table_constructor_script: {data}" and the matched text is "data". (if the line isn't commented out with '#')
+    "(?<=(?<!#+\s*)static_param_table_constructor_script:\s*\{).*(?=\})"
 
-    - and this one is to match the Auto Table Contructor Script that will be used in setting the static Params (parameters that are function specific):
-    "(?<=#auto-table-construction-script-for-static-parameters:\s*)\".*\""
+    
+
+    ------------------OTHER-----------------------
+
+    "(?<=(?<!#+\s*)required_inputs:\s*)\[.*\]"
+
+    "(?<=(?<!#+\s*)optional_inputs:\s*)\[.*\]"
 
 
+    "(?<=(?<!#+\s*)is_selection_dependent:\s*\[).*(?=\])"
+    is_selection_dependent
+
+
+    "(?<=(?<!#+\s*)dynamic_requirement_description_format:\s*\").*(?=\")"
     */
 
 
@@ -169,7 +179,7 @@ namespace MDB
 
             if (String.IsNullOrWhiteSpace(RegexRefrenceTableConstructorData[FileDirectoryRefrence]))
             {
-                MessageBox.Show("File directory is empty, a directory to a file or folder must be defined first to read from.");
+                MessageBox.Show("Referenced File/Folder directory is empty, a directory to a file or folder must be defined first to read from.");
 
             }
             else if (Directory.Exists(fileDirectory)) // if directory read all files within directory
@@ -190,7 +200,7 @@ namespace MDB
             }
             else
             {
-                MessageBox.Show("File does not exist at file directory (" + fileDirectory + ") to construct table from.");
+                MessageBox.Show("File/Folder does not exist at referenced directory (" + fileDirectory + ") to construct table from.");
 
             }
 
@@ -257,7 +267,109 @@ namespace MDB
         }
 
 
+        internal static void UpdateRegexRefrenceTableData(string mainTableKey)
+        {
 
+            
+
+
+            // get the table contructor data
+            Dictionary<string, dynamic> RegexRefrenceTableConstructorData = DatabaseFunct.currentData[mainTableKey][DatabaseFunct.RegexRefrenceTableConstructorDataRefrence];
+            //the stored directory is the relative directory that is combined with the absolute directory
+            string fileDirectory = Path.Combine(InputOutput.selectedPath, RegexRefrenceTableConstructorData[FileDirectoryRefrence]);
+
+            string fileText = null;
+
+            
+
+            string error_header = "Error encountered while updating row data for File Regex Reference Table \"" + mainTableKey + "\": ";
+
+            if (String.IsNullOrWhiteSpace(RegexRefrenceTableConstructorData[FileDirectoryRefrence]))
+            {
+                MessageBox.Show(error_header+ "Referenced directory is empty, a directory to a file or folder isn't defined for this table to reference data from.");
+
+            }
+            else if (Directory.Exists(fileDirectory)) // if directory read all files within directory
+            {
+
+
+                fileText = "";
+                //add text from all files within directory
+                foreach (string fileFullName in Directory.GetFiles(fileDirectory))
+                {
+                    fileText += File.ReadAllText(fileFullName) + "/n";
+                }
+            }
+            else if (File.Exists(fileDirectory))
+            {
+                fileText = File.ReadAllText(fileDirectory);
+
+            }
+            else
+            {
+                MessageBox.Show(error_header + "File or folder does not exist at directory (" + fileDirectory + ") to construct table from. The directory for the referenced file or folder must have changed.");
+
+            }
+
+            //update table row data
+            if (fileText != null)
+            {
+                
+                //wipe table row data
+                Dictionary<int, Dictionary<string, dynamic>> tableData = DatabaseFunct.currentData[mainTableKey][DatabaseFunct.RowEntryRefrence];
+                tableData.Clear();
+
+                
+                List<string> ColList = RegexRefrenceTableConstructorData[ColumnOrderRefrence];
+
+                //add in order of column order list
+                foreach (string colKey in ColList)
+                {
+                    Dictionary<string, dynamic> columnConstructorData = RegexRefrenceTableConstructorData[ColumnDataRefrence][colKey];
+
+
+                    
+
+                    //get all the regex matches for this column
+                    string regex = columnConstructorData["regex"];
+                    MatchCollection matches = Regex.Matches(fileText, regex);
+
+                    //write to the table
+                    int rowIndex = 0;
+                    foreach (Match match in matches)
+                    {
+                        string value = match.Value;
+
+                        //add rows when matches exceeds the number of rows in the table
+                        if (tableData.Count - 1 < rowIndex)
+                        {
+                            //create new blank row data for new rows
+                            Dictionary<string, dynamic> rowData = new Dictionary<string, dynamic>();
+                            foreach (string _colKey in ColList)
+                            {
+                                rowData[_colKey] = null;
+                            }
+
+
+                            tableData.Add(rowIndex, rowData);
+                            
+                        }
+                        
+                        //write to cell data at row index
+                        tableData[rowIndex][colKey] = value;
+
+
+
+                        rowIndex += 1;
+                    }
+
+
+
+                }
+            }
+
+
+        }
 
 
 

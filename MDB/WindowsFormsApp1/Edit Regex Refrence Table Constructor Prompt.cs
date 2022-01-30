@@ -142,6 +142,13 @@ namespace MDB
 
         private void folderDirectoryButton_Click(object sender, EventArgs e)
         {
+            if (String.IsNullOrWhiteSpace(InputOutput.selectedPath))
+            {
+                MessageBox.Show("selected filepath is undefined, load or save a file first");
+                return;
+            }
+
+
             FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
             folderBrowserDialog1.SelectedPath = InputOutput.selectedPath;
 

@@ -64,13 +64,17 @@ namespace MDB
         //adds a colored bookmark on top of the tab
         internal static void BookmarkTable(string tabName, Color color)
         {
+
+            
+
             Dictionary<string,Color> TabBookmarkColorsByName = Program.mainForm.customTabControl1.DisplayStyleProvider.TabBookmarkColorsByName;
-            TabBookmarkColorsByName.Add(tabName, color);
+            
+            TabBookmarkColorsByName[tabName] = color;
 
             currentData[tabName][BookmarkColorRefrence] = color;
 
         }
-        internal static void RemoveOrChangeTableBookmark(string tabName, string newTabName)
+        internal static void RemoveBookmarkOrTransferBookmarkToNewTableName(string tabName, string newTabName)
         {
             Dictionary<string, Color> TabBookmarkColorsByName = Program.mainForm.customTabControl1.DisplayStyleProvider.TabBookmarkColorsByName;
             if (TabBookmarkColorsByName.ContainsKey(tabName))
@@ -138,7 +142,7 @@ namespace MDB
 
                 Program.mainForm.customTabControl1.TabPages.RemoveAt(Program.mainForm.customTabControl1.TabPages.IndexOfKey(tabName));
                 //remove from bookmarks
-                RemoveOrChangeTableBookmark(tabName, null);
+                RemoveBookmarkOrTransferBookmarkToNewTableName(tabName, null);
 
                 string[] allKeys = currentData.Keys.ToArray<string>();
                 //remove table and subtables within table from data
@@ -249,7 +253,7 @@ namespace MDB
                         }
 
                         //transfer over bookmark to newTabName
-                        RemoveOrChangeTableBookmark(tabName,newTabName);
+                        RemoveBookmarkOrTransferBookmarkToNewTableName(tabName,newTabName);
 
                     }
                     else

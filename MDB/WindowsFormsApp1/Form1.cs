@@ -73,7 +73,7 @@ namespace MDB
         {
 
             string[] ListBoxArr = new string[] { "User Input Table", "File Regex Refrence Table" };
-            string[] input = Prompt.ShowDialog("Enter table Name and Type:", "New Table", true, true, ListBoxArr);
+            string[] input = Prompt.ShowDialog("Enter table Name and Type:", "New Table", true,"", true, ListBoxArr);
 
             if (input[0] == "T")
             {
@@ -85,7 +85,7 @@ namespace MDB
         private void removeTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            string[] input = Prompt.ShowDialog("Table Name:", "Remove Table", true, false, null);
+            string[] input = Prompt.ShowDialog("Table Name:", "Remove Table", true, "", false, null);
 
             if (input[0] == "T")
             {
@@ -103,7 +103,7 @@ namespace MDB
             if (DatabaseFunct.selectedTable != "")
             {
 
-                string[] input = Prompt.ShowDialog("Name Column And Select Type", "Create Column", true, true, ColumnTypes.Types.Keys.ToArray<string>());
+                string[] input = Prompt.ShowDialog("Name Column And Select Type", "Create Column", true, "", true, ColumnTypes.Types.Keys.ToArray<string>());
                 if (input[0] == "T")
                 {
                     DatabaseFunct.AddColumn(input[1], input[2], false, Program.mainForm.TableMainGridView);
@@ -203,7 +203,7 @@ namespace MDB
             if (DatabaseFunct.selectedTable != "")
             {
 
-                string[] input = Prompt.ShowDialog("Name Column And Select Type", "Create Column", true, true, ColumnTypes.Types.Keys.ToArray<string>());
+                string[] input = Prompt.ShowDialog("Name Column And Select Type", "Create Column", true, "", true, ColumnTypes.Types.Keys.ToArray<string>());
 
                 if (input[0] == "T")
                 {

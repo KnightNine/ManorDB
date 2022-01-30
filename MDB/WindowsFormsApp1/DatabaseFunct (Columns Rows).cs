@@ -106,7 +106,7 @@ namespace MDB
                                         // if refrenceColumnLinkedTo doesn't already exist
                                         if (!currentData[tableKey].ContainsKey((dynamic)(colName + ScriptReceiverLinkToRefrenceColumnExt)))
                                         {
-                                            string[] input = Prompt.ShowDialog("Choose a Foreign Key Refrence.", "Create Auto Table Constructor Script Receiver Column", false, true, foreignKeyRefrenceColumnsInTable.ToArray());
+                                            string[] input = Prompt.ShowDialog("Choose a Foreign Key Refrence.", "Create Auto Table Constructor Script Receiver Column", false,null, true, foreignKeyRefrenceColumnsInTable.ToArray());
                                             refrenceColumnLinkedTo = input[2];
 
                                             //store the linked column in current data
@@ -170,7 +170,7 @@ namespace MDB
                                     if (!currentData[tableKey].ContainsKey((dynamic)(colName + RefrenceColumnKeyExt)))
                                     {
 
-                                        string[] input = Prompt.ShowDialog("Choose a table to refrence from.", "Create Refrence Column", false, true, MainTables.ToArray());
+                                        string[] input = Prompt.ShowDialog("Choose a table to refrence from.", "Create Refrence Column", false,null, true, MainTables.ToArray());
                                         tableRefrence = input[2];
                                     }
                                     else
@@ -259,7 +259,7 @@ namespace MDB
                                     if (!currentData[tableKey].ContainsKey((dynamic)(colName + ParentSubTableRefrenceColumnKeyExt)))
                                     {
 
-                                        string[] input = Prompt.ShowDialog("Choose a subtable to refrence from.", "Create Parent SubTable Refrence Column", false, true, ParentSubTables.ToArray());
+                                        string[] input = Prompt.ShowDialog("Choose a subtable to refrence from.", "Create Parent SubTable Refrence Column", false,null, true, ParentSubTables.ToArray());
                                         parentSubtableRefrence = input[2];
                                     }
                                     else

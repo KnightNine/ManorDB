@@ -267,7 +267,7 @@ namespace MDB
 
 
 
-        public static string[] ShowDialog(string text, string caption, bool addTextBox, bool addListBox, string[] listBoxArr)
+        public static string[] ShowDialog(string text, string caption, bool addTextBox, string initialTextBoxText, bool addListBox, string[] listBoxArr)
         {
             Form prompt = new Form()
             {
@@ -289,6 +289,7 @@ namespace MDB
             {
 
                 prompt.Controls.Add(textBox);
+                textBox.Text = initialTextBoxText;
             }
 
             ComboBox ComboBox1 = new ComboBox() { Left = 50, Top = 70, Width = 400, AutoCompleteMode = AutoCompleteMode.Suggest };
@@ -553,7 +554,7 @@ namespace MDB
         {
             MenuItem senderItem = (MenuItem)sender;
             string tableName = (string)senderItem.Tag;
-            string[] input = Prompt.ShowDialog("Enter New Table Name:", "Rename \""+ tableName +"\" Table", true, false, null);
+            string[] input = Prompt.ShowDialog("Enter New Table Name:", "Rename \""+ tableName +"\" Table", true, tableName, false, null);
 
             if (input[0] == "T")
             {
@@ -576,9 +577,9 @@ namespace MDB
             {
                 ColorPicker.ColorInfo selectedItem = input as ColorPicker.ColorInfo;
 
-                if (selectedItem.Text == "No Bookmark")
+                if (selectedItem.Text == "No Bookmark" )
                 {
-                    DatabaseFunct.RemoveOrChangeTableBookmark(tableName, null);
+                    DatabaseFunct.RemoveBookmarkOrTransferBookmarkToNewTableName(tableName, null);
                 }
                 else
                 {
@@ -599,7 +600,7 @@ namespace MDB
             CustomDataGridView _DGV = dat[0];
             string _colName = dat[1];
 
-            string[] input = Prompt.ShowDialog("Enter New Column Name:", "Rename \"" + _colName + "\" Column", true, false,  null);
+            string[] input = Prompt.ShowDialog("Enter New Column Name:", "Rename \"" + _colName + "\" Column", true, _colName, false,  null);
             
             if (input[0] == "T")
             {
