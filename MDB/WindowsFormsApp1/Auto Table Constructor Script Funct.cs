@@ -280,7 +280,7 @@ namespace MDB
             {
                 string[] columnDat = columnScript.Split(':');
                 //get name within <>
-                string columnName = Regex.Match(columnDat[0], @"(?<=\<)[^}]*(?=\>)").Value;
+                string columnName = Regex.Match(columnDat[0], @"(?<=\<)[^<>]*(?=\>)").Value;
 
                 if (columnName == colName)
                 {
@@ -349,7 +349,7 @@ namespace MDB
             {
                 string[] columnDat = columnScript.Split(':');
                 //get name within <>
-                string columnName = Regex.Match(columnDat[0], @"(?<=\<)[^}]*(?=\>)").Value;
+                string columnName = Regex.Match(columnDat[0], @"(?<=\<)[^<>]*(?=\>)").Value;
 
                 columnNames.Add(columnName);
                 //get type from shorthand
@@ -369,21 +369,27 @@ namespace MDB
                 else if (columnType == "Auto Table Constructor Script Receiver")
                 {
                     //get string within <>
-                    string linkedFKeyColumn = Regex.Match(columnDat[2].Trim(), @"(?<=\<)[^}]*(?=\>)").Value;
-                    additionalColumnData = new Tuple<string, dynamic>(DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt, linkedFKeyColumn);
+                    MatchCollection matchCollection = Regex.Matches(columnDat[2].Trim(), @"(?<=\<)[^<>]*(?=\>)");
+                    List<string> linkedFKeyRefrenceColumnNameData = new List<string>();
+                    foreach (Match match in matchCollection)
+                    {
+                        linkedFKeyRefrenceColumnNameData.Add(match.Value);
+                    }
+
+                    additionalColumnData = new Tuple<string, dynamic>(DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt, linkedFKeyRefrenceColumnNameData);
 
                 }
                 else if (columnType == "Foreign Key Refrence")
                 {
                     //get string within <>
-                    string tableBeingRefrenced = Regex.Match(columnDat[2].Trim(), @"(?<=\<)[^}]*(?=\>)").Value;
+                    string tableBeingRefrenced = Regex.Match(columnDat[2].Trim(), @"(?<=\<)[^<>]*(?=\>)").Value;
 
                     additionalColumnData = new Tuple<string, dynamic>(DatabaseFunct.RefrenceColumnKeyExt, tableBeingRefrenced);
                 }
                 else if (columnType == "Parent Subtable Foreign Key Refrence")
                 {
                     //get string within <>
-                    string outwardDirectory = Regex.Match(columnDat[2].Trim(), @"(?<=\<)[^}]*(?=\>)").Value;
+                    string outwardDirectory = Regex.Match(columnDat[2].Trim(), @"(?<=\<)[^<>]*(?=\>)").Value;
 
                     additionalColumnData = new Tuple<string, dynamic>(DatabaseFunct.ParentSubTableRefrenceColumnKeyExt, outwardDirectory);
                 }
@@ -407,6 +413,43 @@ namespace MDB
 
 
             DatabaseFunct.loadingTable = false;
+        }
+
+        public static string MergeScripts(string[] scripts)
+        {
+            string mergedScript = "";
+            //if one script has SingleRowRestriction the merged script will too
+            bool isSingleRowRestriction = false;
+
+            bool isFirst = true;
+
+            foreach (string script in scripts) 
+            {
+                if (script.StartsWith("#"))
+                {
+                    isSingleRowRestriction = true;
+                    script.Replace("#", "");
+                }
+
+                
+                if (isFirst)
+                {
+                    
+                    mergedScript += script;
+                    isFirst = false;
+                }
+                else
+                {
+                    //add comma to scripts after first script to seperate columns
+                    mergedScript += ","+script;
+                }
+            }
+
+            if (isSingleRowRestriction)
+            {
+                mergedScript = "#" + mergedScript;
+            }
+            return mergedScript;
         }
 
 
@@ -445,7 +488,7 @@ namespace MDB
                     {
                         columnName = columnDat[0].Trim();
                         //get string within <>
-                        MatchCollection x = Regex.Matches(columnName, @"(?<=\<)[^}]*(?=\>)");
+                        MatchCollection x = Regex.Matches(columnName, @"(?<=\<)[^<>]*(?=\>)");
                         if (x.Count == 0)
                         {
                             columnError += "    column name is missing <> brackets \n";
@@ -455,7 +498,7 @@ namespace MDB
                             columnName = x[0].Value;
                             if (columnNamesAtCurrentLevel.Contains(columnName))
                             {
-                                columnError += "    column name is duplicate to existing column name at table level. \n";
+                                columnError += "    column name\""+ columnName + "\" is duplicate to existing column name at table level. \n";
                             }
                             else
                             {
@@ -523,64 +566,70 @@ namespace MDB
                         
                         string linkedFKeyColumn = columnDat[2].Trim();
                         //get string within <>
-                        MatchCollection x = Regex.Matches(linkedFKeyColumn, @"(?<=\<)[^}]*(?=\>)");
+                        MatchCollection x = Regex.Matches(linkedFKeyColumn, @"(?<=\<)[^<>]*(?=\>)");
                         if (x.Count == 0)
                         {
-                            columnError += "    linkedForeignKeyColumn name is missing <> brackets \n";
+                            columnError += "    linkedForeignKeyColumn name(s) are missing <> brackets \n";
                         }
                         else
                         {
-                            //check if adjacent column of Fkey type exists
-                            linkedFKeyColumn = x[0].Value;
-
-                            bool linkedFKeyColumnIsFound = false;
-
-                            foreach (string columnScriptAtCurrentLevel in columnScripts)
+                            foreach (Match m in x)
                             {
-                                try
+                                //check if adjacent column of Fkey type exists
+                                linkedFKeyColumn = m.Value;
+
+                                bool linkedFKeyColumnIsFound = false;
+
+                                foreach (string columnScriptAtCurrentLevel in columnScripts)
                                 {
-                                    string[] _columnDat = columnScriptAtCurrentLevel.Split(':');
-                                    string _columnName = Regex.Match(_columnDat[0], @"(?<=\<)[^}]*(?=\>)").Value;
-                                    string _columnTypeShorthand = _columnDat[1].Trim();
-
-                                    Console.WriteLine(_columnName +"=="+ linkedFKeyColumn+" ?");
-
-                                    if (_columnName == linkedFKeyColumn)
+                                    try
                                     {
-                                        if (columnTypeShorthandDict.ContainsKey(_columnTypeShorthand))
-                                        {
+                                        string[] _columnDat = columnScriptAtCurrentLevel.Split(':');
+                                        string _columnName = Regex.Match(_columnDat[0], @"(?<=\<)[^<>]*(?=\>)").Value;
+                                        string _columnTypeShorthand = _columnDat[1].Trim();
 
-                                            string _columnType = columnTypeShorthandDict[_columnTypeShorthand];
-                                            if (_columnType != "Foreign Key Refrence")
+                                        Console.WriteLine(_columnName + "==" + linkedFKeyColumn + " ?");
+
+                                        if (_columnName == linkedFKeyColumn)
+                                        {
+                                            if (columnTypeShorthandDict.ContainsKey(_columnTypeShorthand))
                                             {
-                                                columnError += "    linked column is not a Foreign Key Refrence column \n";
-                                                break;
+
+                                                string _columnType = columnTypeShorthandDict[_columnTypeShorthand];
+                                                if (_columnType != "Foreign Key Refrence")
+                                                {
+                                                    columnError += "        linked column \"" + _columnName + "\" is not a Foreign Key Refrence column \n";
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    linkedFKeyColumnIsFound = true;
+                                                }
+
                                             }
                                             else
                                             {
-                                                linkedFKeyColumnIsFound = true;
+                                                columnError += "    could not read the column type of linkedFKeyColumn: \""+ _columnName + "\"\n";
+                                                break;
                                             }
+                                        }
 
-                                        }
-                                        else
-                                        {
-                                            columnError += "    could not read a column type of linkedFKeyColumn \n";
-                                            break;
-                                        }
+
+
+                                    }
+                                    catch
+                                    {
+                                        columnError += "    could not read a column name or type when checking for the linked Foreign key refrence column \n";
                                     }
 
                                 }
-                                catch
-                                {
-                                    columnError += "    could not read a column name or type when checking for the linked Foreign key refrence column \n";
-                                }
-                               
-                            }
 
-                            if (!linkedFKeyColumnIsFound)
-                            {
-                                columnError += "    could not find linkedForeignKeyColumn \n";
+                                if (!linkedFKeyColumnIsFound)
+                                {
+                                    columnError += "    could not find linkedForeignKeyColumn \"" + linkedFKeyColumn + "\"\n";
+                                }
                             }
+                            
 
 
                         }
@@ -589,7 +638,7 @@ namespace MDB
                     {
                         string tableBeingRefrenced = columnDat[2].Trim();
                         //get string within <>
-                        MatchCollection x = Regex.Matches(tableBeingRefrenced, @"(?<=\<)[^}]*(?=\>)");
+                        MatchCollection x = Regex.Matches(tableBeingRefrenced, @"(?<=\<)[^<>]*(?=\>)");
                         if (x.Count == 0)
                         {
                             columnError += "    tableBeingRefrenced name is missing <> brackets \n";
@@ -612,7 +661,7 @@ namespace MDB
                     {
                         string outwardDirectory = columnDat[2].Trim();
                         //get string within <>
-                        MatchCollection x = Regex.Matches(outwardDirectory, @"(?<=\<)[^}]*(?=\>)");
+                        MatchCollection x = Regex.Matches(outwardDirectory, @"(?<=\<)[^<>]*(?=\>)");
                         if (x.Count == 0)
                         {
                             columnError += "    outwardDirectory is missing <> brackets \n";
@@ -682,10 +731,10 @@ namespace MDB
             }
 
 
-            //script cannot be blank if constructing the table
+            //script cannot be blank if runing recursiveScriptValidator()
             if (String.IsNullOrWhiteSpace(script))
             {
-                return "Script is blank";
+                return error;
             }
 
             recursiveScriptValidator(script, new List<string>() );
@@ -709,129 +758,194 @@ namespace MDB
             }
 
 
-            //get foreign key refrence column this column is linked to 
-            string linkedRefrenceColumnName = "";
-            //get the table being refrenced by that foreign key refrence column
-            string tableBeingRefrenced = "";
+            //get foreign key refrence column(s) this column is linked to 
+            dynamic linkedFKeyRefrenceColumnNameData;
+            //get the tables and PKs being refrenced by foreign key refrence columns
+            List<Tuple<string,string,string>> tableRowsBeingRefrenced = new List<Tuple<string, string, string>>();
 
             if (isConstructed)
             {
                 Dictionary<string, dynamic> colTag = senderDGV.Columns[colName].Tag as Dictionary<string, dynamic>;
-                linkedRefrenceColumnName = colTag[DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
-                Dictionary<string, dynamic> refColTag = senderDGV.Columns[linkedRefrenceColumnName].Tag as Dictionary<string, dynamic>;
-                tableBeingRefrenced = refColTag[DatabaseFunct.RefrenceColumnKeyExt];
-
-            }
-            else
-            {
-                linkedRefrenceColumnName = DatabaseFunct.currentData[tableKey][colName + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
-                tableBeingRefrenced = DatabaseFunct.currentData[tableKey][linkedRefrenceColumnName + DatabaseFunct.RefrenceColumnKeyExt];
-            }
-
-            //get the value of the cell of the foreign key refrence column at the same row
-            string tablePKSelected = tableData[rowIndex][linkedRefrenceColumnName];
-
-
-            // check if anything in the linkedRefrenceColumn is even selected
-            if (tablePKSelected == null)
-            {
-                if (!DatabaseFunct.loadingTable)
-                {
-                    MessageBox.Show("there is no Primary Key selected by the \"" + linkedRefrenceColumnName + "\" Column that this Auto Table Constructor Script Receiver Column is linked to.");
-                }
+                linkedFKeyRefrenceColumnNameData = colTag[DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
                 
-                return null;
-            }
 
-            //now go to the refrenced table and look through the columns for the Primary Key Column and Auto Table Constructor Script Column
-            string autoTableConstructorScriptColumnName = null;
-            string primaryKeyColumnName = null;
-            foreach (KeyValuePair<string, dynamic> KV in DatabaseFunct.currentData[tableBeingRefrenced])
-            {
-                if (KV.Value is string)
-                {
-                    if (KV.Value == "Primary Key")
-                    {
-                        primaryKeyColumnName = KV.Key;
-                    }
-                    else if (KV.Value == "Auto Table Constructor Script")
-                    {
-                        autoTableConstructorScriptColumnName = KV.Key;
-                    }
-                }
+
+
                 
-            }
-           
-
-
-            //check if Auto Table Constructor Script column Exists:
-            if (autoTableConstructorScriptColumnName == null)
-            {
-                if (!DatabaseFunct.loadingTable)
+                foreach(string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
                 {
-                    MessageBox.Show("There is no Auto Table Constructor Script column in the main table being refrenced by the \"" + linkedRefrenceColumnName + "\" Column that this Auto Table Constructor Script Receiver Column is linked to.");
-                }
-                return null;
-            }
-            else if (primaryKeyColumnName == null)//check if Primary Key column Exists:
-            {
-                if (!DatabaseFunct.loadingTable)
-                {
-                    MessageBox.Show(" there is no Primary Key column in the main table being refrenced by the \"" + linkedRefrenceColumnName + "\" Column that this Auto Table Constructor Script Receiver Column is linked to.");
-                }
                     
-                return null;
+
+                    Dictionary<string, dynamic> refColTag = senderDGV.Columns[linkedFKeyRefrenceColumnName].Tag as Dictionary<string, dynamic>;
+                    //get table name being referenced by the column
+                    string tableName = refColTag[DatabaseFunct.RefrenceColumnKeyExt];
+                    //get the value of the cell of the foreign key refrence column at the same row
+                    string tablePKSelected = tableData[rowIndex][linkedFKeyRefrenceColumnName];
+
+                    tableRowsBeingRefrenced.Add(new Tuple<string, string, string>(linkedFKeyRefrenceColumnName, tableName, tablePKSelected ));
+                }
+                
+
             }
             else
             {
-                
-                
-                Dictionary<int, Dictionary<string, dynamic>> tableBeingRefrencedData = DatabaseFunct.currentData[tableBeingRefrenced][DatabaseFunct.RowEntryRefrence];
-                
+                linkedFKeyRefrenceColumnNameData = DatabaseFunct.currentData[tableKey][colName + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
+                //convert to list from string for backwards compatablity
+                if (linkedFKeyRefrenceColumnNameData is string)
+                {
+                    linkedFKeyRefrenceColumnNameData = new List<string>() {linkedFKeyRefrenceColumnNameData };
+                    DatabaseFunct.currentData[tableKey][colName + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt] = linkedFKeyRefrenceColumnNameData;
+                }
 
-                bool PKFound = false;
-                //look for the row that contains the primary key selected in the tableBeingRefrencedData
-                for (int i = 0; i < tableBeingRefrencedData.Keys.Count; i++)
+                foreach (string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
                 {
-                    Dictionary<string, dynamic> rowData = tableBeingRefrencedData[i];
-                    if (rowData[primaryKeyColumnName] == tablePKSelected)
-                    {
-                        tableConstructorScript = rowData[autoTableConstructorScriptColumnName];
-                        PKFound = true;
-                        break;
-                    }
+                    //get table name being referenced by the column
+                    string tableName = DatabaseFunct.currentData[tableKey][linkedFKeyRefrenceColumnName + DatabaseFunct.RefrenceColumnKeyExt];
+
+                    //get the value of the cell of the foreign key refrence column at the same row
+                    string tablePKSelected = tableData[rowIndex][linkedFKeyRefrenceColumnName];
+
+                    tableRowsBeingRefrenced.Add(new Tuple<string, string,string>(linkedFKeyRefrenceColumnName, tableName, tablePKSelected));
+
                 }
-                // has a tableConstructorScript been found?
-                if (!PKFound)
+            }
+
+
+            string mergedScript = "";
+            List<string> scriptsToMerge = new List<string>();
+
+            foreach (Tuple<string, string,string> refDat in tableRowsBeingRefrenced)
+            {
+                string linkedFKeyRefrenceColumnName = refDat.Item1;
+                string tableBeingRefrenced = refDat.Item2;
+                string tablePKSelected = refDat.Item3;
+
+
+                // if anything in the linkedRefrenceColumn is even selected
+                if (tablePKSelected != null)
                 {
-                    if (!DatabaseFunct.loadingTable)
+                    //now go to the refrenced table and look through the columns for the Primary Key Column and Auto Table Constructor Script Column
+                    string autoTableConstructorScriptColumnName = null;
+                    string primaryKeyColumnName = null;
+                    foreach (KeyValuePair<string, dynamic> KV in DatabaseFunct.currentData[tableBeingRefrenced])
                     {
-                        MessageBox.Show(" the Primary Key selected within the \"" + linkedRefrenceColumnName + "\" Column, that this Auto Table Constructor Script Receiver Column is linked to, doesn't exist within the main table (" + tableBeingRefrenced + ") the column is refrencing.");
+                        if (KV.Value is string)
+                        {
+                            if (KV.Value == "Primary Key")
+                            {
+                                primaryKeyColumnName = KV.Key;
+                            }
+                            else if (KV.Value == "Auto Table Constructor Script")
+                            {
+                                autoTableConstructorScriptColumnName = KV.Key;
+                            }
+                        }
+
                     }
-                    return null;
-                }
-                else
-                {
-                    //validate the script
-                    string scriptError = AutoTableConstructorScriptFunct.ValidateScript(tableConstructorScript);
-                    if (scriptError != "")
+
+
+
+                    //check if Auto Table Constructor Script column Exists:
+                    if (autoTableConstructorScriptColumnName == null)
                     {
                         if (!DatabaseFunct.loadingTable)
                         {
-                            MessageBox.Show("the Auto Table Constructor Script in Table: " + tableBeingRefrenced + ", at Column: " + autoTableConstructorScriptColumnName + ", with Primary Key: " + tablePKSelected + ", being refrenced has error(s): \n" + scriptError);
+                            MessageBox.Show("There is no Auto Table Constructor Script column in the main table being refrenced by the \"" + linkedFKeyRefrenceColumnName + "\" Column that this Auto Table Constructor Script Receiver Column is linked to.");
                         }
                         return null;
                     }
-                    else // valid
+                    else if (primaryKeyColumnName == null)//check if Primary Key column Exists:
                     {
-                        return tableConstructorScript;
+                        if (!DatabaseFunct.loadingTable)
+                        {
+                            MessageBox.Show(" there is no Primary Key column in the main table being refrenced by the \"" + linkedFKeyRefrenceColumnName + "\" Column that this Auto Table Constructor Script Receiver Column is linked to.");
+                        }
+
+                        return null;
+                    }
+                    else
+                    {
+
+
+                        Dictionary<int, Dictionary<string, dynamic>> tableBeingRefrencedData = DatabaseFunct.currentData[tableBeingRefrenced][DatabaseFunct.RowEntryRefrence];
+
+
+                        bool PKFound = false;
+                        //look for the row that contains the primary key selected in the tableBeingRefrencedData
+                        for (int i = 0; i < tableBeingRefrencedData.Keys.Count; i++)
+                        {
+                            Dictionary<string, dynamic> rowData = tableBeingRefrencedData[i];
+                            if (rowData[primaryKeyColumnName] == tablePKSelected)
+                            {
+                                tableConstructorScript = rowData[autoTableConstructorScriptColumnName];
+                                PKFound = true;
+                                break;
+                            }
+                        }
+                        // has a tableConstructorScript been found?
+                        if (!PKFound)
+                        {
+                            if (!DatabaseFunct.loadingTable)
+                            {
+                                MessageBox.Show(" the Primary Key selected within the \"" + linkedFKeyRefrenceColumnName + "\" Column, that this Auto Table Constructor Script Receiver Column is linked to, doesn't exist within the main table (" + tableBeingRefrenced + ") the column is refrencing.");
+                            }
+                            return null;
+                        }
+                        else
+                        {
+                            //validate the script
+                            string scriptError = AutoTableConstructorScriptFunct.ValidateScript(tableConstructorScript);
+                            if (scriptError != "")
+                            {
+                                if (!DatabaseFunct.loadingTable)
+                                {
+                                    MessageBox.Show("the Auto Table Constructor Script in Table: " + tableBeingRefrenced + ", at Column: " + autoTableConstructorScriptColumnName + ", with Primary Key: " + tablePKSelected + ", being refrenced has error(s): \n\n" + scriptError);
+                                }
+                                return null;
+                            }
+                            else // valid
+                            {
+                                scriptsToMerge.Add(tableConstructorScript);
+                            }
+
+
+                        }
                     }
 
-
                 }
-
-
             }
+
+
+            mergedScript = AutoTableConstructorScriptFunct.MergeScripts(scriptsToMerge.ToArray());
+            string mergedError = AutoTableConstructorScriptFunct.ValidateScript(mergedScript);
+            if (!String.IsNullOrEmpty(mergedError))
+            {
+                if (!DatabaseFunct.loadingTable)
+                {
+                    MessageBox.Show("Error in merged script: \n\n" + mergedError);
+                }
+                return null;
+            }
+
+
+            // check if anything in the linkedRefrenceColumn is even selected
+            if (String.IsNullOrEmpty(mergedScript))
+            {
+                if (!DatabaseFunct.loadingTable)
+                {
+                    string linkedColumnsList = "";
+                    foreach (string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
+                    {
+                        linkedColumnsList += "\"" + linkedFKeyRefrenceColumnName + "\",";
+                    }
+                    linkedColumnsList = linkedColumnsList.TrimEnd(new char[] { ',' });
+                    MessageBox.Show("there is no Primary Key selected across the [" + linkedColumnsList + "] Column(s) that this Auto Table Constructor Script Receiver Column is linked to.");
+                }
+                
+                return null;
+            }
+
+            return mergedScript;
 
             
         }

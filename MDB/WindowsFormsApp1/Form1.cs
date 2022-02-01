@@ -73,7 +73,7 @@ namespace MDB
         {
 
             string[] ListBoxArr = new string[] { "User Input Table", "File Regex Refrence Table" };
-            string[] input = Prompt.ShowDialog("Enter table Name and Type:", "New Table", true,"", true, ListBoxArr);
+            string[] input = Prompt.ShowDialog("Enter table Name and Type:", "New Table", true,"", true, ListBoxArr,false,null);
 
             if (input[0] == "T")
             {
@@ -85,7 +85,7 @@ namespace MDB
         private void removeTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            string[] input = Prompt.ShowDialog("Table Name:", "Remove Table", true, "", false, null);
+            string[] input = Prompt.ShowDialog("Table Name:", "Remove Table", true, "", false, null, false, null);
 
             if (input[0] == "T")
             {
@@ -103,7 +103,7 @@ namespace MDB
             if (DatabaseFunct.selectedTable != "")
             {
 
-                string[] input = Prompt.ShowDialog("Name Column And Select Type", "Create Column", true, "", true, ColumnTypes.Types.Keys.ToArray<string>());
+                string[] input = Prompt.ShowDialog("Name Column And Select Type", "Create Column", true, "", true, ColumnTypes.Types.Keys.ToArray<string>(), false, null);
                 if (input[0] == "T")
                 {
                     DatabaseFunct.AddColumn(input[1], input[2], false, Program.mainForm.TableMainGridView);
@@ -203,7 +203,7 @@ namespace MDB
             if (DatabaseFunct.selectedTable != "")
             {
 
-                string[] input = Prompt.ShowDialog("Name Column And Select Type", "Create Column", true, "", true, ColumnTypes.Types.Keys.ToArray<string>());
+                string[] input = Prompt.ShowDialog("Name Column And Select Type", "Create Column", true, "", true, ColumnTypes.Types.Keys.ToArray<string>(),false,null);
 
                 if (input[0] == "T")
                 {
@@ -400,7 +400,7 @@ namespace MDB
                         {
                             string[] columnDat = columnScript.Split(':');
                             //get name within <>
-                            string columnName = Regex.Match(columnDat[0], @"(?<=\<)[^}]*(?=\>)").Value;
+                            string columnName = Regex.Match(columnDat[0], @"(?<=\<)[^<>]*(?=\>)").Value;
                             //get type from shorthand
                             string columnType = AutoTableConstructorScriptFunct.columnTypeShorthandDict[columnDat[1].Trim()];
 
@@ -426,12 +426,21 @@ namespace MDB
                             {
                                 //check if linked column from ATCSR tag
                                 Dictionary<string, dynamic> ATCSRColumnTag = senderDGV.Columns[KV.Key].Tag as Dictionary<string, dynamic>;
-                                isLinked = ATCSRColumnTag[DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt] == colName;
+                                isLinked = ATCSRColumnTag[DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt].Contains(colName);
                                
                             }
                             else
                             {
-                                isLinked = relevantTableColumnData[KV.Key + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt] == colName;
+                                
+                                dynamic linkedFKeyRefrenceColumnNameData = relevantTableColumnData[KV.Key + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
+                                //convert to list from string for backwards compatablity
+                                if (linkedFKeyRefrenceColumnNameData is string)
+                                {
+                                    linkedFKeyRefrenceColumnNameData = new List<string>() { linkedFKeyRefrenceColumnNameData };
+                                    relevantTableColumnData[KV.Key + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt] = linkedFKeyRefrenceColumnNameData;
+                                }
+
+                                isLinked = linkedFKeyRefrenceColumnNameData.Contains(colName);
                             }
 
 

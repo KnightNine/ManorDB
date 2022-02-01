@@ -81,7 +81,7 @@ namespace MDB
                                     else
                                     {
                                         //currently there's no support for refrencing scripts from a Parent Subtable Foreign Key Refrence column
-                                        System.Windows.Forms.MessageBox.Show("A Auto Table Constructor Script must be placed in the Main Table and not in a Sub Table!");
+                                        System.Windows.Forms.MessageBox.Show("An Auto Table Constructor Script must be placed in the Main Table and not in a Sub Table!");
                                     }
                                     break;
                                 
@@ -99,48 +99,92 @@ namespace MDB
                                         }
                                     }
 
-                                    string refrenceColumnLinkedTo = null;
+                                    List<string> linkedFKeyRefrenceColumnNameData = new List<string>();
 
                                     if (foreignKeyRefrenceColumnsInTable.Count > 0)
                                     {
                                         // if refrenceColumnLinkedTo doesn't already exist
                                         if (!currentData[tableKey].ContainsKey((dynamic)(colName + ScriptReceiverLinkToRefrenceColumnExt)))
                                         {
-                                            string[] input = Prompt.ShowDialog("Choose a Foreign Key Refrence.", "Create Auto Table Constructor Script Receiver Column", false,null, true, foreignKeyRefrenceColumnsInTable.ToArray());
-                                            refrenceColumnLinkedTo = input[2];
+                                            bool linkAgain = true;
+                                            
+                                            
+                                            Tuple<string,List<string>> input = Prompt.ShowMultiItemSelectDialog("Choose Foreign Key Refrence Columns to link to.", "Create Auto Table Constructor Script Receiver Column", foreignKeyRefrenceColumnsInTable.ToArray(),"Link Column");
+                                            linkedFKeyRefrenceColumnNameData = input.Item2;
 
-                                            //store the linked column in current data
-                                            currentData[tableKey][colName + ScriptReceiverLinkToRefrenceColumnExt] = refrenceColumnLinkedTo;
+                                            //if input prompt was closed
+                                            if (input.Item1 == "F")
+                                            {
+                                                MessageBox.Show("Auto Table Constructor Script Receiver column creation canceled.");
+                                                return;
+                                            }
+
+                                            if (linkedFKeyRefrenceColumnNameData.Count == 0)
+                                            {
+                                                MessageBox.Show("One or more column links must be selected.");
+                                                return;
+                                            }
+
+                                            
+                                            
+
+                                            
+                                            
 
                                         }
                                         else
                                         {
-                                            refrenceColumnLinkedTo = currentData[tableKey][colName + ScriptReceiverLinkToRefrenceColumnExt];
+                                            linkedFKeyRefrenceColumnNameData = currentData[tableKey][colName + ScriptReceiverLinkToRefrenceColumnExt];
                                         }
 
-                                        string tableKeyBeingRefrenced = currentData[tableKey][refrenceColumnLinkedTo + RefrenceColumnKeyExt];
-
-                                        //now check if the selected refrenceColumnLinkedTo is refrencing a table with a "Auto Table Constructor Script" column
-                                        bool refrencedTableContainsScript = false;
-                                        foreach (KeyValuePair<string, dynamic> KV in currentData[tableKeyBeingRefrenced])
+                                        string linkError = "";
+                                        bool allLinkedColumnsValid = true;
+                                        foreach (string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
                                         {
-                                            if (KV.Value is string && KV.Value == "Auto Table Constructor Script")
-                                            {
-                                                refrencedTableContainsScript = true;
-                                            }
-                                        }
 
-                                        if (refrencedTableContainsScript)
+
+                                            //cancel creation if an invalid selection made
+                                            if (!currentData[tableKey].ContainsKey(linkedFKeyRefrenceColumnName) || currentData[tableKey][linkedFKeyRefrenceColumnName] != "Foreign Key Refrence" || !foreignKeyRefrenceColumnsInTable.Contains(linkedFKeyRefrenceColumnName))
+                                            {
+                                                //this shouldn't happen with normal use
+                                                linkError += "INTERNAL ERROR:  the foreign key refrence column, \"" + linkedFKeyRefrenceColumnName + "\", that you are linking this column to is invalid! \n";
+                                                return;
+                                            }
+                                            else
+                                            {
+                                                string tableKeyBeingRefrenced = currentData[tableKey][linkedFKeyRefrenceColumnName + RefrenceColumnKeyExt];
+                                                bool refrencedTableContainsScript = false;
+                                                //now check if the selected refrenceColumnLinkedTo is refrencing a table with a "Auto Table Constructor Script" column
+                                                foreach (KeyValuePair<string, dynamic> KV in currentData[tableKeyBeingRefrenced])
+                                                {
+                                                    if (KV.Value is string && KV.Value == "Auto Table Constructor Script")
+                                                    {
+                                                        refrencedTableContainsScript = true;
+                                                    }
+                                                }
+
+                                                if (!refrencedTableContainsScript)
+                                                {
+                                                    linkError += "the foreign key refrence column, \"" + linkedFKeyRefrenceColumnName + "\", that you are linking this column to does not contain a \"Auto Table Constructor Script Column\" within it's referenced table to read from! \n";
+                                                }
+                                            }
+                                            
+                                            
+                                        }
+                                            
+
+                                        if (String.IsNullOrEmpty(linkError))
                                         {
 
                                             // add the column
                                             valid = true;
-
+                                            //store the linked column in current data
+                                            currentData[tableKey][colName + ScriptReceiverLinkToRefrenceColumnExt] = linkedFKeyRefrenceColumnNameData;
                                         }
                                         else
                                         {
                                             
-                                            System.Windows.Forms.MessageBox.Show("the foreign key refrence column you are linking this column to does not contain a \"Auto Table Constructor Script Column\" to read from!");
+                                            System.Windows.Forms.MessageBox.Show(linkError);
                                             
 
                                         }
@@ -170,7 +214,7 @@ namespace MDB
                                     if (!currentData[tableKey].ContainsKey((dynamic)(colName + RefrenceColumnKeyExt)))
                                     {
 
-                                        string[] input = Prompt.ShowDialog("Choose a table to refrence from.", "Create Refrence Column", false,null, true, MainTables.ToArray());
+                                        string[] input = Prompt.ShowDialog("Choose a table to refrence from.", "Create Refrence Column", false,null, true, MainTables.ToArray(), false, null);
                                         tableRefrence = input[2];
                                     }
                                     else
@@ -259,7 +303,7 @@ namespace MDB
                                     if (!currentData[tableKey].ContainsKey((dynamic)(colName + ParentSubTableRefrenceColumnKeyExt)))
                                     {
 
-                                        string[] input = Prompt.ShowDialog("Choose a subtable to refrence from.", "Create Parent SubTable Refrence Column", false,null, true, ParentSubTables.ToArray());
+                                        string[] input = Prompt.ShowDialog("Choose a subtable to refrence from.", "Create Parent SubTable Refrence Column", false,null, true, ParentSubTables.ToArray(), false, null);
                                         parentSubtableRefrence = input[2];
                                     }
                                     else
@@ -516,8 +560,11 @@ namespace MDB
                     {
                         if (KV.Value is string && KV.Value == "Auto Table Constructor Script Receiver")
                         {
+                            
+                            
+
                             //if linked to this column
-                            if (currentData[tableKey][KV.Key + ScriptReceiverLinkToRefrenceColumnExt] == colName)
+                            if (currentData[tableKey][KV.Key + ScriptReceiverLinkToRefrenceColumnExt].Contains(colName))
                             {
                                 string linkedColName = KV.Key;
                                 //remove it

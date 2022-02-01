@@ -116,7 +116,7 @@ namespace MDB
                     {
                         string[] columnDat = columnScript.Split(':');
                         //get name within <>
-                        string subColumnName = Regex.Match(columnDat[0], @"(?<=\<)[^}]*(?=\>)").Value;
+                        string subColumnName = Regex.Match(columnDat[0], @"(?<=\<)[^<>]*(?=\>)").Value;
 
                         columnOrder.Add(subColumnName);
                         //get type

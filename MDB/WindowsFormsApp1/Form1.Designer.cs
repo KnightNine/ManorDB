@@ -265,9 +265,172 @@ namespace MDB
     public static class Prompt
     {
 
+        public static Tuple<string,List<string>> ShowMultiItemSelectDialog(string text, string caption, string[] listBoxArr, string addButtonText)
+        {
+            Form prompt = new Form()
+            {
+                Width = 500,
+                Height = 400,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = caption,
+                StartPosition = FormStartPosition.CenterScreen,
+                BackColor = ColorThemes.Themes[ColorThemes.currentTheme]["FormBack"],
+                ForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["FormFore"],
+            };
+
+            Label textLabel = new Label() { Left = 50, Top = 10, Text = text, Width = 400, Height = 40 };
+            ComboBox ComboBox1 = new ComboBox() { Left = 50, Top = 50, Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
+            DataGridView dataGridView = new DataGridView() { Left = 50, Top = 75, Width = 400, Height = 200, ScrollBars = ScrollBars.Vertical, ColumnHeadersVisible = false, RowHeadersVisible = false, AllowUserToResizeRows = false, ReadOnly = true, AllowUserToAddRows = false, AllowUserToDeleteRows = false, AllowUserToOrderColumns = false };
+            Button addButton = new Button() { Left = 300, Top = 50, Width = 100, Text = addButtonText, AutoSizeMode = AutoSizeMode.GrowOnly , Anchor = AnchorStyles.Left};
+            Button confirmation = new Button() { Text = "Done", Left = 350, Width = 100, Top = 300, DialogResult = DialogResult.OK };
+
+            //---ComboBox1
 
 
-        public static string[] ShowDialog(string text, string caption, bool addTextBox, string initialTextBoxText, bool addListBox, string[] listBoxArr)
+            foreach (string key in listBoxArr)
+            {
+                ComboBox1.Items.Add(key);
+            }
+            ComboBox1.SelectedIndex = 0;
+
+            prompt.Controls.Add(ComboBox1);
+            //---dataGridView
+            
+            dataGridView.Columns.Add("default","default");
+            dataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            dataGridView.BackgroundColor = SystemColors.ControlDarkDark;
+
+            dataGridView.Tag = new Dictionary<string, dynamic>() { { "addButton", addButton }, { "ComboBox1", ComboBox1 } };
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+
+            //not sure why but DefaultCellStyle doesn't seem to change anything here
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+
+            dataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+
+            dataGridView.CellClick += DataGridView_CellClick;
+            dataGridView.CellMouseEnter += DataGridView_CellMouseEnter;
+            dataGridView.CellMouseLeave += DataGridView_CellMouseLeave;
+
+
+            prompt.Controls.Add(dataGridView);
+
+            //----addButton
+            
+            addButton.Tag = new Dictionary<string, dynamic>() { { "dataGridView", dataGridView } ,{ "ComboBox1", ComboBox1 } };
+            addButton.Click += AddButton_Click;
+
+            prompt.Controls.Add(addButton);
+            //----
+
+            List<string> getSelectedItems()
+            {
+                List<string> result = new List<string>();
+                foreach (DataGridViewRow row in dataGridView.Rows)
+                {
+                    result.Add(row.Cells[0].Tag as string);
+                }
+                return result;
+            }
+
+            confirmation.Click += (sender, e) => { prompt.Close(); };
+
+            prompt.Controls.Add(confirmation);
+            prompt.Controls.Add(textLabel);
+
+            prompt.AcceptButton = confirmation;
+
+            return prompt.ShowDialog() == DialogResult.OK ? new Tuple<string, List<string>> ( "T", getSelectedItems() ) : new Tuple<string, List<string>>( "F", null );
+        }
+
+        private static void DataGridView_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView senderDGV = sender as DataGridView;
+            DataGridViewCell cell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            //revert to original value and color
+            cell.Style.BackColor = System.Drawing.SystemColors.Window;
+            cell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+            cell.Style.SelectionBackColor = System.Drawing.SystemColors.Window;
+            cell.Style.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            cell.Value = cell.Tag;
+        }
+
+        private static void DataGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView senderDGV = sender as DataGridView;
+            DataGridViewCell cell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            cell.Style.BackColor = Color.Red;
+            cell.Style.ForeColor = Color.White;
+            cell.Style.SelectionBackColor = Color.Red;
+            cell.Style.SelectionForeColor = Color.White;
+            cell.Value = "Remove";
+        }
+
+        private static void DataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView senderDGV = sender as DataGridView;
+            Dictionary<string, dynamic> tagDict = senderDGV.Tag as Dictionary<string, dynamic>;
+
+            ComboBox ComboBox1 = tagDict["ComboBox1"];
+
+            //return item to combo box
+            DataGridViewCell cell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            
+
+            ComboBox1.Items.Add(cell.Tag);
+
+            senderDGV.Rows.RemoveAt(e.RowIndex);
+        }
+
+        private static void AddButton_Click(object sender, EventArgs e)
+        {
+            Button senderButton = sender as Button;
+            Dictionary<string, dynamic> tagDict = senderButton.Tag as Dictionary<string, dynamic>;
+
+            DataGridView dataGridView = tagDict["dataGridView"];
+            ComboBox ComboBox1 = tagDict["ComboBox1"];
+
+
+            
+
+
+            if (ComboBox1.SelectedItem != null)
+            {
+                string item = ComboBox1.SelectedItem.ToString();
+
+
+                dataGridView.Rows.Add();
+                DataGridViewCell newCell = dataGridView.Rows[dataGridView.Rows.Count - 1].Cells[0];
+                //this has to be set manually due to some issue
+                newCell.Style.BackColor = System.Drawing.SystemColors.Window;
+                newCell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+                newCell.Style.SelectionBackColor = System.Drawing.SystemColors.Window;
+                newCell.Style.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+
+                newCell.Value = item;
+                newCell.Tag = item;
+                
+
+                //remove item from comboBox items
+                ComboBox1.SelectedItem = null;
+                ComboBox1.Items.Remove(item);
+
+            }
+
+
+        }
+
+
+
+        public static string[] ShowDialog(string text, string caption, bool addTextBox, string initialTextBoxText, bool addListBox, string[] listBoxArr, bool addCheckBox, string checkBoxText)
         {
             Form prompt = new Form()
             {
@@ -293,6 +456,7 @@ namespace MDB
             }
 
             ComboBox ComboBox1 = new ComboBox() { Left = 50, Top = 70, Width = 400, AutoCompleteMode = AutoCompleteMode.Suggest };
+            CheckBox CheckBox1 = new CheckBox() { Left = 50, Top = 70, Width = 400 };
             if (addListBox)
             {
 
@@ -303,6 +467,11 @@ namespace MDB
                 ComboBox1.SelectedIndex = 0;
 
                 prompt.Controls.Add(ComboBox1);
+            }
+            else if (addCheckBox)
+            {
+                CheckBox1.Text = checkBoxText;
+                prompt.Controls.Add(CheckBox1);
             }
 
 
@@ -315,7 +484,7 @@ namespace MDB
 
             prompt.AcceptButton = confirmation;
 
-            return prompt.ShowDialog() == DialogResult.OK ? new string[] { "T", textBox.Text, ComboBox1.SelectedItem != null ? ComboBox1.SelectedItem.ToString() : "" } : new string[] { "F", "", "" };
+            return prompt.ShowDialog() == DialogResult.OK ? new string[] { "T", textBox.Text, ComboBox1.SelectedItem != null ? ComboBox1.SelectedItem.ToString() : "" , CheckBox1.Checked?"T":"F"} : new string[] { "F", "", "" ,""};
         }
 
 
@@ -554,7 +723,7 @@ namespace MDB
         {
             MenuItem senderItem = (MenuItem)sender;
             string tableName = (string)senderItem.Tag;
-            string[] input = Prompt.ShowDialog("Enter New Table Name:", "Rename \""+ tableName +"\" Table", true, tableName, false, null);
+            string[] input = Prompt.ShowDialog("Enter New Table Name:", "Rename \""+ tableName +"\" Table", true, tableName, false, null, false, null);
 
             if (input[0] == "T")
             {
@@ -600,7 +769,7 @@ namespace MDB
             CustomDataGridView _DGV = dat[0];
             string _colName = dat[1];
 
-            string[] input = Prompt.ShowDialog("Enter New Column Name:", "Rename \"" + _colName + "\" Column", true, _colName, false,  null);
+            string[] input = Prompt.ShowDialog("Enter New Column Name:", "Rename \"" + _colName + "\" Column", true, _colName, false,  null,false,null);
             
             if (input[0] == "T")
             {

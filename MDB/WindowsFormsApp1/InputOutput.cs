@@ -149,7 +149,7 @@ namespace MDB
                                 
                                 if (ct[key] is Newtonsoft.Json.Linq.JArray)
                                 {
-                                    if (key == DatabaseFunct.ColumnOrderRefrence || key.EndsWith(DatabaseFunct.ColumnDisablerArrayExt) || key == RegexRefrenceTableConstructorPromptHandler.ColumnOrderRefrence)
+                                    if (key == DatabaseFunct.ColumnOrderRefrence || key.EndsWith(DatabaseFunct.ColumnDisablerArrayExt) || key == RegexRefrenceTableConstructorPromptHandler.ColumnOrderRefrence || key.EndsWith(DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt))
                                     {
                                         //column order list OR disabler array
                                         // and column order list within regex constructor data

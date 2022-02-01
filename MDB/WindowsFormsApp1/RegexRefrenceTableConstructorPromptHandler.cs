@@ -37,7 +37,7 @@ namespace MDB
 
     
 
-    ------------------OTHER-----------------------
+    ------------------other regex i'll be using-----------------------
 
     "(?<=(?<!#+\s*)required_inputs:\s*)\[.*\]"
 
@@ -322,10 +322,43 @@ namespace MDB
                 
                 List<string> ColList = RegexRefrenceTableConstructorData[ColumnOrderRefrence];
 
+                List<string> ColOrderList = DatabaseFunct.currentData[mainTableKey][DatabaseFunct.ColumnOrderRefrence];
+
+                //wipe existing columns from the table:
+                foreach(string colKey in ColOrderList)
+                {
+                    DatabaseFunct.currentData[mainTableKey].Remove(colKey);
+                }
+                ColOrderList.Clear();
+
+
                 //add in order of column order list
                 foreach (string colKey in ColList)
                 {
+
                     Dictionary<string, dynamic> columnConstructorData = RegexRefrenceTableConstructorData[ColumnDataRefrence][colKey];
+
+                    //get column type
+                    string columnType = "Text";
+                    if (columnConstructorData["isPK"])
+                    {
+                        columnType = "Primary Key";
+                    }
+                    else if (columnConstructorData["isATCS"])
+                    {
+                        columnType = "Auto Table Constructor Script";
+                    }
+
+                    //add column if it doesn't exist yet
+                    if (!DatabaseFunct.currentData[mainTableKey].ContainsKey(colKey))
+                    {
+                        ColOrderList.Add(colKey);
+                        DatabaseFunct.currentData[mainTableKey][colKey] = columnType;
+                        //none of the column types used here require metadata
+                    }
+
+
+                    
 
 
                     
