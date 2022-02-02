@@ -29,7 +29,7 @@ The game I am working on relies on complex repeating data structures to define i
   There are some features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least:
 <p/>
 <ul>
-  <li>ability to change columns linked to a `Auto Table Constructor Script Receiver` column without having to delete and re-add the column entirely</li>
+  <li>ability to change columns linked to a `Auto Table Constructor Script Receiver` column without having to delete and re-add the column (thus losing data)</li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>Key Shortcuts</li>
   <li>Image Columns</li>
