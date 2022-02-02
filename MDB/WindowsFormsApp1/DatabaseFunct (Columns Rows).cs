@@ -822,11 +822,23 @@ namespace MDB
                             {
                                 if (KV.Value is string && KV.Value == "Auto Table Constructor Script Receiver")
                                 {
+                                    dynamic linkedFKeyRefrenceColumnNameData = currentData[tableKey][KV.Key + ScriptReceiverLinkToRefrenceColumnExt];
+                                    //convert to list from string for backwards compatablity
+                                    if (linkedFKeyRefrenceColumnNameData is string)
+                                    {
+                                        linkedFKeyRefrenceColumnNameData = new List<string>() { linkedFKeyRefrenceColumnNameData };
+                                        DatabaseFunct.currentData[tableKey][KV.Key + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt] = linkedFKeyRefrenceColumnNameData;
+                                    }
+                                    
                                     //if linked to this column
-                                    if (currentData[tableKey][KV.Key + ScriptReceiverLinkToRefrenceColumnExt] == colName)
+                                    if (linkedFKeyRefrenceColumnNameData.Contains(colName))
                                     {
                                         //change the linked column name
-                                        currentData[tableKey][KV.Key + ScriptReceiverLinkToRefrenceColumnExt] = newColName;
+                                        //and preserve list order
+                                        int colIndex = linkedFKeyRefrenceColumnNameData.IndexOf(colName);
+                                        linkedFKeyRefrenceColumnNameData.RemoveAt(colIndex);
+                                        linkedFKeyRefrenceColumnNameData.Insert(colIndex, newColName);
+                                        
                                     }
 
 
@@ -903,7 +915,7 @@ namespace MDB
                                                     parentSubtableRefrenceEntries.Add(new dynamic[] { tableKV.Key, KV.Key, newValue });
                                                     added = true;
                                                 }
-                                                else if (KV.Value == tableKey + "/" + colName) //if refrencing this table directly
+                                                else if (KV.Value == tableKey + "/" + colName) //if refrencing this subtable directly
                                                 {
 
                                                     string newValue = tableKey + "/" + newColName;
