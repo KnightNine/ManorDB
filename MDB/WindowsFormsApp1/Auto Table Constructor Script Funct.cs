@@ -813,6 +813,7 @@ namespace MDB
 
             string mergedScript = "";
             List<string> scriptsToMerge = new List<string>();
+            bool noLinkedColumnsHaveData = true;
 
             foreach (Tuple<string, string,string> refDat in tableRowsBeingRefrenced)
             {
@@ -824,6 +825,8 @@ namespace MDB
                 // if anything in the linkedRefrenceColumn is even selected
                 if (tablePKSelected != null)
                 {
+                    noLinkedColumnsHaveData = false;
+
                     //now go to the refrenced table and look through the columns for the Primary Key Column and Auto Table Constructor Script Column
                     string autoTableConstructorScriptColumnName = null;
                     string primaryKeyColumnName = null;
@@ -905,7 +908,11 @@ namespace MDB
                             }
                             else // valid
                             {
-                                scriptsToMerge.Add(tableConstructorScript);
+                                if (!String.IsNullOrEmpty(tableConstructorScript))
+                                {
+                                    scriptsToMerge.Add(tableConstructorScript);
+                                }
+                                
                             }
 
 
@@ -933,13 +940,22 @@ namespace MDB
             {
                 if (!DatabaseFunct.loadingTable)
                 {
-                    string linkedColumnsList = "";
-                    foreach (string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
+                    
+                    if (noLinkedColumnsHaveData)
                     {
-                        linkedColumnsList += "\"" + linkedFKeyRefrenceColumnName + "\",";
+                        string linkedColumnsList = "";
+                        foreach (string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
+                        {
+                            linkedColumnsList += "\"" + linkedFKeyRefrenceColumnName + "\",";
+                        }
+                        linkedColumnsList = linkedColumnsList.TrimEnd(new char[] { ',' });
+                        MessageBox.Show("there is no Primary Key selected across the [" + linkedColumnsList + "] Column(s) that this Auto Table Constructor Script Receiver Column is linked to.");
                     }
-                    linkedColumnsList = linkedColumnsList.TrimEnd(new char[] { ',' });
-                    MessageBox.Show("there is no Primary Key selected across the [" + linkedColumnsList + "] Column(s) that this Auto Table Constructor Script Receiver Column is linked to.");
+                    else
+                    {
+                        MessageBox.Show("Merged script is empty.");
+                    }
+                    
                 }
                 
                 return null;
