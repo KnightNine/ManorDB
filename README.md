@@ -29,10 +29,12 @@ The game I am working on relies on complex repeating data structures to define i
   There are some features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least:
 <p/>
 <ul>
+  
   <li>ability to change columns linked to a `Auto Table Constructor Script Receiver` column without having to delete and re-add the column (thus losing data)</li>
   <li>Column Type Icons (to show the type of each column)</li>
   <li>Adjacent Column Disabler Array support for `Auto Table Constructor Script`</li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
+  <li>"Table Directory" column type that constructs and stores a string array of the directory in another table's structure, this would resolve the typos that could arise from writing these directories manually.</li>
   <li>Key Shortcuts</li>
   <li>Image Columns</li>
   <li>File Directory Primary Key List Table Type (a table that refrences a file directory and generates a table with the file names as row data for a Primary Key column.)</li>
