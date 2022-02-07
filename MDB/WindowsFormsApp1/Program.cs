@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Reflection;
 using System.Collections.Specialized;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace MDB
 {
@@ -21,19 +22,22 @@ namespace MDB
         //<<parentDGV,row>,<column,childDGV>> (only one subtable can be open at a time per row)
         public static Dictionary<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubTables = new Dictionary<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>>();
 
-
         
-
 
 
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
+        
 
-
-        static void Main()
+        static void Main(string[] args)
         {
+            
+            
+
+            
+
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -57,7 +61,11 @@ namespace MDB
 
             ((System.ComponentModel.ISupportInitialize)(mainForm.TableMainGridView)).BeginInit();
             mainForm.panel1.Controls.Add(mainForm.TableMainGridView);
-           // mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.AutoClose = false;
+
+            
+
+
+            // mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.AutoClose = false;
             /*mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.LostFocus += new EventHandler(mainForm.hideUnhideColumnsToolStripMenuItemLostFocus);*/
             ((System.ComponentModel.ISupportInitialize)(mainForm.TableMainGridView)).EndInit();
 
@@ -68,8 +76,26 @@ namespace MDB
             mainForm.Refresh();
             mainForm.ResumeLayout(true);
 
+            //load file if opened from file
+            if (args.Count() > 0)
+            {
+                string mdbFilePath = args[0];
+
+                if (mdbFilePath != "" && File.Exists(mdbFilePath) && mdbFilePath.EndsWith(".mdb"))
+                {
+                    InputOutput.ImportMDBFile(mdbFilePath, true);
+                }
+            }
+            
+
+
+
+
+
             Application.Run(mainForm);
             
+
+
 
 
         }

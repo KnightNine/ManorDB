@@ -59,7 +59,6 @@ namespace MDB
             // 
             // menuStrip1
             // 
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -68,7 +67,7 @@ namespace MDB
             this.hideUnhideColumnsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(2517, 60);
+            this.menuStrip1.Size = new System.Drawing.Size(1924, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -79,48 +78,48 @@ namespace MDB
             this.appendFileToolStripMenuItem,
             this.saveAsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 56);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(343, 54);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // appendFileToolStripMenuItem
             // 
             this.appendFileToolStripMenuItem.Name = "appendFileToolStripMenuItem";
-            this.appendFileToolStripMenuItem.Size = new System.Drawing.Size(343, 54);
+            this.appendFileToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.appendFileToolStripMenuItem.Text = "Append File";
             this.appendFileToolStripMenuItem.Click += new System.EventHandler(this.appendFileToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(343, 54);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // newTableToolStripMenuItem
             // 
             this.newTableToolStripMenuItem.Name = "newTableToolStripMenuItem";
-            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(179, 56);
+            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
             this.newTableToolStripMenuItem.Text = "New Table";
             this.newTableToolStripMenuItem.Click += new System.EventHandler(this.newTableToolStripMenuItem_Click);
             // 
             // removeTableToolStripMenuItem
             // 
             this.removeTableToolStripMenuItem.Name = "removeTableToolStripMenuItem";
-            this.removeTableToolStripMenuItem.Size = new System.Drawing.Size(226, 56);
+            this.removeTableToolStripMenuItem.Size = new System.Drawing.Size(92, 20);
             this.removeTableToolStripMenuItem.Text = "Remove Table";
             this.removeTableToolStripMenuItem.Click += new System.EventHandler(this.removeTableToolStripMenuItem_Click);
             // 
             // hideUnhideColumnsToolStripMenuItem
             // 
             this.hideUnhideColumnsToolStripMenuItem.Name = "hideUnhideColumnsToolStripMenuItem";
-            this.hideUnhideColumnsToolStripMenuItem.Size = new System.Drawing.Size(337, 56);
+            this.hideUnhideColumnsToolStripMenuItem.Size = new System.Drawing.Size(138, 20);
             this.hideUnhideColumnsToolStripMenuItem.Text = "Hide/Unhide Columns";
             this.hideUnhideColumnsToolStripMenuItem.Click += new System.EventHandler(this.hideUnhideColumnsToolStripMenuItem_Click);
             // 
@@ -133,7 +132,7 @@ namespace MDB
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(0, 60);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(864, 69);
+            this.label1.Size = new System.Drawing.Size(350, 29);
             this.label1.TabIndex = 1;
             this.label1.Text = "Open or create a new MDB File";
             // 
@@ -154,11 +153,11 @@ namespace MDB
             // 
             this.vScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.vScrollBar1.LargeChange = 1;
-            this.vScrollBar1.Location = new System.Drawing.Point(2474, 60);
+            this.vScrollBar1.Location = new System.Drawing.Point(1881, 24);
             this.vScrollBar1.Maximum = 0;
             this.vScrollBar1.MaximumSize = new System.Drawing.Size(43, 0);
             this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(43, 1031);
+            this.vScrollBar1.Size = new System.Drawing.Size(43, 1037);
             this.vScrollBar1.TabIndex = 1;
             this.vScrollBar1.ValueChanged += new System.EventHandler(this.ScrollBar_ValueChanged);
             // 
@@ -201,21 +200,20 @@ namespace MDB
             this.customTabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.customTabControl1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.customTabControl1.HotTrack = true;
-            this.customTabControl1.Location = new System.Drawing.Point(0, 1031);
+            this.customTabControl1.Location = new System.Drawing.Point(0, 1001);
             this.customTabControl1.Name = "customTabControl1";
             this.customTabControl1.SelectedIndex = 0;
-            this.customTabControl1.Size = new System.Drawing.Size(2474, 60);
+            this.customTabControl1.Size = new System.Drawing.Size(1881, 60);
             this.customTabControl1.TabIndex = 0;
             this.customTabControl1.SelectedIndexChanged += new System.EventHandler(this.customTabControl1_SelectedIndexChanged);
             this.customTabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.customTabControl1_MouseDown);
-            
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.ClientSize = new System.Drawing.Size(2517, 1091);
+            this.ClientSize = new System.Drawing.Size(1924, 1061);
             this.Controls.Add(this.customTabControl1);
             this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.menuStrip1);

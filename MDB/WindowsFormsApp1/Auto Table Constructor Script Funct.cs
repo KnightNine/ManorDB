@@ -910,9 +910,14 @@ namespace MDB
                             {
                                 if (!String.IsNullOrEmpty(tableConstructorScript))
                                 {
+
                                     scriptsToMerge.Add(tableConstructorScript);
                                 }
-                                
+                                else
+                                {
+                                    //MessageBox.Show("Blasted! "+ linkedFKeyRefrenceColumnName);
+                                }
+
                             }
 
 
@@ -922,7 +927,7 @@ namespace MDB
                 }
             }
 
-
+            //why does this give a null refrence exception only sometimes when taking in null strings?
             mergedScript = AutoTableConstructorScriptFunct.MergeScripts(scriptsToMerge.ToArray());
             string mergedError = AutoTableConstructorScriptFunct.ValidateScript(mergedScript);
             if (!String.IsNullOrEmpty(mergedError))
