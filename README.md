@@ -32,7 +32,6 @@ The game I am working on relies on complex repeating data structures to define i
   
   <li>ability to change columns linked to a `Auto Table Constructor Script Receiver` column without having to delete and re-add the column (thus losing data)</li>
   <li>Column Type Icons (to show the type of each column)</li>
-  <li>Adjacent Column Disabler Array support for `Auto Table Constructor Script`</li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>"Table Directory" column type that constructs and stores a string array of the directory in another table's structure, this would resolve the typos that could arise from writing these directories manually.</li>
   <li>Key Shortcuts</li>
