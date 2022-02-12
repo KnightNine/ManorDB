@@ -132,46 +132,100 @@ namespace MDB
         
 
         //I'd need to account for other potential disabler conditions that may still be disabling either of the two cells
-        internal static bool IsDataRowCellStillDisabled(string tableKey, KeyValuePair<int, Dictionary<string, dynamic>> KVRow, string ColumnKey)
+        internal static bool IsDataRowCellStillDisabled(string tableKey, KeyValuePair<int, Dictionary<string, dynamic>> KVRow, string ColumnKey, string[] columnDisablerArray)
         {
-            if (DatabaseFunct.currentData[tableKey].ContainsKey(ColumnKey + ColumnDisablerArrayExt))
+            //fetch disabler array if not already defined
+            if (columnDisablerArray == null)
             {
-                foreach (string disablerColumnKey in currentData[tableKey][ColumnKey + ColumnDisablerArrayExt])
+                if (DatabaseFunct.currentData.ContainsKey(tableKey) && DatabaseFunct.currentData[tableKey].ContainsKey(ColumnKey + ColumnDisablerArrayExt))
                 {
-
-                    if (DoesDataRowCellContainData(KVRow, disablerColumnKey))
-                    {
-                        return true;
-                    }
+                    columnDisablerArray = currentData[tableKey][ColumnKey + ColumnDisablerArrayExt].ToArray();
                 }
             }
+
+            if (columnDisablerArray != null)
+            {
+                foreach (string disablerColumnKey in columnDisablerArray)
+                {
+                    //column can't disable itself
+                    if (disablerColumnKey != ColumnKey)
+                    {
+                        if (DoesDataRowCellContainData(KVRow, disablerColumnKey))
+                        {
+                            return true;
+                        }
+                    }
+
+                    
+                }
+            }
+                
+            
             return false;
 
         }
 
         //when a change is made to a cell of a column with a disabler array, update all cells in the same row of columns within the disabler array
-        internal static void UpdateStatusOfAllRowCellsInDisablerArrayOfCell(CustomDataGridView DGV, string tableKey, KeyValuePair<int, Dictionary<string, dynamic>> KVRow, string ColumnKey)
+        internal static void UpdateStatusOfAllRowCellsInDisablerArrayOfCell(CustomDataGridView DGV, string tableKey, KeyValuePair<int, Dictionary<string, dynamic>> KVRow, string ColumnKey, List<string[]> constructedTableDisablerArrays)
         {
             Console.WriteLine("in " + DGV.Name + " at row index " + KVRow.Key.ToString());
             Console.WriteLine("Checking Row Cells if Disabled:");
 
-            if (DatabaseFunct.currentData[tableKey].ContainsKey(ColumnKey + ColumnDisablerArrayExt))
+
+            string[] columnDisablerArray = null;
+
+            if (constructedTableDisablerArrays != null) // use constructedTableDisablerArrays
             {
-                foreach (string ColumnKeyToUpdate in currentData[tableKey][ColumnKey + ColumnDisablerArrayExt])
+
+                columnDisablerArray = AutoTableConstructorScriptFunct.GetColumnDisablerArrayFromConstructedTableDisablerArrays(ColumnKey, constructedTableDisablerArrays);
+                
+                
+            }
+            else //source disablerArray from currentData
+            {
+                if (DatabaseFunct.currentData[tableKey].ContainsKey(ColumnKey + ColumnDisablerArrayExt))
                 {
-                    Console.WriteLine(ColumnKeyToUpdate);
-                    bool isDisabled = IsDataRowCellStillDisabled(tableKey, KVRow, ColumnKeyToUpdate);
-                    Console.WriteLine("     IsDisabled = " + isDisabled.ToString());
-                    if (isDisabled)
-                    {
-                        DisableCellAtColAndRow(DGV, ColumnKeyToUpdate, KVRow.Key);
-                    }
-                    else
-                    {
-                        EnableCellAtColAndRow(DGV, ColumnKeyToUpdate, KVRow.Key);
-                    }
+                    columnDisablerArray = currentData[tableKey][ColumnKey + ColumnDisablerArrayExt].ToArray();
+
+                    
                 }
             }
+
+
+            if (columnDisablerArray != null)
+            {
+                foreach (string ColumnKeyToUpdate in columnDisablerArray)
+                {
+                    if (ColumnKeyToUpdate != ColumnKey) // this check is only for constructedTables
+                    {
+                        string[] updatingColumnDisablerArray = null;
+
+                        if (constructedTableDisablerArrays != null)
+                        {
+                            //get columnDisablerArray relative to the column being updated
+                            updatingColumnDisablerArray = AutoTableConstructorScriptFunct.GetColumnDisablerArrayFromConstructedTableDisablerArrays(ColumnKeyToUpdate, constructedTableDisablerArrays);
+                        }
+                        
+
+
+                        Console.WriteLine(ColumnKeyToUpdate);
+                        bool isDisabled = IsDataRowCellStillDisabled(tableKey, KVRow, ColumnKeyToUpdate, updatingColumnDisablerArray);
+                        Console.WriteLine("     IsDisabled = " + isDisabled.ToString());
+                        if (isDisabled)
+                        {
+                            DisableCellAtColAndRow(DGV, ColumnKeyToUpdate, KVRow.Key);
+                        }
+                        else
+                        {
+                            EnableCellAtColAndRow(DGV, ColumnKeyToUpdate, KVRow.Key);
+                        }
+                    }
+
+
+                }
+            }
+            
+
         }
 
 
@@ -400,8 +454,8 @@ namespace MDB
 
                         if (openDGVOfTable != null)
                         {
-                            bool isDisabled1 = IsDataRowCellStillDisabled(tableKey, KVRow, selectedColKey1);
-                            bool isDisabled2 = IsDataRowCellStillDisabled(tableKey, KVRow, selectedColKey2);
+                            bool isDisabled1 = IsDataRowCellStillDisabled(tableKey, KVRow, selectedColKey1,null);
+                            bool isDisabled2 = IsDataRowCellStillDisabled(tableKey, KVRow, selectedColKey2,null);
                             if (!isDisabled1)
                             {
                                 EnableCellAtColAndRow(openDGVOfTable, selectedColKey1, KVRow.Key);

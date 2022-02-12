@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace MDB
 {
@@ -29,32 +30,62 @@ namespace MDB
                     - with '-' you are escaping once to the previous table level ("SCol Name1") 
                     - then you are entering a different subtable column called "Adjacent SCol Name1"
                 
-                Note1: you don't necessarily need to enter an adjacent subtable, <-/-> is a valid outward_directory.
-                Note2: you cannot escape to nor beyond the main table directory and must reference a subtable column.
-                Note3: only the immediate table level of Adjacent subtable columns to the base directory referenced is used, so <-/"Adj Sub"/"Sub2"> is invalid.
-                Note4: spacing outside of quotes is trimmed.
-                Note5: you cannot reference a subtable column within a constructed table (this is mostly irrelevant though as there are is no primary key support within TableConstructorScript).
+                - Note1: you don't necessarily need to enter an adjacent subtable, <-/-> is a valid outward_directory.
+                - Note2: you cannot escape to nor beyond the main table directory and must reference a subtable column.
+                - Note3: only the immediate table level of Adjacent subtable columns to the base directory referenced is used, so <-/"Adj Sub"/"Sub2"> is invalid.
+                - Note4: spacing outside of quotes is trimmed.
+                - Note5: you cannot reference a subtable column within a constructed table (this is mostly irrelevant though as there are is no primary key support within TableConstructorScript).
                 
                 This "outward directory method" is designed to consider that, if any columnnames in the directory are changed, it won't affect the directory within the script unless it's the name of an adjacent subtable columnname that is being referenced.
                 
 
 
-            -Auto Table Constructor Script Receiver: " <column_name>:A:<linked_fKey_column_name> "
+            -Auto Table Constructor Script Receiver: " <column_name>:A:<linked_fKey_column_name1><linked_fKey_column_name2>..."
+                (linked_fKey_column_names must be an adjacent column at the same table level.)
 
-        -if you want to add a single row restriction to a constructed table or sub-table, add a hashtag "#" at the beginning of the script (there cannot be spaces before this hashtag)
 
-        - any spaces before or after the column names and type shorthand are trimmed so there's no need to worry about spacing,
+        - Note: any spaces before or after the column names and type shorthand are trimmed so there's no need to worry about spacing unless otherwise stated,
           so "  <Bool Column>  : B  , ..." will correct to "<Bool Column>:B,..."
 
-        
+        ---SINGLE ROW RESTICTION---
+        -if you want to add a single row restriction to a constructed table or sub-table, add a hashtag "#" at the beginning of the script (there cannot be spaces before this hashtag)
+        ---------------------------
 
+
+        ---DISABLER ARRAYS---
+        To define pairs of columns that disable eachother, you would define an array like so : "[[<colName1>,<colName2>,<colname4>][<colname1>,<colname3>]]"
+        
+        The columns that are joined within a nested array will disable the other columns in the same array upon one being filled.
+
+        - This array should be placed at the begining of the script (after the single row restriction hashtag `#` if there is one).
+        - Nested arrays should also contain 2 or more column names or else they are not valid.
+        ---------------------
 
         Example:
         "# <Bool Column>:B, <Subtable Column>:S:{<Sub Bool Column>:B,<Sub Text Column>:T }, <Text Column>:T, <Foreign Key Refrence Column>:F:<My Table Name>"
 
+        
 
 
+        
         */
+
+
+
+        
+        /*
+
+        - Custom Auto Table Script Prefabs:  if you have a lot of auto table constructor scripts that follow the same format, you can now define "Script Prefabs" which look something like this when implemented into a script 
+`<col1>:T, (rep), <col3>:T ` where `(rep)` is will be swaped out of the script with whatever string that is defined by the `rep` key before the script is read.
+
+         */
+        public static Dictionary<string, string> scriptPrefabDict = new Dictionary<string, string>()
+        {
+            {"N", "{<Numeric>:N}" }
+        };
+
+
+
 
         public static Dictionary<string, string> columnTypeShorthandDict = new Dictionary<string, string>()
         {
@@ -80,7 +111,41 @@ namespace MDB
         };
 
 
+        public static string LoadScriptPefabs(string script)
+        {
 
+            string _script = script + "";
+
+            MatchCollection M = Regex.Matches(script, @"\([^\(\)]*\)");
+
+            while (M.Count > 0)
+            {
+                string key = M[0].Value;
+                //remove brackets from key
+                string strippedkey = Regex.Replace(key, @"[\(\)]", "");
+
+                Console.WriteLine("Prefab Key Found: \""+strippedkey+"\"");
+
+                string value = "";
+                if (scriptPrefabDict.ContainsKey(strippedkey))
+                {
+                    value = scriptPrefabDict[strippedkey];
+                    
+                }
+
+                //replace all instances of this key with the designated value
+                _script = _script.Replace(key, value);
+
+                //update matches
+                M = Regex.Matches(_script, @"\([^\(\)]*\)");
+            }
+
+            return _script;
+
+            
+
+
+        }
 
         public static string FetchDirectoryFromOutwardDirectory(string outwardDirectory, string currentDirectory)
         {
@@ -160,6 +225,25 @@ namespace MDB
         }
 
 
+        public static string[] GetColumnDisablerArrayFromConstructedTableDisablerArrays(string columnName, List<string[]> constructedTableDisablerArrays)
+        {
+            string[] columnDisablerArray = new string[] { };
+
+            //find the array that's relevant to the column
+            foreach (string[] constructedDisablerArray in constructedTableDisablerArrays)
+            {
+
+                if (constructedDisablerArray.Contains(columnName))
+                {
+                    //combine, ignore duplicate strings
+                    columnDisablerArray = columnDisablerArray.Union(constructedDisablerArray).ToArray();
+
+                }
+            }
+
+            return columnDisablerArray.Length != 0 ? columnDisablerArray : null;
+        }
+
 
         public static void LoadConstructedColumn(string colName, string colType, CustomDataGridView DGV, Dictionary<int, Dictionary<string, dynamic>> tableData, Tuple<string,dynamic> additionalColumnData)
         {
@@ -231,6 +315,7 @@ namespace MDB
                     else
                     {
                         isDataTypeValid = false;
+                        
                     }
                 }
 
@@ -258,6 +343,9 @@ namespace MDB
         }
 
 
+
+        //unused----
+        /*
         public static string GetTypeOfColumnInScript(string colName, string tableConstructorScript)
         {
 
@@ -298,31 +386,77 @@ namespace MDB
             MessageBox.Show("column type not found for column: " + colName + " within constructed table");
             return null;
 
-        }
+        }*/
 
         
-        public static Tuple<MatchCollection,bool, string[]> FetchTopLevelScriptData(string tableConstructorScript)
+        public static Tuple<MatchCollection,bool, string[], List<string[]>> FetchTopLevelScriptData(string tableConstructorScript)
         {
+           
+
+
+
             //collect subscripts within "subtable column" curly brackets and includes nested curly brackets
             MatchCollection subtableScripts = Regex.Matches(tableConstructorScript, @"(?<=\{)(?>\{(?<c>)|[^{}]+|\}(?<-c>))*(?(c)(?!))(?=\})");
 
             //ignore these subscripts
             string scriptAtCurrentLevel = Regex.Replace(tableConstructorScript, @"(?<=\{)(?>\{(?<c>)|[^{}]+|\}(?<-c>))*(?(c)(?!))(?=\})", "");
+
+            string columnScriptData = scriptAtCurrentLevel;
+
+            //fetch disablerArrays from current level script
+            List<string[]> disablerArrays = new List<string[]>();
+            MatchCollection disablerArrayMatches = Regex.Matches(scriptAtCurrentLevel, @"(?<=\[).*(?=\])");
+            if (disablerArrayMatches.Count > 0)
+            {
+                string disablerArraysData = disablerArrayMatches[0].Value;
+
+
+
+
+
+                MatchCollection disablerArraysDataMatches = Regex.Matches(disablerArraysData, @"(?<=\[)[^\[\]]*(?=\])");
+                foreach (Match m in disablerArraysDataMatches)
+                {
+                    List<string> disablerArray = new List<string>();
+                    string[] columnKeys = m.Value.Split(',');
+                    foreach (string columnKey in columnKeys)
+                    {
+                        //extract from <>
+                        Match colKey = Regex.Match(columnKey, "(?<=<)[^<>]*(?=>)");
+                        disablerArray.Add(colKey.Value);
+                    }
+                    //add to collection
+                    disablerArrays.Add(disablerArray.ToArray());
+                }
+
+
+                //remove disabler array data so that column data can be read clearly
+                columnScriptData = Regex.Replace(columnScriptData, @"\[.*\]", "");
+            }
+
+
+
             //get if single row restriction:
             bool singleRowRestriction = scriptAtCurrentLevel.StartsWith("#");
 
-            string[] columnScripts = scriptAtCurrentLevel.Split(',');
+            
 
-            return new Tuple<MatchCollection,bool, string[]>(subtableScripts, singleRowRestriction, columnScripts);
+            string[] columnScripts = columnScriptData.Split(',');
+
+            return new Tuple<MatchCollection,bool, string[], List<string[]>>(subtableScripts, singleRowRestriction, columnScripts, disablerArrays);
         }
 
         //whenever a AutoTableConstructorScriptReader button (or a subtable button within the AutoTableConstructorScriptReader subtable) is pressed, instead of referring to the currentData table structure, refer to the script that the button is refrencing
         public static void ConstructSubTableStructureFromScript(CustomDataGridView DGV)
         {
+
+
+
             Dictionary<string,dynamic> DGVTag = DGV.Tag as Dictionary<string,dynamic>;
             string tableConstructorScript = DGVTag["tableConstructorScript"];
 
-
+            //load prefabs
+            tableConstructorScript = LoadScriptPefabs(tableConstructorScript);
 
             //find data source
             Dictionary<int, Dictionary<string, dynamic>> tableData = DatabaseFunct.GetTableDataFromDir(DGV.Name);
@@ -333,13 +467,17 @@ namespace MDB
             DatabaseFunct.loadingTable = true;
 
 
-            Tuple<MatchCollection,bool, string[]>  dat = FetchTopLevelScriptData(tableConstructorScript);
+            Tuple<MatchCollection,bool, string[], List<string[]>>  dat = FetchTopLevelScriptData(tableConstructorScript);
             MatchCollection subtableScripts = dat.Item1;
             bool singleRowRestriction = dat.Item2;
             string[] columnScripts = dat.Item3;
+            List<string[]> disablerArrays = dat.Item4;
+
+            //add disabler arrays to the dgvTag
+            DGVTag["disablerArrays"] = disablerArrays;
 
 
-            
+
 
             List<string> columnNames = new List<string>();
 
@@ -398,9 +536,9 @@ namespace MDB
             }
 
 
+            
 
-            
-            
+
             //load rows from table data
             foreach (KeyValuePair<int, Dictionary<string, dynamic>> entry in tableData)
             {
@@ -423,32 +561,65 @@ namespace MDB
 
             bool isFirst = true;
 
+            //collect the disabler arrays data into this string then re-add the surrounding brackets
+            string mergedDisablerArrays = "";
+
+            
+
             foreach (string script in scripts) 
             {
-                if (script.StartsWith("#"))
+                string _script = script;
+
+                //load prefabs
+                _script = LoadScriptPefabs(_script);
+
+                if (_script.StartsWith("#"))
                 {
                     isSingleRowRestriction = true;
-                    script.Replace("#", "");
+                    //remove the first character
+                    _script = _script.Remove(0,1);
                 }
 
+                //assess the DisablerArrays at the first table level by ignoring DisablerArrays after a curly bracket (i.e. DisablerArraysData that is potentially in a subtable)
+
                 
+                MatchCollection topLevelDisablerArraysData = Regex.Matches(script, @"(?<=(?<!\{.*)\[)[^\{]*(?=\])" ); //more complex regex that does the same thing: @"(?<=(?<!\{.*)\[)(?>\[(?<c>)|[^\[\]]+|\](?<-c>))*(?(c)(?!))(?=\])"
+
+                if (topLevelDisablerArraysData.Count > 0)
+                {
+                    
+                    mergedDisablerArrays += topLevelDisablerArraysData[0].Value;
+                    
+                    
+                    //remove from script
+                    _script = Regex.Replace(_script, @"(?<!\{.*)\[[^\{]*\]", "");
+                }
+
+
                 if (isFirst)
                 {
                     
-                    mergedScript += script;
+                    mergedScript += _script;
                     isFirst = false;
                 }
                 else
                 {
                     //add comma to scripts after first script to seperate columns
-                    mergedScript += ","+script;
+                    mergedScript += "," + _script;
                 }
+            }
+
+            if (mergedDisablerArrays != "")
+            {
+                //re-add surrounding brackets
+                mergedScript = "[" + mergedDisablerArrays + "]" + mergedScript;
             }
 
             if (isSingleRowRestriction)
             {
                 mergedScript = "#" + mergedScript;
             }
+            
             return mergedScript;
         }
 
@@ -456,6 +627,11 @@ namespace MDB
         //returns a string if there are errors in the script
         public static string ValidateScript(string script)
         {
+
+            //load prefabs
+            script = LoadScriptPefabs(script);
+
+
             string error = "";
 
             string[] parentColumns;
@@ -464,12 +640,14 @@ namespace MDB
             void recursiveScriptValidator(string scriptToValidate, List<string> parentColumnDirectory)
             {
 
-                Tuple<MatchCollection, bool, string[]> dat = FetchTopLevelScriptData(scriptToValidate);
+                Tuple<MatchCollection, bool, string[], List<string[]>> dat = FetchTopLevelScriptData(scriptToValidate);
                 MatchCollection subtableScripts = dat.Item1;
                 bool singleRowRestriction = dat.Item2;
                 string[] columnScripts = dat.Item3;
+                List<string[]> disablerArrays = dat.Item4;
 
                 
+
 
                 int subtableScriptIndex = 0;
 
@@ -728,7 +906,42 @@ namespace MDB
                     }
 
                 }
+
+
+                string invalidColNames = "";
+                bool invalidDisablerArrExists = false;
+                //validate that disablerArray columns exist
+                foreach (string[] disablerArr in disablerArrays)
+                {
+                    foreach (string colName in disablerArr)
+                    {
+                        if (!columnNamesAtCurrentLevel.Contains(colName))
+                        {
+                            invalidColNames += colName + ",";
+                        }
+                    }
+                    if (disablerArr.Length <= 1)
+                    {
+                        invalidDisablerArrExists = true;
+                    }
+
+                }
+
+                if (invalidColNames != "")
+                {
+                    error += "Disabler Array Script contains these column names: [" + invalidColNames + "] which do not exist within the column scripts at the same table level!\n";
+                }
+
+                if (invalidDisablerArrExists)
+                {
+                    error += "One or more disablerArrays in the script are invalid due to containing less than 2 columns.\n";
+                }
+
+
             }
+
+
+            
 
 
             //script cannot be blank if runing recursiveScriptValidator()
@@ -898,6 +1111,7 @@ namespace MDB
                         {
                             //validate the script
                             string scriptError = AutoTableConstructorScriptFunct.ValidateScript(tableConstructorScript);
+
                             if (scriptError != "")
                             {
                                 if (!DatabaseFunct.loadingTable)

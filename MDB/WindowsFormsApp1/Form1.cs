@@ -170,27 +170,7 @@ namespace MDB
             }
         }
 
-        public void TableMainGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-        {
-            /* me trying to increase the bool cell checkbox size:
-             * 
-            if (e.ColumnIndex > -1)
-            {
-                //increase size of check boxes of 
-                CustomDataGridView senderDGV = sender as CustomDataGridView;
-
-
-                if (senderDGV.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
-                {
-                    e.PaintBackground(e.CellBounds, true);
-                    ControlPaint.DrawCheckBox(e.Graphics, 11, 88, 44, 44, (bool)e.FormattedValue ? ButtonState.Checked : ButtonState.Normal);
-                    e.Handled = true;
-                }
-            }
-            
-            */
-
-        }
+        
 
         
 
@@ -332,6 +312,8 @@ namespace MDB
                     Console.WriteLine("rewriting cell display to... " + Convert.ToString(val));
                     //corrected string value is applied to textbox
                     senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = displayVal;
+                    //this allows the length of the cell's tooltip text to exceed 256 characters
+                    senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].ToolTipText = displayVal as string;
                 }
 
 
@@ -393,7 +375,7 @@ namespace MDB
                         string tableConstructorScript = DGVTag["tableConstructorScript"];
 
                         //get column scripts
-                        Tuple<MatchCollection, bool, string[]> dat = AutoTableConstructorScriptFunct.FetchTopLevelScriptData(tableConstructorScript);
+                        Tuple<MatchCollection, bool, string[],List<string[]>> dat = AutoTableConstructorScriptFunct.FetchTopLevelScriptData(tableConstructorScript);
                         string[] columnScripts = dat.Item3;
 
                         //store name and type within relevantTableColumnData
@@ -482,6 +464,8 @@ namespace MDB
                                 Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[e.RowIndex][linkedColName];
                                 //update displayValue of button cell (to empty since there's no rows)
                                 senderDGV.Rows[e.RowIndex].Cells[linkedColIndex].Value = ColumnTypes.GetSubTableCellDisplay(subtableData, senderDGV.Columns[e.ColumnIndex].Name, tableKey, subtableConstructorScript);
+                                //this allows the length of the cell's tooltip text to exceed 256 characters
+                                senderDGV.Rows[e.RowIndex].Cells[linkedColIndex].ToolTipText = senderDGV.Rows[e.RowIndex].Cells[linkedColIndex].Value.ToString();
 
 
 
@@ -491,20 +475,36 @@ namespace MDB
 
                         }
                     }
+                    
+
                     DatabaseFunct.loadingTable = false;
                 }
 
 
 
+                
+
+                //get disablerArrays
+
+                List<string[]> constructedTableDisablerArrays = null;
 
 
-
-
-                //if it isn't constructed
-                if (!isConstructed)
+                if (DGVTag.ContainsKey("disablerArrays"))
                 {
+                    //returns null if empty
+                    constructedTableDisablerArrays = DGVTag["disablerArrays"];
+
+
+                }
+
+
+
+                //constructed tables must have a disablerArray 
+                if (!isConstructed || constructedTableDisablerArrays != null)
+                {
+                    
                     //update disabled cells
-                    DatabaseFunct.UpdateStatusOfAllRowCellsInDisablerArrayOfCell(senderDGV, tableKey, KVRow, colName);
+                    DatabaseFunct.UpdateStatusOfAllRowCellsInDisablerArrayOfCell(senderDGV, tableKey, KVRow, colName, constructedTableDisablerArrays);
                 }
                 
             }
@@ -855,9 +855,53 @@ namespace MDB
                     }
 
                 }
+
+
+                // set DataGridViewComboBoxCell dropdown width to fit longest string in items
+                
+                if (colType == "Foreign Key Refrence" || colType == "Parent Subtable Foreign Key Refrence")
+                {
+                    //force cell to redraw
+                    DataGridViewComboBoxCell cell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
+
+                    int width = cell.DropDownWidth;
+                    Font font = senderDGV.DefaultCellStyle.Font;
+                    //add room for scrollbar if it appears
+                    int vertScrollBarWidth = (cell.Items.Count > cell.MaxDropDownItems) ? SystemInformation.VerticalScrollBarWidth : 0;
+                    Graphics g = CreateGraphics();
+
+                    //find widest string in items
+                    foreach (string s in cell.Items)
+                    {
+                        if (s != null)
+                        {
+                            int stringWidth = (int)g.MeasureString(s, font).Width;
+
+                            int newWidth =  stringWidth + vertScrollBarWidth;
+
+                            if (width < newWidth)
+                            {
+                                width = newWidth;
+                            }
+                        }
+                        
+                    }
+                    //set to width
+                    cell.DropDownWidth = width;
+                    
+                }
+                
+
             }
 
         }
+
+        public void TableMainGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            
+
+        }
+
 
 
         private CustomDataGridView lastDGVClicked = null;
@@ -1075,6 +1119,8 @@ namespace MDB
                         Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[e.RowIndex][senderDGV.Columns[e.ColumnIndex].Name];
                         //if constructed, use stored script within column tag
                         selcell.Value = ColumnTypes.GetSubTableCellDisplay(subtableData, senderDGV.Columns[e.ColumnIndex].Name, tableKey, subtableConstructorScript);
+                        //this allows the length of the cell's tooltip text to exceed 256 characters
+                        selcell.ToolTipText = selcell.Value.ToString();
 
                     }
                     RecenterSubTables();
@@ -1432,7 +1478,31 @@ namespace MDB
 
         }
 
-        
+
+        private void editScriptPrefabsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Dictionary<string, string> prefabDict = AutoTableConstructorScriptFunct.scriptPrefabDict;
+            Tuple<string,Dictionary<string,string>> data = DictionaryWriterPrompt.Show(
+                "Add the key within brackets to any Auto Table Constructor Script like so: \"(key)\" and it will be swapped out with the coresponding string value,(These Key-Value Pairs can be used to shorten repetitive ATC Scripts.)",
+                "Key:",
+                "Value:",
+                "Edit Auto Table Constructor Script Prefabs",
+                "Add Prefab Key And Value",
+                prefabDict
+                );
+
+            if (data.Item1 == "T")
+            {
+                //update the prefabDict
+                AutoTableConstructorScriptFunct.scriptPrefabDict = data.Item2;
+
+                //save the prefab dict 
+                Program.SaveConfigurationFile();
+            }
+
+        }
+
+
 
         /*public void hideUnhideColumnsToolStripMenuItemLostFocus(object sender, EventArgs e)
         {

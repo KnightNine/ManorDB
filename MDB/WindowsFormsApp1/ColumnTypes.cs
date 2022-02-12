@@ -12,6 +12,8 @@ namespace MDB
 {
     public static class ColumnTypes
     {
+        
+
 
         public static Dictionary<string, Type> Types = new Dictionary<string, Type>()
         {
@@ -40,7 +42,10 @@ namespace MDB
             {"Auto Table Constructor Script",typeof(DataGridViewTextBoxColumn) },
             //this column links to an existing foreign key refrence column in the same table upon creation.
             //it takes the data from the "Auto Table Constructor Script Source" column cell at the same row as the primary key being refrenced to generate a subtable of a specified structure.
-            {"Auto Table Constructor Script Receiver",typeof(DataGridViewButtonColumn) }, 
+            {"Auto Table Constructor Script Receiver",typeof(DataGridViewButtonColumn) },
+
+
+            
 
         };
 
@@ -48,18 +53,24 @@ namespace MDB
         internal static dynamic GetDefaultColumnValue(string colType)
         {
             dynamic defaultVal = null;
-            if (colType == "Bool")
+            switch (colType) 
             {
-                defaultVal = false;
+                case "Bool":
+                    defaultVal = false;
+                    break;
 
+                case "SubTable":
+                    defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
+                    break;
 
-            }
-            else if (colType == "SubTable" || colType == "Auto Table Constructor Script Receiver")
-            {
-                defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
+                case "Auto Table Constructor Script Receiver":
+                    defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
+                    break;
+                
+            };
+                
+            
 
-
-            }
             
             return defaultVal;
         }
@@ -75,7 +86,7 @@ namespace MDB
 
         internal static string GetSubTableCellDisplay(Dictionary<int, Dictionary<string, dynamic>> subtableData,string columnName, string tableKey, string subtableConstructorScript)
         {
-            var buttonText = columnName + "{\n";
+            var buttonText = columnName + ":\n";
 
             int i = 0;
             int displayMax = 5;
@@ -85,7 +96,7 @@ namespace MDB
                 string subTableKey = tableKey + "/" + columnName;
 
                 List<string> columnOrder = new List<string>();
-                Dictionary<string,string> columnTypes = new Dictionary<string, string>();
+                Dictionary<string, string> columnTypes = new Dictionary<string, string>();
                 //if this isn't a constructed table, leave subtableConstructorScript null
                 if (subtableConstructorScript == null)
                 {
@@ -99,19 +110,12 @@ namespace MDB
                 else
                 {
                     //get the column order from the subtable's constructor script
-                    //collect subscripts within "subtable column" curly brackets and includes nested curly brackets
-                    MatchCollection subtableScripts = Regex.Matches(subtableConstructorScript, @"(?<=\{)(?>\{(?<c>)|[^{}]+|\}(?<-c>))*(?(c)(?!))(?=\})");
-
-                    //ignore these subscripts
-                    string scriptAtCurrentLevel = Regex.Replace(subtableConstructorScript, @"(?<=\{)(?>\{(?<c>)|[^{}]+|\}(?<-c>))*(?(c)(?!))(?=\})", "");
-
-                    
-                    //then split script into it's columns by commas
-                    string[] columnScripts = scriptAtCurrentLevel.Split(',');
+                    Tuple<MatchCollection, bool, string[], List<string[]>> dat = AutoTableConstructorScriptFunct.FetchTopLevelScriptData(subtableConstructorScript);
+                    string[] columnScripts = dat.Item3;
 
 
                     //collect column names into columnOrder
-                    
+
                     foreach (string columnScript in columnScripts)
                     {
                         string[] columnDat = columnScript.Split(':');
@@ -136,8 +140,8 @@ namespace MDB
                         dynamic defaultVal = ColumnTypes.GetDefaultColumnValue(colType);
                         subtableData[i][K] = defaultVal;
                     }
-                        
-                    
+
+
 
                     V = subtableData[i][K];
 
@@ -148,19 +152,20 @@ namespace MDB
 
 
                     //show value of the subtable row unless it's a subtable column; in which {...} would be shown instead
-                    rowText += "|" + K + ":" + (V == null ? "null" : (Vt.IsGenericType && Vt.GetGenericTypeDefinition() == typeof(Dictionary<,>) ? "{...}" : V.ToString()));
+                    rowText += " |<" + K + ">:" + (V == null ? "null" : (Vt.IsGenericType && Vt.GetGenericTypeDefinition() == typeof(Dictionary<,>) ? "{...}" : V.ToString()));
                 }
 
 
 
 
-                buttonText += i.ToString() + "- " + rowText + "\n";
+                buttonText +=  i.ToString() + "- " + rowText + "\n";
                 i += 1;
             }
             if (i == 0)
             {
                 buttonText = "empty";
             }
+            
 
             return buttonText;
         }

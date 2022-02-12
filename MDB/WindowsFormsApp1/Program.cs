@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Collections.Specialized;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Configuration;
 
 namespace MDB
 {
@@ -29,7 +30,10 @@ namespace MDB
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
+
+
         
+
 
         static void Main(string[] args)
         {
@@ -86,7 +90,10 @@ namespace MDB
                     InputOutput.ImportMDBFile(mdbFilePath, true);
                 }
             }
-            
+
+
+            //get settings data
+            LoadConfigurationFile();
 
 
 
@@ -108,6 +115,36 @@ namespace MDB
             pi.SetValue(dgv, setting, null);
         }
 
+        public static void SaveConfigurationFile()
+        {
+            try
+            {
+                //convert dictionary to json string so that it can be stored as string
+                Properties.Settings.Default.scriptPrefabDict = Newtonsoft.Json.JsonConvert.SerializeObject(AutoTableConstructorScriptFunct.scriptPrefabDict);
+                Properties.Settings.Default.Save();
+            }
+            catch
+            {
+                MessageBox.Show("could not save config file");
+            }
+        }
+
+        static void LoadConfigurationFile()
+        {
+            try
+            {
+                //convert dictionary from json string
+                AutoTableConstructorScriptFunct.scriptPrefabDict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string,string>>(Properties.Settings.Default.scriptPrefabDict);
+            }
+            catch
+            {
+                MessageBox.Show("Script Prefab Data not found.");
+                SaveConfigurationFile();
+            }
+                
+            
+            
+        }
 
 
         //isConstructed is true if the DataGridView Table is constructed from an Auto Table Constructor script
@@ -206,6 +243,7 @@ namespace MDB
             TableMainGridView.CellMouseEnter += new DataGridViewCellEventHandler(mainForm.TableMainGridView_CellMouseEnter);
             TableMainGridView.GotFocus += new EventHandler(mainForm.TableMainGridView_Got_Focus);
             TableMainGridView.Click += new EventHandler(mainForm.TableMainGridView_Click);
+            
 
             DoubleBuffered(TableMainGridView, true);
 

@@ -228,6 +228,8 @@ namespace MDB
                             //any value 
                             tableLevelKVs[key] = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(ct[key].ToString());
 
+                            
+
 
                         }
                         else if (ct[key] is dynamic)//when converting dicts from json, keys are automatically converted to dynamic so "if (ct[key] is Newtonsoft.Json.Linq.JValue)" never gets used
@@ -240,6 +242,11 @@ namespace MDB
                                 tableLevelKVs[key] = Color.FromName(ct[key] as string);
 
 
+                            }
+                            else if (ct[key].GetType() == typeof(long))
+                            {
+                                //int64s must be int32s to register properly
+                                tableLevelKVs[key] = (int)ct[key];
                             }
                             else
                             {

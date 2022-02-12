@@ -22,5 +22,17 @@ namespace MDB.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{}")]
+        public string scriptPrefabDict {
+            get {
+                return ((string)(this["scriptPrefabDict"]));
+            }
+            set {
+                this["scriptPrefabDict"] = value;
+            }
+        }
     }
 }

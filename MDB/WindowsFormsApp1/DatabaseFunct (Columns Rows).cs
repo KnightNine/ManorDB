@@ -109,7 +109,7 @@ namespace MDB
                                             bool linkAgain = true;
                                             
                                             
-                                            Tuple<string,List<string>> input = Prompt.ShowMultiItemSelectDialog("Choose Foreign Key Refrence Columns to link to.", "Create Auto Table Constructor Script Receiver Column", foreignKeyRefrenceColumnsInTable.ToArray(),"Link Column");
+                                            Tuple<string,List<string>> input = MultiSelectPrompt.Show("Choose Foreign Key Refrence Columns to link to.", "Create Auto Table Constructor Script Receiver Column", foreignKeyRefrenceColumnsInTable.ToArray(),"Link Column");
                                             linkedFKeyRefrenceColumnNameData = input.Item2;
 
                                             //if input prompt was closed
@@ -1351,10 +1351,28 @@ namespace MDB
                     
                 }
 
-                //constructed tables don't have disabler array functionality.
-                if (!isParentConstructed)
+                //construct disablerArray
+                
+                List<string[]> constructedTableDisablerArrays = null;
+
+
+                if (ParentDGVTag.ContainsKey("disablerArrays"))
                 {
-                    UpdateStatusOfAllRowCellsInDisablerArrayOfCell(ParentDGV, ConvertDirToTableKey(ParentDGV.Name), KVRow, ColName);
+                    //returns null if empty
+                    constructedTableDisablerArrays = ParentDGVTag["disablerArrays"];
+
+
+                }
+
+
+
+                //constructed tables must have a disablerArrays data 
+                if (!isParentConstructed || constructedTableDisablerArrays != null)
+                {
+
+                    
+                
+                    UpdateStatusOfAllRowCellsInDisablerArrayOfCell(ParentDGV, ConvertDirToTableKey(ParentDGV.Name), KVRow, ColName, constructedTableDisablerArrays);
                 }
                 
             }
@@ -1421,6 +1439,9 @@ namespace MDB
 
         internal static void LoadRow(KeyValuePair<int, Dictionary<string, dynamic>> entryData, CustomDataGridView DGV, bool isConstructed)
         {
+
+
+
             string tableDir = DGV.Name;
             string tableKey = ConvertDirToTableKey(tableDir);
 
@@ -1446,18 +1467,44 @@ namespace MDB
                 List<string> removalList = new List<string>();
                 foreach (string colKey in tableData[rowIndex].Keys)
                 {
+                    if (colKey.Contains("divert"))
+                    {
+                        string v = "";
+                        foreach (KeyValuePair<string, dynamic> x in entryData.Value)
+                        {
+                            v += x.Key + ":" + x.Value + "\n";
+                        }
+                        MessageBox.Show(v);
+
+                    }
+
+                    //for some reason columns.Contains() isn't case sensitive so i'm using this instead
+                    bool c = false;
                     //key doesn't exist within columns and must be old data
-                    if (!columns.Contains(colKey))
+                    foreach (DataGridViewColumn column in columns)
+                    {
+                        if (column.Name == colKey)
+                        {
+                            c = true;
+                        }
+
+                    }
+                    if (!c)
                     {
                         removalList.Add(colKey);
                     }
                 }
+
+                
                 //erase from entryData.Value/tableData[index]
                 foreach (string colKey in removalList)
                 {
+                   
                     tableData[rowIndex].Remove(colKey);
                 }
 
+                
+                
 
                 //fetch script
                 Dictionary<string, dynamic> DGVTag = DGV.Tag as Dictionary<string, dynamic>;
@@ -1592,15 +1639,33 @@ namespace MDB
 
                     }
 
+                    
+
                     //assign data to column entry
                     DGV.Rows[rowIndex].Cells[column.Name].Value = displayValue;
+                    //this allows the length of the cell's tooltip text to exceed 256 characters
+                    DGV.Rows[rowIndex].Cells[column.Name].ToolTipText = displayValue as string;
 
-                    //constructed tables don't have an adjacentcolumndisabler
-                    if (!isConstructed)
+                    //construct columnDisablerArray
+                    Dictionary<string, dynamic> DGVTag = DGV.Tag as Dictionary<string, dynamic>;
+                    string[] columnDisablerArray = null;
+
+
+                    if (DGVTag.ContainsKey("disablerArrays"))
                     {
-                        
+                        //returns null if empty
+                        columnDisablerArray = AutoTableConstructorScriptFunct.GetColumnDisablerArrayFromConstructedTableDisablerArrays(column.Name, DGVTag["disablerArrays"]);
+
+
+                    }
+
+
+
+                    //constructed tables must have a columnDisablerArray
+                    if (!isConstructed || columnDisablerArray != null)
+                    {
                         //check if cell is enabled
-                        bool isDisabled = IsDataRowCellStillDisabled(tableKey, new KeyValuePair<int, Dictionary<string, dynamic>>(rowIndex, tableData[rowIndex]), column.Name);
+                        bool isDisabled = IsDataRowCellStillDisabled(tableKey, new KeyValuePair<int, Dictionary<string, dynamic>>(rowIndex, tableData[rowIndex]), column.Name, columnDisablerArray);
                         if (isDisabled)
                         {
                             DisableCellAtColAndRow(DGV, column.Name, rowIndex);
@@ -1609,7 +1674,7 @@ namespace MDB
                     
 
                 }
-                else // if it doesn't already exist in row data
+                else //if it doesn't already exist in row data
                 {
                     //set to default 
                     dynamic defaultVal = ColumnTypes.GetDefaultColumnValue(colType);
@@ -1703,11 +1768,41 @@ namespace MDB
                 KeyValuePair<int, Dictionary<string, dynamic>> KVRow = new KeyValuePair<int, Dictionary<string, dynamic>>(RowIndex, GetTableDataFromDir(ParentDGV.Name)[RowIndex]);
 
 
-                UpdateStatusOfAllRowCellsInDisablerArrayOfCell(ParentDGV, ConvertDirToTableKey(ParentDGV.Name), KVRow, ColName);
+
+                //get if parent dgv is constructed
+                bool isParentConstructed = false;
+
+                Dictionary<string, dynamic> ParentDGVTag = ParentObj.Tag as Dictionary<string, dynamic>;
+                if (ParentDGVTag.ContainsKey("tableConstructorScript"))
+                {
+                    isParentConstructed = true;
+
+                }
+
+                //get disablerArrays
+
+                List<string[]> constructedTableDisablerArrays = null;
+
+
+                if (ParentDGVTag.ContainsKey("disablerArrays"))
+                {
+                    //returns null if empty
+                    constructedTableDisablerArrays = ParentDGVTag["disablerArrays"];
+
+
+                }
+
+
+
+                //constructed tables must have disablerArrays data 
+                if (!isParentConstructed || constructedTableDisablerArrays != null)
+                {
+                    UpdateStatusOfAllRowCellsInDisablerArrayOfCell(ParentDGV, ConvertDirToTableKey(ParentDGV.Name), KVRow, ColName, constructedTableDisablerArrays);
+                }
             }
 
-            // if this is a Subtable
-            if (ParentObj is CustomDataGridView)
+                // if this is a Subtable
+                if (ParentObj is CustomDataGridView)
             {
                 DatabaseFunct.UpdateSubTableAddRowButton(DGV);
             }

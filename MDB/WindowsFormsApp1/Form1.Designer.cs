@@ -54,6 +54,7 @@ namespace MDB
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.customTabControl1 = new System.Windows.Forms.CustomTabControl();
+            this.editScriptPrefabsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,10 +65,12 @@ namespace MDB
             this.fileToolStripMenuItem,
             this.newTableToolStripMenuItem,
             this.removeTableToolStripMenuItem,
-            this.hideUnhideColumnsToolStripMenuItem});
+            this.hideUnhideColumnsToolStripMenuItem,
+            this.editScriptPrefabsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1924, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(2, 1, 0, 1);
+            this.menuStrip1.Size = new System.Drawing.Size(722, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -78,7 +81,7 @@ namespace MDB
             this.appendFileToolStripMenuItem,
             this.saveAsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 22);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
@@ -105,21 +108,21 @@ namespace MDB
             // newTableToolStripMenuItem
             // 
             this.newTableToolStripMenuItem.Name = "newTableToolStripMenuItem";
-            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
+            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(73, 22);
             this.newTableToolStripMenuItem.Text = "New Table";
             this.newTableToolStripMenuItem.Click += new System.EventHandler(this.newTableToolStripMenuItem_Click);
             // 
             // removeTableToolStripMenuItem
             // 
             this.removeTableToolStripMenuItem.Name = "removeTableToolStripMenuItem";
-            this.removeTableToolStripMenuItem.Size = new System.Drawing.Size(92, 20);
+            this.removeTableToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.removeTableToolStripMenuItem.Text = "Remove Table";
             this.removeTableToolStripMenuItem.Click += new System.EventHandler(this.removeTableToolStripMenuItem_Click);
             // 
             // hideUnhideColumnsToolStripMenuItem
             // 
             this.hideUnhideColumnsToolStripMenuItem.Name = "hideUnhideColumnsToolStripMenuItem";
-            this.hideUnhideColumnsToolStripMenuItem.Size = new System.Drawing.Size(138, 20);
+            this.hideUnhideColumnsToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.hideUnhideColumnsToolStripMenuItem.Text = "Hide/Unhide Columns";
             this.hideUnhideColumnsToolStripMenuItem.Click += new System.EventHandler(this.hideUnhideColumnsToolStripMenuItem_Click);
             // 
@@ -130,7 +133,8 @@ namespace MDB
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 60);
+            this.label1.Location = new System.Drawing.Point(0, 25);
+            this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(350, 29);
             this.label1.TabIndex = 1;
@@ -141,7 +145,8 @@ namespace MDB
             this.panel1.AutoSize = true;
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel1.BackColor = System.Drawing.Color.Transparent;
-            this.panel1.Location = new System.Drawing.Point(982, 392);
+            this.panel1.Location = new System.Drawing.Point(368, 164);
+            this.panel1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(0, 0);
             this.panel1.TabIndex = 2;
@@ -153,11 +158,11 @@ namespace MDB
             // 
             this.vScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.vScrollBar1.LargeChange = 1;
-            this.vScrollBar1.Location = new System.Drawing.Point(1881, 24);
+            this.vScrollBar1.Location = new System.Drawing.Point(706, 24);
             this.vScrollBar1.Maximum = 0;
-            this.vScrollBar1.MaximumSize = new System.Drawing.Size(43, 0);
+            this.vScrollBar1.MaximumSize = new System.Drawing.Size(16, 0);
             this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(43, 1037);
+            this.vScrollBar1.Size = new System.Drawing.Size(16, 421);
             this.vScrollBar1.TabIndex = 1;
             this.vScrollBar1.ValueChanged += new System.EventHandler(this.ScrollBar_ValueChanged);
             // 
@@ -200,20 +205,28 @@ namespace MDB
             this.customTabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.customTabControl1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.customTabControl1.HotTrack = true;
-            this.customTabControl1.Location = new System.Drawing.Point(0, 1001);
+            this.customTabControl1.Location = new System.Drawing.Point(0, 420);
+            this.customTabControl1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.customTabControl1.Name = "customTabControl1";
             this.customTabControl1.SelectedIndex = 0;
-            this.customTabControl1.Size = new System.Drawing.Size(1881, 60);
+            this.customTabControl1.Size = new System.Drawing.Size(706, 25);
             this.customTabControl1.TabIndex = 0;
             this.customTabControl1.SelectedIndexChanged += new System.EventHandler(this.customTabControl1_SelectedIndexChanged);
             this.customTabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.customTabControl1_MouseDown);
             // 
+            // editScriptPrefabsToolStripMenuItem
+            // 
+            this.editScriptPrefabsToolStripMenuItem.Name = "editScriptPrefabsToolStripMenuItem";
+            this.editScriptPrefabsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.editScriptPrefabsToolStripMenuItem.Text = "Edit Script Prefabs";
+            this.editScriptPrefabsToolStripMenuItem.Click += new System.EventHandler(this.editScriptPrefabsToolStripMenuItem_Click);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.ClientSize = new System.Drawing.Size(1924, 1061);
+            this.ClientSize = new System.Drawing.Size(722, 445);
             this.Controls.Add(this.customTabControl1);
             this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.menuStrip1);
@@ -222,6 +235,7 @@ namespace MDB
             this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.Name = "Form1";
             this.Text = "ManorDB";
             this.menuStrip1.ResumeLayout(false);
@@ -256,14 +270,259 @@ namespace MDB
         private TabPage tabPage1;
         private TabPage tabPage2;
         public CustomTabControl customTabControl1;
+        private ToolStripMenuItem editScriptPrefabsToolStripMenuItem;
     }
 
 
 
-    public static class Prompt
-    {
 
-        public static Tuple<string,List<string>> ShowMultiItemSelectDialog(string text, string caption, string[] listBoxArr, string addButtonText)
+
+
+
+
+
+
+
+
+
+
+
+    public static class DictionaryWriterPrompt
+    {
+        public static Tuple<string, Dictionary<string, string>> Show(string text,string keyText,string valueText, string caption, string addButtonText, Dictionary<string,string> storedData)
+        {
+            Form prompt = new Form()
+            {
+                Width = 500,
+                Height = 430,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = caption,
+                StartPosition = FormStartPosition.CenterScreen,
+                BackColor = ColorThemes.Themes[ColorThemes.currentTheme]["FormBack"],
+                ForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["FormFore"],
+            };
+
+            Label textLabel = new Label() { Left = 50, Top = 10, Text = text, Width = 400, Height = 40 };
+            Label KeyLabel = new Label() { Left = 50, Top = 65, Text = keyText, Width = 275, Height = 14 };
+            TextBox KeyBox = new TextBox() { Left = 50, Top = 80, Width = 275 };
+            Label ValueLabel = new Label() { Left = 50, Top = 105, Text = valueText, Width = 275, Height = 14 };
+            TextBox ValueBox = new TextBox() { Left = 50, Top = 120, Width = 275 };
+            DataGridView dataGridView = new DataGridView() { Left = 50, Top = 155, Width = 400, Height = 200, ScrollBars = ScrollBars.Vertical, ColumnHeadersVisible = false, RowHeadersVisible = false, AllowUserToResizeRows = false, ReadOnly = true, AllowUserToAddRows = false, AllowUserToDeleteRows = false, AllowUserToOrderColumns = false };
+            Button addButton = new Button() { Left = 355, Top = 80, Width = 90, Height = 70, Text = addButtonText, AutoSizeMode = AutoSizeMode.GrowOnly, Anchor = AnchorStyles.Left };
+            Button confirmation = new Button() { Text = "Done", Left = 350, Width = 100, Top = 360, DialogResult = DialogResult.OK };
+
+            //---Key
+            prompt.Controls.Add(KeyLabel);
+            prompt.Controls.Add(KeyBox);
+            //---Value
+            prompt.Controls.Add(ValueLabel);
+            prompt.Controls.Add(ValueBox);
+
+            //---dataGridView
+
+            dataGridView.Columns.Add("Key", "Key");
+            dataGridView.Columns.Add("Val", "Val");
+            dataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            dataGridView.BackgroundColor = SystemColors.ControlDarkDark;
+
+            dataGridView.Tag = new Dictionary<string, dynamic>() { { "addButton", addButton }, { " KeyBox", KeyBox },{ "ValueBox", ValueBox } };
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+
+            //not sure why but DefaultCellStyle doesn't seem to change anything here
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+
+            dataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+
+            dataGridView.CellClick += DataGridView_CellClick;
+            dataGridView.CellMouseEnter += DataGridView_CellMouseEnter;
+            dataGridView.CellMouseLeave += DataGridView_CellMouseLeave;
+
+
+
+            prompt.Controls.Add(dataGridView);
+
+            //load existing dict
+            foreach (KeyValuePair<string,string> kv in storedData)
+            {
+                dataGridView.Rows.Add();
+                DataGridViewRow row = dataGridView.Rows[dataGridView.Rows.Count - 1];
+                row.Cells[0].Value = kv.Key;
+                row.Cells[0].Tag = kv.Key;
+                row.Cells[1].Value = kv.Value;
+                row.Cells[1].Tag = kv.Value;
+
+                SetRowInitialCellStyles(row);
+            }
+
+            //----addButton
+
+            addButton.Tag = new Dictionary<string, dynamic>() { { "dataGridView", dataGridView },  { "KeyBox", KeyBox }, { "ValueBox", ValueBox } };
+            addButton.Click += AddButton_Click;
+
+            prompt.Controls.Add(addButton);
+            //----
+
+            Dictionary<string,string> getTableData()
+            {
+                Dictionary<string, string> result = new Dictionary<string, string>();
+                foreach (DataGridViewRow row in dataGridView.Rows)
+                {
+                    result.Add(row.Cells[0].Tag as string, row.Cells[1].Tag as string);
+                }
+                return result;
+            }
+
+            confirmation.Click += (sender, e) => { prompt.Close(); };
+
+            prompt.Controls.Add(confirmation);
+            prompt.Controls.Add(textLabel);
+
+            prompt.AcceptButton = confirmation;
+
+            return prompt.ShowDialog() == DialogResult.OK ? new Tuple<string, Dictionary<string, string>>("T", getTableData()) : new Tuple<string, Dictionary<string, string>>("F", null);
+        }
+
+        private static void DataGridView_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView senderDGV = sender as DataGridView;
+            foreach (DataGridViewCell cell in senderDGV.Rows[e.RowIndex].Cells)
+            {
+                //revert to original value and color
+                cell.Style.BackColor = System.Drawing.SystemColors.Window;
+                cell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+                cell.Style.SelectionBackColor = System.Drawing.SystemColors.Window;
+                cell.Style.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+                cell.Value = cell.Tag;
+            }
+        }
+
+            private static void DataGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView senderDGV = sender as DataGridView;
+            foreach(DataGridViewCell cell in senderDGV.Rows[e.RowIndex].Cells)
+            {
+                cell.Style.BackColor = Color.Red;
+                cell.Style.ForeColor = Color.White;
+                cell.Style.SelectionBackColor = Color.Red;
+                cell.Style.SelectionForeColor = Color.White;
+                cell.Value = "Remove";
+            }
+            
+        }
+
+        private static void DataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridView senderDGV = sender as DataGridView;
+            Dictionary<string, dynamic> tagDict = senderDGV.Tag as Dictionary<string, dynamic>;
+
+            
+
+            senderDGV.Rows.RemoveAt(e.RowIndex);
+        }
+        private static void AddButton_Click(object sender, EventArgs e)
+        {
+            Button senderButton = sender as Button;
+            Dictionary<string, dynamic> tagDict = senderButton.Tag as Dictionary<string, dynamic>;
+
+            DataGridView dataGridView = tagDict["dataGridView"];
+            TextBox KeyBox = tagDict["KeyBox"];
+            TextBox ValueBox = tagDict["ValueBox"];
+
+            string Key = KeyBox.Text;
+            string Value = ValueBox.Text;
+
+            bool validKey = true;
+
+            foreach (DataGridViewRow row in dataGridView.Rows)
+            {
+                
+                if (row.Cells[0].Tag as string == Key)
+                {
+                    validKey = false;
+                }
+                
+            }
+
+            if (validKey)
+            {
+                if (!String.IsNullOrEmpty(KeyBox.Text) && !String.IsNullOrEmpty(ValueBox.Text))
+                {
+
+
+
+                    dataGridView.Rows.Add();
+
+                    DataGridViewRow row = dataGridView.Rows[dataGridView.Rows.Count - 1];
+
+
+                    DataGridViewCell newCell = row.Cells[0];
+                    newCell.Value = Key;
+                    newCell.Tag = Key;
+
+                    DataGridViewCell newCell2 = row.Cells[1];
+                    newCell2.Value = Value;
+                    newCell2.Tag = Value;
+
+                    SetRowInitialCellStyles(row);
+                    
+                    //empty boxes
+                    KeyBox.Text = "";
+                    ValueBox.Text = "";
+
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+                MessageBox.Show("Key already exists in table!");
+            }
+           
+
+
+        }
+
+
+        private static void SetRowInitialCellStyles(DataGridViewRow row)
+        {
+            //KEY---------------
+            DataGridViewCell newCell = row.Cells[0];
+            //this has to be set manually due to some issue
+            newCell.Style.BackColor = System.Drawing.SystemColors.Window;
+            newCell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+            newCell.Style.SelectionBackColor = System.Drawing.SystemColors.Window;
+            newCell.Style.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+
+            
+
+            //Value---------------
+            DataGridViewCell newCell2 = row.Cells[1];
+            //this has to be set manually due to some issue
+            newCell2.Style.BackColor = System.Drawing.SystemColors.Window;
+            newCell2.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+            newCell2.Style.SelectionBackColor = System.Drawing.SystemColors.Window;
+            newCell2.Style.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+
+            
+        }
+
+    }
+
+
+    public static class MultiSelectPrompt
+    {
+        public static Tuple<string, List<string>> Show(string text, string caption, string[] listBoxArr, string addButtonText)
         {
             Form prompt = new Form()
             {
@@ -279,7 +538,7 @@ namespace MDB
             Label textLabel = new Label() { Left = 50, Top = 10, Text = text, Width = 400, Height = 40 };
             ComboBox ComboBox1 = new ComboBox() { Left = 50, Top = 50, Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
             DataGridView dataGridView = new DataGridView() { Left = 50, Top = 75, Width = 400, Height = 200, ScrollBars = ScrollBars.Vertical, ColumnHeadersVisible = false, RowHeadersVisible = false, AllowUserToResizeRows = false, ReadOnly = true, AllowUserToAddRows = false, AllowUserToDeleteRows = false, AllowUserToOrderColumns = false };
-            Button addButton = new Button() { Left = 300, Top = 50, Width = 100, Text = addButtonText, AutoSizeMode = AutoSizeMode.GrowOnly , Anchor = AnchorStyles.Left};
+            Button addButton = new Button() { Left = 300, Top = 50, Width = 100, Text = addButtonText, AutoSizeMode = AutoSizeMode.GrowOnly, Anchor = AnchorStyles.Left };
             Button confirmation = new Button() { Text = "Done", Left = 350, Width = 100, Top = 300, DialogResult = DialogResult.OK };
 
             //---ComboBox1
@@ -293,8 +552,8 @@ namespace MDB
 
             prompt.Controls.Add(ComboBox1);
             //---dataGridView
-            
-            dataGridView.Columns.Add("default","default");
+
+            dataGridView.Columns.Add("default", "default");
             dataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             dataGridView.BackgroundColor = SystemColors.ControlDarkDark;
@@ -319,11 +578,12 @@ namespace MDB
             dataGridView.CellMouseLeave += DataGridView_CellMouseLeave;
 
 
+
             prompt.Controls.Add(dataGridView);
 
             //----addButton
-            
-            addButton.Tag = new Dictionary<string, dynamic>() { { "dataGridView", dataGridView } ,{ "ComboBox1", ComboBox1 } };
+
+            addButton.Tag = new Dictionary<string, dynamic>() { { "dataGridView", dataGridView }, { "ComboBox1", ComboBox1 } };
             addButton.Click += AddButton_Click;
 
             prompt.Controls.Add(addButton);
@@ -346,7 +606,7 @@ namespace MDB
 
             prompt.AcceptButton = confirmation;
 
-            return prompt.ShowDialog() == DialogResult.OK ? new Tuple<string, List<string>> ( "T", getSelectedItems() ) : new Tuple<string, List<string>>( "F", null );
+            return prompt.ShowDialog() == DialogResult.OK ? new Tuple<string, List<string>>("T", getSelectedItems()) : new Tuple<string, List<string>>("F", null);
         }
 
         private static void DataGridView_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
@@ -381,13 +641,12 @@ namespace MDB
 
             //return item to combo box
             DataGridViewCell cell = senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            
+
 
             ComboBox1.Items.Add(cell.Tag);
 
             senderDGV.Rows.RemoveAt(e.RowIndex);
         }
-
         private static void AddButton_Click(object sender, EventArgs e)
         {
             Button senderButton = sender as Button;
@@ -397,7 +656,7 @@ namespace MDB
             ComboBox ComboBox1 = tagDict["ComboBox1"];
 
 
-            
+
 
 
             if (ComboBox1.SelectedItem != null)
@@ -415,7 +674,7 @@ namespace MDB
 
                 newCell.Value = item;
                 newCell.Tag = item;
-                
+
 
                 //remove item from comboBox items
                 ComboBox1.SelectedItem = null;
@@ -425,6 +684,15 @@ namespace MDB
 
 
         }
+    }
+
+
+    public static class Prompt
+    {
+
+        
+
+        
 
 
 
