@@ -13,6 +13,162 @@ namespace MDB
     public static partial class DatabaseFunct
     {
         //======================================================================================================================
+        // Grey out dependent script receiver cells that require one or more linked columns to be filled:
+
+
+        //get linked columns and grey out the cell if none of the linked columns are filled
+        //any cell can be put in this function if the columntype is uncertain 
+        internal static void UpdateReceiverCellUnfulfilledDependencyState(string tableKey, string colName, Dictionary<int, Dictionary<string, dynamic>> tableData, int rowIndex, CustomDataGridView senderDGV)
+        {
+            bool hasUnfulfilledDependency = true;
+
+            string tableConstructorScript = null;
+
+            //get if the table is constructed by script
+            Dictionary<string, dynamic> DGVTag = senderDGV.Tag as Dictionary<string, dynamic>;
+            bool isConstructed = false;
+            if (DGVTag.ContainsKey("tableConstructorScript"))
+            {
+                isConstructed = true;
+            }
+
+
+            //get foreign key refrence column(s) this column is linked to 
+            dynamic linkedFKeyRefrenceColumnNameData;
+            
+
+            if (isConstructed)
+            {
+
+                
+
+                Dictionary<string, dynamic> colTag = senderDGV.Columns[colName].Tag as Dictionary<string, dynamic>;
+
+                string colType = colTag["columnType"];
+
+
+                if (Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
+                {
+                    linkedFKeyRefrenceColumnNameData = colTag[DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
+
+
+
+
+
+                    foreach (string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
+                    {
+
+
+
+                        //get the value of the cell of the foreign key refrence column at the same row
+                        string tablePKSelected = tableData[rowIndex][linkedFKeyRefrenceColumnName];
+
+                        if (tablePKSelected != null)
+                        {
+                            hasUnfulfilledDependency = false;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    hasUnfulfilledDependency = false;
+                }
+
+
+            }
+            else
+            {
+
+                string colType = currentData[tableKey][colName];
+
+
+                if (Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
+                {
+
+                    linkedFKeyRefrenceColumnNameData = DatabaseFunct.currentData[tableKey][colName + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
+
+                    //convert to list from string for backwards compatablity
+                    if (linkedFKeyRefrenceColumnNameData is string)
+                    {
+                        linkedFKeyRefrenceColumnNameData = new List<string>() { linkedFKeyRefrenceColumnNameData };
+                        DatabaseFunct.currentData[tableKey][colName + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt] = linkedFKeyRefrenceColumnNameData;
+                    }
+
+                    foreach (string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
+                    {
+
+
+                        //get the value of the cell of the foreign key refrence column at the same row
+                        string tablePKSelected = tableData[rowIndex][linkedFKeyRefrenceColumnName];
+
+                        if (tablePKSelected != null)
+                        {
+                            hasUnfulfilledDependency = false;
+                            break;
+                        }
+
+                    }
+                }
+                else
+                {
+                    hasUnfulfilledDependency = false;
+                }
+            }
+
+
+            if (hasUnfulfilledDependency)
+            {
+                ShowUnfufilledDependencyOfReceiverCellAtColAndRow(senderDGV, colName, rowIndex);
+            }
+            else
+            {
+                HideUnfufilledDependencyOfReceiverCellAtColAndRow(senderDGV, colName, rowIndex);
+            }
+        }
+
+
+        internal static void ShowUnfufilledDependencyOfReceiverCellAtColAndRow(CustomDataGridView DGV, string ColKey, int RowIndex)
+        {
+
+            
+
+            int ColumnIndex = DGV.Columns.IndexOf(DGV.Columns[ColKey]);
+
+            DataGridViewButtonCell cell = DGV.Rows[RowIndex].Cells[ColumnIndex] as DataGridViewButtonCell;
+
+            //if the cell isn't disabled:
+            if(((Dictionary<string, dynamic>)cell.Tag)["Enabled"] != false)
+            {
+                //gray out the cell
+                string currentTheme = ColorThemes.currentTheme;
+                cell.Style.ForeColor = ColorThemes.Themes[currentTheme]["UnfulfilledDependency"];
+                cell.Style.SelectionForeColor = ColorThemes.Themes[currentTheme]["UnfulfilledDependency"];
+
+            }
+
+            
+        }
+
+        internal static void HideUnfufilledDependencyOfReceiverCellAtColAndRow(CustomDataGridView DGV, string ColKey, int RowIndex)
+        {
+            int ColumnIndex = DGV.Columns.IndexOf(DGV.Columns[ColKey]);
+
+            DataGridViewButtonCell cell = DGV.Rows[RowIndex].Cells[ColumnIndex] as DataGridViewButtonCell;
+
+
+            if (((Dictionary<string, dynamic>)cell.Tag)["Enabled"] != false)
+            {
+                //restore cell style to the default value
+                //default style
+                cell.Style.ForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["SubTableCellFore"];
+                cell.Style.SelectionForeColor = ColorThemes.Themes[ColorThemes.currentTheme]["SubTableSelectedCellFore"];
+            }
+
+
+        }
+
+        //======================================================================================================================
         // Disable and Enable Cells in a CustomDataGridView
 
 
@@ -125,6 +281,20 @@ namespace MDB
                     cell.Style.ForeColor = DGV.AlternatingRowsDefaultCellStyle.ForeColor;
                     cell.Style.SelectionBackColor = DGV.AlternatingRowsDefaultCellStyle.SelectionBackColor;
                 }
+
+
+                //if this cell is of a script receiver column: 
+                if (cell.GetType() == typeof(DataGridViewButtonCell))
+                {
+                    string tableKey = ConvertDirToTableKey(DGV.Name);
+                    Dictionary<int, Dictionary<string, dynamic>> tableData = GetTableDataFromDir(DGV.Name);
+                    //UpdateReceiverCellUnfulfilledDependencyState() will confirm the column type
+                    //set the UnfulfilledDependencyState of the cell
+                    UpdateReceiverCellUnfulfilledDependencyState(tableKey, ColKey, tableData, RowIndex, DGV);
+                }
+
+                
+
             }
 
         }
@@ -198,18 +368,19 @@ namespace MDB
                 {
                     if (ColumnKeyToUpdate != ColumnKey) // this check is only for constructedTables
                     {
-                        string[] updatingColumnDisablerArray = null;
+                        //leave null to fetch from tabel data when passed to IsDataRowCellStillDisabled()
+                        string[] columnToUpdateDisablerArray = null;
 
                         if (constructedTableDisablerArrays != null)
                         {
                             //get columnDisablerArray relative to the column being updated
-                            updatingColumnDisablerArray = AutoTableConstructorScriptFunct.GetColumnDisablerArrayFromConstructedTableDisablerArrays(ColumnKeyToUpdate, constructedTableDisablerArrays);
+                            columnToUpdateDisablerArray = AutoTableConstructorScriptFunct.GetColumnDisablerArrayFromConstructedTableDisablerArrays(ColumnKeyToUpdate, constructedTableDisablerArrays);
                         }
                         
 
 
                         Console.WriteLine(ColumnKeyToUpdate);
-                        bool isDisabled = IsDataRowCellStillDisabled(tableKey, KVRow, ColumnKeyToUpdate, updatingColumnDisablerArray);
+                        bool isDisabled = IsDataRowCellStillDisabled(tableKey, KVRow, ColumnKeyToUpdate, columnToUpdateDisablerArray);
                         Console.WriteLine("     IsDisabled = " + isDisabled.ToString());
                         if (isDisabled)
                         {

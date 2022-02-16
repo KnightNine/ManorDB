@@ -12,7 +12,9 @@ namespace MDB
 {
     public static class ColumnTypes
     {
-        
+
+        public static int scriptColumnTypeDuplicates = 0;
+
 
 
         public static Dictionary<string, Type> Types = new Dictionary<string, Type>()
@@ -50,24 +52,67 @@ namespace MDB
         };
 
 
+
+        public static void SetScriptColumnTypeDuplicates(int newScriptColumnTypeDuplicatesVal)
+        {
+            if (scriptColumnTypeDuplicates < newScriptColumnTypeDuplicatesVal)
+            {
+                for (int i = scriptColumnTypeDuplicates; i < newScriptColumnTypeDuplicatesVal; i++)
+                {
+                    //formatted int is +1
+                    int fj = i + 1;
+
+                    Types["Auto Table Constructor Script" + fj.ToString()] = typeof(DataGridViewTextBoxColumn);
+                    Types["Auto Table Constructor Script Receiver" + fj.ToString()] = typeof(DataGridViewButtonColumn);
+                    //add type to shorthand and validType Dicts:
+                    AutoTableConstructorScriptFunct.columnTypeShorthandDict["A" + fj.ToString()] = "Auto Table Constructor Script Receiver" + fj.ToString();
+                    AutoTableConstructorScriptFunct.columnCellValueValidType["Auto Table Constructor Script Receiver" + fj.ToString()] = typeof(Dictionary<int, Dictionary<string, dynamic>>);
+                }
+            }
+            else if (scriptColumnTypeDuplicates > newScriptColumnTypeDuplicatesVal)
+            {
+                for (int i = scriptColumnTypeDuplicates; i > newScriptColumnTypeDuplicatesVal; i--)
+                {
+                    //formatted int is not +1 because it is decremented after the loop
+                    int fj = i;
+
+                    Types.Remove("Auto Table Constructor Script" + fj.ToString());
+                    Types.Remove("Auto Table Constructor Script Receiver" + fj.ToString());
+                    //remove type from shorthand and validType Dicts:
+                    AutoTableConstructorScriptFunct.columnTypeShorthandDict.Remove("A" + fj.ToString());
+                    AutoTableConstructorScriptFunct.columnCellValueValidType.Remove("Auto Table Constructor Script Receiver" + fj.ToString());
+                }
+            }
+
+            scriptColumnTypeDuplicates = newScriptColumnTypeDuplicatesVal;
+
+            Program.SaveConfigurationFile();
+
+
+
+        } 
+
+
         internal static dynamic GetDefaultColumnValue(string colType)
         {
             dynamic defaultVal = null;
-            switch (colType) 
+
+            if (colType == "Bool"){
+                defaultVal = false;
+               
+            }
+            else if (colType == "SubTable")
             {
-                case "Bool":
-                    defaultVal = false;
-                    break;
+                defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
+            }
+            else if (Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
+            {
+                defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
+            }
 
-                case "SubTable":
-                    defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
-                    break;
-
-                case "Auto Table Constructor Script Receiver":
-                    defaultVal = new Dictionary<int, Dictionary<string, dynamic>>();
-                    break;
+               
                 
-            };
+            
                 
             
 
@@ -255,7 +300,7 @@ namespace MDB
                     value = (int)a;
                 }
             }
-            else if (colType == "Auto Table Constructor Script" && value != null)
+            else if (Regex.IsMatch(colType, @"Auto Table Constructor Script\d*$") && value != null)
             {
 
                 string scriptError = AutoTableConstructorScriptFunct.ValidateScript(value);

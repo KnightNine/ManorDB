@@ -119,6 +119,9 @@ namespace MDB
         static Color darkDisabledCell = Color.Maroon;
         static Color darkSelectedDisabledCell = Color.Crimson;
 
+        static Color darkUnfulfilledDependencyCell = System.Drawing.ColorTranslator.FromHtml("#1e7272");
+        static Color darkSelectedUnfulfilledDependencyCell = System.Drawing.ColorTranslator.FromHtml("#1e7272");
+
         static Color darkInvalidCellOutline = Color.Red;
 
         static Color darkDisabledText = Color.Gray;
@@ -231,6 +234,9 @@ namespace MDB
         static Color lightDisabledCell = Color.Maroon;
         static Color lightSelectedDisabledCell = Color.Crimson;
 
+        static Color lightUnfulfilledDependencyCell = Color.DimGray;
+        static Color lightSelectedUnfulfilledDependencyCell = Color.DarkGray;
+
         static Color lightInvalidCellOutline = Color.Red;
 
         static Color lightDisabledText = Color.Gray;
@@ -272,6 +278,10 @@ namespace MDB
                     {"Disabled",darkDisabledCell },
                     {"DisabledText",darkDisabledText },
                     {"DisabledSelected",darkSelectedDisabledCell },
+
+                    {"UnfulfilledDependency", darkUnfulfilledDependencyCell },
+                    {"UnfulfilledDependencySelected", darkSelectedUnfulfilledDependencyCell },
+
                     { "InvalidCellOutline",darkInvalidCellOutline},
                     {"TabStyle", System.Windows.Forms.TabStyle.ManorDB },
                     {"TabTextColor",  darkTabText},
@@ -306,6 +316,10 @@ namespace MDB
                     {"Disabled",lightDisabledCell },
                     {"DisabledText",lightDisabledText },
                     {"DisabledSelected",lightSelectedDisabledCell },
+
+                    {"UnfulfilledDependency", lightUnfulfilledDependencyCell },
+                    {"UnfulfilledDependencySelected", lightSelectedUnfulfilledDependencyCell },
+
                     { "InvalidCellOutline",lightInvalidCellOutline},
                     {"TabStyle", System.Windows.Forms.TabStyle.VisualStudio },
                     {"TabTextColor",  lightTabText},

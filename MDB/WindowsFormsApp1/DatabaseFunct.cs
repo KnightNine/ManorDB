@@ -30,6 +30,9 @@ namespace MDB
         public static string RegexRefrenceTableConstructorDataRefrence = "@RegexRefrenceTableConstructorData";
 
         public static string ScriptReceiverLinkToRefrenceColumnExt = ".RefrenceColumnLinked";
+        public static string ScriptReceiverScriptColumnExt = ".ScriptColumnLinked";
+
+        public static string TypeIndexRefrence = "@TypeIndex";
 
         public static string selectedTable = "";
 

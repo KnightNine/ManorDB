@@ -47,6 +47,9 @@ namespace MDB
             this.newTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideUnhideColumnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.scriptSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editScriptPrefabsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setScriptColumnDuplicatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -54,7 +57,6 @@ namespace MDB
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.customTabControl1 = new System.Windows.Forms.CustomTabControl();
-            this.editScriptPrefabsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -66,7 +68,7 @@ namespace MDB
             this.newTableToolStripMenuItem,
             this.removeTableToolStripMenuItem,
             this.hideUnhideColumnsToolStripMenuItem,
-            this.editScriptPrefabsToolStripMenuItem});
+            this.scriptSettingsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(2, 1, 0, 1);
@@ -126,6 +128,29 @@ namespace MDB
             this.hideUnhideColumnsToolStripMenuItem.Text = "Hide/Unhide Columns";
             this.hideUnhideColumnsToolStripMenuItem.Click += new System.EventHandler(this.hideUnhideColumnsToolStripMenuItem_Click);
             // 
+            // scriptSettingsToolStripMenuItem
+            // 
+            this.scriptSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editScriptPrefabsToolStripMenuItem,
+            this.setScriptColumnDuplicatesToolStripMenuItem});
+            this.scriptSettingsToolStripMenuItem.Name = "scriptSettingsToolStripMenuItem";
+            this.scriptSettingsToolStripMenuItem.Size = new System.Drawing.Size(94, 22);
+            this.scriptSettingsToolStripMenuItem.Text = "Script Settings";
+            // 
+            // editScriptPrefabsToolStripMenuItem
+            // 
+            this.editScriptPrefabsToolStripMenuItem.Name = "editScriptPrefabsToolStripMenuItem";
+            this.editScriptPrefabsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.editScriptPrefabsToolStripMenuItem.Text = "Edit Script Prefabs";
+            this.editScriptPrefabsToolStripMenuItem.Click += new System.EventHandler(this.editScriptPrefabsToolStripMenuItem_Click);
+            // 
+            // setScriptColumnDuplicatesToolStripMenuItem
+            // 
+            this.setScriptColumnDuplicatesToolStripMenuItem.Name = "setScriptColumnTypeDuplicatesToolStripMenuItem";
+            this.setScriptColumnDuplicatesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.setScriptColumnDuplicatesToolStripMenuItem.Text = "Set Script Column Type Duplicates";
+            this.setScriptColumnDuplicatesToolStripMenuItem.Click += new System.EventHandler(this.setScriptColumnTypeDuplicatesToolStripMenuItem_Click);
+            // 
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -146,7 +171,7 @@ namespace MDB
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel1.BackColor = System.Drawing.Color.Transparent;
             this.panel1.Location = new System.Drawing.Point(368, 164);
-            this.panel1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.panel1.Margin = new System.Windows.Forms.Padding(1);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(0, 0);
             this.panel1.TabIndex = 2;
@@ -206,20 +231,13 @@ namespace MDB
             this.customTabControl1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.customTabControl1.HotTrack = true;
             this.customTabControl1.Location = new System.Drawing.Point(0, 420);
-            this.customTabControl1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.customTabControl1.Margin = new System.Windows.Forms.Padding(1);
             this.customTabControl1.Name = "customTabControl1";
             this.customTabControl1.SelectedIndex = 0;
             this.customTabControl1.Size = new System.Drawing.Size(706, 25);
             this.customTabControl1.TabIndex = 0;
             this.customTabControl1.SelectedIndexChanged += new System.EventHandler(this.customTabControl1_SelectedIndexChanged);
             this.customTabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.customTabControl1_MouseDown);
-            // 
-            // editScriptPrefabsToolStripMenuItem
-            // 
-            this.editScriptPrefabsToolStripMenuItem.Name = "editScriptPrefabsToolStripMenuItem";
-            this.editScriptPrefabsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.editScriptPrefabsToolStripMenuItem.Text = "Edit Script Prefabs";
-            this.editScriptPrefabsToolStripMenuItem.Click += new System.EventHandler(this.editScriptPrefabsToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -235,7 +253,7 @@ namespace MDB
             this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.Margin = new System.Windows.Forms.Padding(1);
             this.Name = "Form1";
             this.Text = "ManorDB";
             this.menuStrip1.ResumeLayout(false);
@@ -270,7 +288,9 @@ namespace MDB
         private TabPage tabPage1;
         private TabPage tabPage2;
         public CustomTabControl customTabControl1;
+        private ToolStripMenuItem scriptSettingsToolStripMenuItem;
         private ToolStripMenuItem editScriptPrefabsToolStripMenuItem;
+        private ToolStripMenuItem setScriptColumnDuplicatesToolStripMenuItem;
     }
 
 
@@ -738,6 +758,11 @@ namespace MDB
             {
                 CheckBox1.Text = checkBoxText;
                 prompt.Controls.Add(CheckBox1);
+            }
+            else
+            {
+                //add more room for label above
+                textBox.Top += 20;
             }
 
 

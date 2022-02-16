@@ -132,6 +132,10 @@ namespace MDB
                     value = scriptPrefabDict[strippedkey];
                     
                 }
+                else
+                {
+                    MessageBox.Show("Script Prefabs does not contain key: \"" + strippedkey + "\"");
+                }
 
                 //replace all instances of this key with the designated value
                 _script = _script.Replace(key, value);
@@ -245,7 +249,7 @@ namespace MDB
         }
 
 
-        public static void LoadConstructedColumn(string colName, string colType, CustomDataGridView DGV, Dictionary<int, Dictionary<string, dynamic>> tableData, Tuple<string,dynamic> additionalColumnData)
+        public static void LoadConstructedColumn(string colName, string colType, CustomDataGridView DGV, Dictionary<int, Dictionary<string, dynamic>> tableData, List<Tuple<string,dynamic>> additionalColumnData)
         {
 
 
@@ -257,11 +261,13 @@ namespace MDB
             Dictionary<string, dynamic>  colTag = new Dictionary<string, dynamic>();
 
             //store additional data specific to certain column types
-            if (additionalColumnData != null)
+            foreach(Tuple<string,dynamic> KV in additionalColumnData)
             {
 
+            
 
-                colTag.Add(additionalColumnData.Item1,additionalColumnData.Item2);
+
+                colTag.Add(KV.Item1, KV.Item2);
                 
             }
 
@@ -495,16 +501,16 @@ namespace MDB
 
 
                 //add subtableConstructorScript to tag if type is SubTable
-                Tuple<string, dynamic> additionalColumnData = null;
+                List<Tuple<string, dynamic>> additionalColumnData = new List<Tuple<string, dynamic>>();
 
                 if (columnType == "SubTable")
                 {
                     string subtableConstructorScript = subtableScripts[subtableScriptIndex].Value;
 
-                    additionalColumnData = new Tuple<string, dynamic>("subtableConstructorScript", subtableConstructorScript);
+                    additionalColumnData.Add(new Tuple<string, dynamic>("subtableConstructorScript", subtableConstructorScript));
                     subtableScriptIndex += 1;
                 }
-                else if (columnType == "Auto Table Constructor Script Receiver")
+                else if (Regex.IsMatch(columnType, @"Auto Table Constructor Script Receiver\d*$"))
                 {
                     //get string within <>
                     MatchCollection matchCollection = Regex.Matches(columnDat[2].Trim(), @"(?<=\<)[^<>]*(?=\>)");
@@ -514,7 +520,14 @@ namespace MDB
                         linkedFKeyRefrenceColumnNameData.Add(match.Value);
                     }
 
-                    additionalColumnData = new Tuple<string, dynamic>(DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt, linkedFKeyRefrenceColumnNameData);
+                    additionalColumnData.Add(new Tuple<string, dynamic>(DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt, linkedFKeyRefrenceColumnNameData));
+
+                    int typeIndex = -1;
+                    if (Regex.IsMatch(columnType, @"\d+$"))
+                    {
+                        typeIndex = Int32.Parse(Regex.Match(columnType, @"\d+$").Value);
+                    }
+                    additionalColumnData.Add(new Tuple<string, dynamic>(DatabaseFunct.TypeIndexRefrence, typeIndex ));
 
                 }
                 else if (columnType == "Foreign Key Refrence")
@@ -522,14 +535,14 @@ namespace MDB
                     //get string within <>
                     string tableBeingRefrenced = Regex.Match(columnDat[2].Trim(), @"(?<=\<)[^<>]*(?=\>)").Value;
 
-                    additionalColumnData = new Tuple<string, dynamic>(DatabaseFunct.RefrenceColumnKeyExt, tableBeingRefrenced);
+                    additionalColumnData.Add(new Tuple<string, dynamic>(DatabaseFunct.RefrenceColumnKeyExt, tableBeingRefrenced));
                 }
                 else if (columnType == "Parent Subtable Foreign Key Refrence")
                 {
                     //get string within <>
                     string outwardDirectory = Regex.Match(columnDat[2].Trim(), @"(?<=\<)[^<>]*(?=\>)").Value;
 
-                    additionalColumnData = new Tuple<string, dynamic>(DatabaseFunct.ParentSubTableRefrenceColumnKeyExt, outwardDirectory);
+                    additionalColumnData.Add(new Tuple<string, dynamic>(DatabaseFunct.ParentSubTableRefrenceColumnKeyExt, outwardDirectory));
                 }
 
                 LoadConstructedColumn(columnName, columnType,DGV,tableData, additionalColumnData);
@@ -738,7 +751,7 @@ namespace MDB
 
 
                     }
-                    else if (columnType == "Auto Table Constructor Script Receiver")
+                    else if (Regex.IsMatch(columnType, @"Auto Table Constructor Script Receiver\d*$"))
                     {
                         //get string within <>
                         
@@ -973,19 +986,23 @@ namespace MDB
 
             //get foreign key refrence column(s) this column is linked to 
             dynamic linkedFKeyRefrenceColumnNameData;
+            //get the index offset of the column type
+            int typeIndex = -1;
             //get the tables and PKs being refrenced by foreign key refrence columns
+            //<linkedFKeyRefrenceColumnName, tableName, tablePKSelected >
             List<Tuple<string,string,string>> tableRowsBeingRefrenced = new List<Tuple<string, string, string>>();
 
             if (isConstructed)
             {
                 Dictionary<string, dynamic> colTag = senderDGV.Columns[colName].Tag as Dictionary<string, dynamic>;
                 linkedFKeyRefrenceColumnNameData = colTag[DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
-                
+                //type index is stored in colTag
+                typeIndex= colTag[DatabaseFunct.TypeIndexRefrence];
 
 
 
-                
-                foreach(string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
+
+                foreach (string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
                 {
                     
 
@@ -1002,6 +1019,14 @@ namespace MDB
             }
             else
             {
+                //get type index
+                string type = DatabaseFunct.currentData[tableKey][colName];
+                if (Regex.IsMatch(type,@"\d+$"))
+                {
+                    typeIndex = Int32.Parse(Regex.Match(type, @"\d+$").Value);
+                }
+                //--------------
+
                 linkedFKeyRefrenceColumnNameData = DatabaseFunct.currentData[tableKey][colName + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
                 //convert to list from string for backwards compatablity
                 if (linkedFKeyRefrenceColumnNameData is string)
@@ -1051,7 +1076,7 @@ namespace MDB
                             {
                                 primaryKeyColumnName = KV.Key;
                             }
-                            else if (KV.Value == "Auto Table Constructor Script")
+                            else if (KV.Value == "Auto Table Constructor Script" + (typeIndex == -1? "" : typeIndex.ToString()))
                             {
                                 autoTableConstructorScriptColumnName = KV.Key;
                             }
@@ -1066,7 +1091,7 @@ namespace MDB
                     {
                         if (!DatabaseFunct.loadingTable)
                         {
-                            MessageBox.Show("There is no Auto Table Constructor Script column in the main table being refrenced by the \"" + linkedFKeyRefrenceColumnName + "\" Column that this Auto Table Constructor Script Receiver Column is linked to.");
+                            MessageBox.Show("There is no Auto Table Constructor Script"+ (typeIndex == -1 ? "" : typeIndex.ToString()) + " column in the main table being refrenced by the \"" + linkedFKeyRefrenceColumnName + "\" Column that this Auto Table Constructor Script Receiver"+ (typeIndex == -1 ? "" : typeIndex.ToString()) + " Column is linked to.");
                         }
                         return null;
                     }
@@ -1074,7 +1099,7 @@ namespace MDB
                     {
                         if (!DatabaseFunct.loadingTable)
                         {
-                            MessageBox.Show(" there is no Primary Key column in the main table being refrenced by the \"" + linkedFKeyRefrenceColumnName + "\" Column that this Auto Table Constructor Script Receiver Column is linked to.");
+                            MessageBox.Show(" there is no Primary Key column in the main table being refrenced by the \"" + linkedFKeyRefrenceColumnName + "\" Column that this Auto Table Constructor Script Receiver" + (typeIndex == -1 ? "" : typeIndex.ToString()) + " Column is linked to.");
                         }
 
                         return null;
@@ -1103,7 +1128,7 @@ namespace MDB
                         {
                             if (!DatabaseFunct.loadingTable)
                             {
-                                MessageBox.Show(" the Primary Key selected within the \"" + linkedFKeyRefrenceColumnName + "\" Column, that this Auto Table Constructor Script Receiver Column is linked to, doesn't exist within the main table (" + tableBeingRefrenced + ") the column is refrencing.");
+                                MessageBox.Show(" the Primary Key selected within the \"" + linkedFKeyRefrenceColumnName + "\" Column, that this Auto Table Constructor Script Receiver" + (typeIndex == -1 ? "" : typeIndex.ToString()) + " Column is linked to, doesn't exist within the main table (" + tableBeingRefrenced + ") the column is refrencing.");
                             }
                             return null;
                         }
@@ -1116,7 +1141,7 @@ namespace MDB
                             {
                                 if (!DatabaseFunct.loadingTable)
                                 {
-                                    MessageBox.Show("the Auto Table Constructor Script in Table: " + tableBeingRefrenced + ", at Column: " + autoTableConstructorScriptColumnName + ", with Primary Key: " + tablePKSelected + ", being refrenced has error(s): \n\n" + scriptError);
+                                    MessageBox.Show("the Auto Table Constructor Script" + (typeIndex == -1 ? "" : typeIndex.ToString()) + " in Table: " + tableBeingRefrenced + ", at Column: " + autoTableConstructorScriptColumnName + ", with Primary Key: " + tablePKSelected + ", being refrenced has error(s): \n\n" + scriptError);
                                 }
                                 return null;
                             }
@@ -1168,7 +1193,7 @@ namespace MDB
                             linkedColumnsList += "\"" + linkedFKeyRefrenceColumnName + "\",";
                         }
                         linkedColumnsList = linkedColumnsList.TrimEnd(new char[] { ',' });
-                        MessageBox.Show("there is no Primary Key selected across the [" + linkedColumnsList + "] Column(s) that this Auto Table Constructor Script Receiver Column is linked to.");
+                        MessageBox.Show("there is no Primary Key selected across the [" + linkedColumnsList + "] Column(s) that this Auto Table Constructor Script Receiver" + (typeIndex == -1 ? "" : typeIndex.ToString()) + " Column is linked to.");
                     }
                     else
                     {

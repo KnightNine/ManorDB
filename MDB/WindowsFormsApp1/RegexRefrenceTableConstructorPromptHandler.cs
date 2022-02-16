@@ -31,17 +31,15 @@ namespace MDB
     A function looks like this in the script file: "func function_name():" and this will match "function_name" if the previous line doesn't contain "#-hide-" nor will it match if the line is commented out with '#' at its start:
     "(?m)(?<=(?<!#-hide-\s*[\r\n]+|#)func\s+).+?(?=\s*\()"
 
-    - and this one is to match the Auto Table Contructor Script that will be used in setting the static Params (parameters that are function specific)
+    - this one is to match the Auto Table Contructor Script that will be used in setting the static Params (parameters that are function specific)
     The description looks like this in the script file: "static_param_table_constructor_script: {data}" and the matched text is "data". (if the line isn't commented out with '#')
     "(?<=(?<!#+\s*)static_param_table_constructor_script:\s*\{).*(?=\})"
 
-    
+    - and this one is to match the Auto Table Contructor Script that will be used in setting the inputs (parameters that are function specific)
+    The description looks like this in the script file: "input_table_constructor_script: {data}" and the matched text is "data". (if the line isn't commented out with '#')
+    "(?<=(?<!#+\s*)input_table_constructor_script:\s*\{).*(?=\})"
 
     ------------------other regex i'll be using-----------------------
-
-    "(?<=(?<!#+\s*)required_inputs:\s*)\[.*\]"
-
-    "(?<=(?<!#+\s*)optional_inputs:\s*)\[.*\]"
 
 
     "(?<=(?<!#+\s*)is_selection_dependent:\s*\[).*(?=\])"
@@ -207,6 +205,8 @@ namespace MDB
             //construct table
             if (fileText != null)
             {
+                int ATCSIndex = 0;
+
                 //add in order of column order list
                 foreach (string colKey in RegexRefrenceTableConstructorData[ColumnOrderRefrence])
                 {
@@ -221,7 +221,8 @@ namespace MDB
                     }
                     else if (columnConstructorData["isATCS"])
                     {
-                        columnType = "Auto Table Constructor Script";
+                        columnType = "Auto Table Constructor Script" + (ATCSIndex == 0 ? "" : ATCSIndex.ToString());
+                        ATCSIndex++;
                     }
 
                     string colName = colKey;
@@ -260,6 +261,11 @@ namespace MDB
 
 
 
+                }
+                if (ATCSIndex - 1 > ColumnTypes.scriptColumnTypeDuplicates)
+                {
+                    MessageBox.Show("Increasing the number of Script Column Type Duplicates to accomodate for the number of Auto Table Constructor Script Columns defined.");
+                    ColumnTypes.SetScriptColumnTypeDuplicates(ATCSIndex);
                 }
             }
 
@@ -332,6 +338,8 @@ namespace MDB
                 ColOrderList.Clear();
 
 
+                int ATCSIndex = 0;
+
                 //add in order of column order list
                 foreach (string colKey in ColList)
                 {
@@ -346,7 +354,8 @@ namespace MDB
                     }
                     else if (columnConstructorData["isATCS"])
                     {
-                        columnType = "Auto Table Constructor Script";
+                        columnType = "Auto Table Constructor Script"+ (ATCSIndex == 0? "":ATCSIndex.ToString());
+                        ATCSIndex++;
                     }
 
                     //add column if it doesn't exist yet
@@ -399,6 +408,13 @@ namespace MDB
 
 
                 }
+
+                if (ATCSIndex-1 > ColumnTypes.scriptColumnTypeDuplicates)
+                {
+                    MessageBox.Show("Increasing the number of Script Column Type Duplicates to accomodate for the number of Auto Table Constructor Script Columns defined in File Regex Reference Table \"" + mainTableKey + "\"");
+                    ColumnTypes.SetScriptColumnTypeDuplicates(ATCSIndex);
+                }
+
             }
 
 

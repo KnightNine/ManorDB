@@ -132,8 +132,6 @@
   <data name="label3.Text" xml:space="preserve">
     <value>Each row in the DataGridView below represents a column in this File Regex Refrence Table.
 The Regex in each row is used to gather matches from the file (or files within a folder directory) and add them as entries for the column in question.
-
-
-</value>
+If Multiple AutoTableConstructorScript Columns are defined,  each one after the first is defined as a duplicate script column type that are indexed sequentially.</value>
   </data>
 </root>

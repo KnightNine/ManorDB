@@ -57,316 +57,327 @@ namespace MDB
                         }
                         else // if adding a new column
                         {
-                            switch (colType)
+                            
+
+
+
+
+
+                            if (Regex.IsMatch(colType, @"Auto Table Constructor Script\d*$"))
                             {
 
-                            
-                            
-                                case "Auto Table Constructor Script":
                                 
-                                    // make sure this is the main dgv and not a subtable
-                                    if (DGV == Program.mainForm.TableMainGridView)
-                                    {
-                                        if (!currentData[tableKey].ContainsValue("Auto Table Constructor Script"))
-                                        {
-                                            valid = true;
-                                        }
-                                        else
-                                        {
 
-                                            System.Windows.Forms.MessageBox.Show("There is already an Auto Table Constructor Script Column in this Table!");
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        //currently there's no support for refrencing scripts from a Parent Subtable Foreign Key Refrence column
-                                        System.Windows.Forms.MessageBox.Show("An Auto Table Constructor Script must be placed in the Main Table and not in a Sub Table!");
-                                    }
-                                    break;
-                                
-                                case "Auto Table Constructor Script Receiver":
-                                
-                                    //check if a foreign key refrence exists in the same table to link to
-                                    List<string> foreignKeyRefrenceColumnsInTable = new List<string>();
-                                    foreach (KeyValuePair<string, dynamic> KV in currentData[tableKey])
-                                    {
-                                        if (KV.Value is string && KV.Value == "Foreign Key Refrence")
-                                        {
-                                            //add to valid columns to link to
-                                            foreignKeyRefrenceColumnsInTable.Add(KV.Key);
-
-                                        }
-                                    }
-
-                                    List<string> linkedFKeyRefrenceColumnNameData = new List<string>();
-
-                                    if (foreignKeyRefrenceColumnsInTable.Count > 0)
-                                    {
-                                        // if refrenceColumnLinkedTo doesn't already exist
-                                        if (!currentData[tableKey].ContainsKey((dynamic)(colName + ScriptReceiverLinkToRefrenceColumnExt)))
-                                        {
-                                            bool linkAgain = true;
-                                            
-                                            
-                                            Tuple<string,List<string>> input = MultiSelectPrompt.Show("Choose Foreign Key Refrence Columns to link to.", "Create Auto Table Constructor Script Receiver Column", foreignKeyRefrenceColumnsInTable.ToArray(),"Link Column");
-                                            linkedFKeyRefrenceColumnNameData = input.Item2;
-
-                                            //if input prompt was closed
-                                            if (input.Item1 == "F")
-                                            {
-                                                MessageBox.Show("Auto Table Constructor Script Receiver column creation canceled.");
-                                                return;
-                                            }
-
-                                            if (linkedFKeyRefrenceColumnNameData.Count == 0)
-                                            {
-                                                MessageBox.Show("One or more column links must be selected.");
-                                                return;
-                                            }
-
-                                            
-                                            
-
-                                            
-                                            
-
-                                        }
-                                        else
-                                        {
-                                            linkedFKeyRefrenceColumnNameData = currentData[tableKey][colName + ScriptReceiverLinkToRefrenceColumnExt];
-                                        }
-
-                                        string linkError = "";
-                                        bool allLinkedColumnsValid = true;
-                                        foreach (string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
-                                        {
-
-
-                                            //cancel creation if an invalid selection made
-                                            if (!currentData[tableKey].ContainsKey(linkedFKeyRefrenceColumnName) || currentData[tableKey][linkedFKeyRefrenceColumnName] != "Foreign Key Refrence" || !foreignKeyRefrenceColumnsInTable.Contains(linkedFKeyRefrenceColumnName))
-                                            {
-                                                //this shouldn't happen with normal use
-                                                linkError += "INTERNAL ERROR:  the foreign key refrence column, \"" + linkedFKeyRefrenceColumnName + "\", that you are linking this column to is invalid! \n";
-                                                return;
-                                            }
-                                            else
-                                            {
-                                                string tableKeyBeingRefrenced = currentData[tableKey][linkedFKeyRefrenceColumnName + RefrenceColumnKeyExt];
-                                                bool refrencedTableContainsScript = false;
-                                                //now check if the selected refrenceColumnLinkedTo is refrencing a table with a "Auto Table Constructor Script" column
-                                                foreach (KeyValuePair<string, dynamic> KV in currentData[tableKeyBeingRefrenced])
-                                                {
-                                                    if (KV.Value is string && KV.Value == "Auto Table Constructor Script")
-                                                    {
-                                                        refrencedTableContainsScript = true;
-                                                    }
-                                                }
-
-                                                if (!refrencedTableContainsScript)
-                                                {
-                                                    linkError += "the foreign key refrence column, \"" + linkedFKeyRefrenceColumnName + "\", that you are linking this column to does not contain a \"Auto Table Constructor Script Column\" within it's referenced table to read from! \n";
-                                                }
-                                            }
-                                            
-                                            
-                                        }
-                                            
-
-                                        if (String.IsNullOrEmpty(linkError))
-                                        {
-
-                                            // add the column
-                                            valid = true;
-                                            //store the linked column in current data
-                                            currentData[tableKey][colName + ScriptReceiverLinkToRefrenceColumnExt] = linkedFKeyRefrenceColumnNameData;
-                                        }
-                                        else
-                                        {
-                                            
-                                            System.Windows.Forms.MessageBox.Show(linkError);
-                                            
-
-                                        }
-
-
-                                    }
-                                    else
-                                    {
-                                        
-                                        
-                                        System.Windows.Forms.MessageBox.Show("the table you are adding this column to must also contain a \"Foreign Key Refrence Column\" to link this column to!");
-                                        
-                                    }
-
-
-
-
-
-                                    break;
-                                case "Foreign Key Refrence":
-                                
-                                    string tableRefrence = "";
-
-                                    string[] MainTables = GetMainTableKeys();
-
-                                    //if no valid refrence already exists
-                                    if (!currentData[tableKey].ContainsKey((dynamic)(colName + RefrenceColumnKeyExt)))
-                                    {
-
-                                        string[] input = Prompt.ShowDialog("Choose a table to refrence from.", "Create Refrence Column", false,null, true, MainTables.ToArray(), false, null);
-                                        tableRefrence = input[2];
-                                    }
-                                    else
-                                    {
-                                        tableRefrence = currentData[tableKey][colName + RefrenceColumnKeyExt];
-                                    }
-
-
-                                    if (tableRefrence != null && MainTables.Contains(tableRefrence) )
-                                    {
-                                        if (currentData[tableRefrence].ContainsValue("Primary Key") )
-                                        {
-
-                                            valid = true;
-                                            //changes made to currentdata can't happen when loading a table
-                                            
-                                            //add refrence kv pair
-
-                                            currentData[tableKey][colName + RefrenceColumnKeyExt] = tableRefrence;
-
-                                            
-
-
-
-
-
-                                        }
-                                        else
-                                        {
-                                            System.Windows.Forms.MessageBox.Show("that table doesn't have a Primary Key column!");
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        System.Windows.Forms.MessageBox.Show("that table doesn't exist!");
-
-                                    }
-
-
-
-
-
-                                    break;
-                                case "Parent Subtable Foreign Key Refrence":
-                                
-                                    string parentSubtableRefrence = "";
-
-                                    List<string> ParentSubTables = new List<string>();
-                                    string subjectTableKey = tableKey.Clone().ToString();
-
-                                    //look through parent table levels starting from current table level
-                                    while (subjectTableKey != "")
-                                    {
-                                        Console.WriteLine(subjectTableKey);
-                                        foreach (string key in currentData[subjectTableKey].Keys)
-                                        {
-                                            Console.WriteLine(key);
-                                            Console.WriteLine(currentData[subjectTableKey][key]);
-                                            Console.WriteLine("--");
-                                            if (currentData[subjectTableKey][key.ToString()] is String && currentData[subjectTableKey][key.ToString()] == "SubTable")
-                                            {
-
-                                                ParentSubTables.Add(subjectTableKey + "/" + key.ToString());
-                                            }
-
-                                        }
-                                        Console.WriteLine("-----");
-
-                                        //remove everything after and including last '/'
-                                        if (subjectTableKey.Contains("/"))
-                                        {
-                                            string regex = "/(?!.*/).*";
-                                            subjectTableKey = Regex.Replace(subjectTableKey, regex, "");
-                                        }
-                                        else
-                                        {
-                                            subjectTableKey = "";
-                                        }
-
-
-
-                                    }
-
-                                    //if no valid refrence already exists
-                                    if (!currentData[tableKey].ContainsKey((dynamic)(colName + ParentSubTableRefrenceColumnKeyExt)))
-                                    {
-
-                                        string[] input = Prompt.ShowDialog("Choose a subtable to refrence from.", "Create Parent SubTable Refrence Column", false,null, true, ParentSubTables.ToArray(), false, null);
-                                        parentSubtableRefrence = input[2];
-                                    }
-                                    else
-                                    {
-                                        parentSubtableRefrence = currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt];
-                                    }
-
-
-                                    if (parentSubtableRefrence != null && ParentSubTables.Contains(parentSubtableRefrence))
-                                    {
-                                        if (currentData[parentSubtableRefrence].ContainsValue("Primary Key"))
-                                        {
-
-                                            valid = true;
-                                            //changes made to currentdata can't happen when loading a table
-                                            
-                                            
-                                            //add refrence kv pair
-
-                                            currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt] = parentSubtableRefrence;
-
-                                            
-
-
-                                        }
-                                        else
-                                        {
-                                            System.Windows.Forms.MessageBox.Show("that subtable doesn't have a Primary Key column!");
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        System.Windows.Forms.MessageBox.Show("that table doesn't exist!");
-
-                                    }
-
-                                    break;
-                                case "SubTable":
-                                    
-                                    
-                                    valid = CreateSubTable(tableKey, colName);
-                                    
-
-
-                                    break;
-                                case "Primary Key":
-                                
-                                    if (!currentData[tableKey].ContainsValue("Primary Key"))
+                                // make sure this is the main dgv and not a subtable
+                                if (DGV == Program.mainForm.TableMainGridView)
+                                {
+                                    if (!currentData[tableKey].ContainsValue(colType))
                                     {
                                         valid = true;
                                     }
                                     else
                                     {
-                                        System.Windows.Forms.MessageBox.Show("this table already has a Primary Key Column!");
+
+                                        System.Windows.Forms.MessageBox.Show("There is already an "+ colType + " Column in this Table!");
                                     }
-                                    break;
-                                default:
-                                
+
+                                }
+                                else
+                                {
+                                    //currently there's no support for refrencing scripts from a Parent Subtable Foreign Key Refrence column
+                                    System.Windows.Forms.MessageBox.Show("An Auto Table Constructor Script must be placed in the Main Table and not in a Sub Table!");
+                                }
+                            }
+                            else if (Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$")) { 
+
+                                //check if a foreign key refrence exists in the same table to link to
+                                List<string> foreignKeyRefrenceColumnsInTable = new List<string>();
+                                foreach (KeyValuePair<string, dynamic> KV in currentData[tableKey])
+                                {
+                                    if (KV.Value is string && KV.Value == "Foreign Key Refrence")
+                                    {
+                                        //add to valid columns to link to
+                                        foreignKeyRefrenceColumnsInTable.Add(KV.Key);
+
+                                    }
+                                }
+
+                                List<string> linkedFKeyRefrenceColumnNameData = new List<string>();
+
+                                if (foreignKeyRefrenceColumnsInTable.Count > 0)
+                                {
+                                    // if refrenceColumnLinkedTo doesn't already exist
+                                    if (!currentData[tableKey].ContainsKey((dynamic)(colName + ScriptReceiverLinkToRefrenceColumnExt)))
+                                    {
+                                        bool linkAgain = true;
+
+
+                                        Tuple<string, List<string>> input = MultiSelectPrompt.Show("Choose Foreign Key Refrence Columns to link to.", "Create Auto Table Constructor Script Receiver Column", foreignKeyRefrenceColumnsInTable.ToArray(), "Link Column");
+                                        linkedFKeyRefrenceColumnNameData = input.Item2;
+
+                                        //if input prompt was closed
+                                        if (input.Item1 == "F")
+                                        {
+                                            MessageBox.Show("Auto Table Constructor Script Receiver column creation canceled.");
+                                            return;
+                                        }
+
+                                        if (linkedFKeyRefrenceColumnNameData.Count == 0)
+                                        {
+                                            MessageBox.Show("One or more column links must be selected.");
+                                            return;
+                                        }
+
+
+
+
+
+
+
+                                    }
+                                    else
+                                    {
+                                        linkedFKeyRefrenceColumnNameData = currentData[tableKey][colName + ScriptReceiverLinkToRefrenceColumnExt];
+                                    }
+
+                                    string linkError = "";
+                                    bool allLinkedColumnsValid = true;
+                                    foreach (string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
+                                    {
+
+
+                                        //cancel creation if an invalid selection made
+                                        if (!currentData[tableKey].ContainsKey(linkedFKeyRefrenceColumnName) || currentData[tableKey][linkedFKeyRefrenceColumnName] != "Foreign Key Refrence" || !foreignKeyRefrenceColumnsInTable.Contains(linkedFKeyRefrenceColumnName))
+                                        {
+                                            //this shouldn't happen with normal use
+                                            linkError += "The foreign key refrence column, \"" + linkedFKeyRefrenceColumnName + "\", that you are linking this column to is invalid!\n Column is either not of type \"Foreign Key Refrence\" or the column does not exst in TableData \n";
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            string tableKeyBeingRefrenced = currentData[tableKey][linkedFKeyRefrenceColumnName + RefrenceColumnKeyExt];
+                                            bool refrencedTableContainsScript = false;
+                                            //now check if the selected refrenceColumnLinkedTo is refrencing a table with a "Auto Table Constructor Script" column of the same index
+
+                                            //make sure the "Auto Table Constructor Script" column is of the same duplicate column type index
+                                            string typeIndexString = "";
+                                            if (Regex.IsMatch(colType, @"\d+$"))
+                                            {
+                                                typeIndexString = Regex.Match(colType, @"\d+$").Value;
+                                            }
+
+                                            foreach (KeyValuePair<string, dynamic> KV in currentData[tableKeyBeingRefrenced])
+                                            {
+                                                if (KV.Value is string && KV.Value == "Auto Table Constructor Script" + typeIndexString)
+                                                {
+                                                    refrencedTableContainsScript = true;
+                                                }
+                                            }
+
+                                            if (!refrencedTableContainsScript)
+                                            {
+                                                linkError += "the foreign key refrence column, \"" + linkedFKeyRefrenceColumnName + "\", that you are linking this column to does not contain a \"Auto Table Constructor Script Column"+ typeIndexString+ "\" within it's referenced table to read from! \n";
+                                            }
+                                        }
+
+
+                                    }
+
+
+                                    if (String.IsNullOrEmpty(linkError))
+                                    {
+
+                                        // add the column
+                                        valid = true;
+                                        //store the linked column in current data
+                                        currentData[tableKey][colName + ScriptReceiverLinkToRefrenceColumnExt] = linkedFKeyRefrenceColumnNameData;
+                                    }
+                                    else
+                                    {
+
+                                        System.Windows.Forms.MessageBox.Show(linkError);
+
+
+                                    }
+
+
+                                }
+                                else
+                                {
+
+
+                                    System.Windows.Forms.MessageBox.Show("the table you are adding this column to must also contain a \"Foreign Key Refrence Column\" to link this column to!");
+
+                                }
+
+
+
+
+
+                            }
+                            else if (colType == "Foreign Key Refrence") {
+
+                                string tableRefrence = "";
+
+                                string[] MainTables = GetMainTableKeys();
+
+                                //if no valid refrence already exists
+                                if (!currentData[tableKey].ContainsKey((dynamic)(colName + RefrenceColumnKeyExt)))
+                                {
+
+                                    string[] input = Prompt.ShowDialog("Choose a table to refrence from.", "Create Refrence Column", false, null, true, MainTables.ToArray(), false, null);
+                                    tableRefrence = input[2];
+                                }
+                                else
+                                {
+                                    tableRefrence = currentData[tableKey][colName + RefrenceColumnKeyExt];
+                                }
+
+
+                                if (tableRefrence != null && MainTables.Contains(tableRefrence))
+                                {
+                                    if (currentData[tableRefrence].ContainsValue("Primary Key"))
+                                    {
+
+                                        valid = true;
+                                        //changes made to currentdata can't happen when loading a table
+
+                                        //add refrence kv pair
+
+                                        currentData[tableKey][colName + RefrenceColumnKeyExt] = tableRefrence;
+
+
+
+
+
+
+
+                                    }
+                                    else
+                                    {
+                                        System.Windows.Forms.MessageBox.Show("that table doesn't have a Primary Key column!");
+                                    }
+
+                                }
+                                else
+                                {
+                                    System.Windows.Forms.MessageBox.Show("that table doesn't exist!");
+
+                                }
+
+
+
+
+
+                            }
+                            else if (colType == "Parent Subtable Foreign Key Refrence") {
+
+                                string parentSubtableRefrence = "";
+
+                                List<string> ParentSubTables = new List<string>();
+                                string subjectTableKey = tableKey.Clone().ToString();
+
+                                //look through parent table levels starting from current table level
+                                while (subjectTableKey != "")
+                                {
+                                    Console.WriteLine(subjectTableKey);
+                                    foreach (string key in currentData[subjectTableKey].Keys)
+                                    {
+                                        Console.WriteLine(key);
+                                        Console.WriteLine(currentData[subjectTableKey][key]);
+                                        Console.WriteLine("--");
+                                        if (currentData[subjectTableKey][key.ToString()] is String && currentData[subjectTableKey][key.ToString()] == "SubTable")
+                                        {
+
+                                            ParentSubTables.Add(subjectTableKey + "/" + key.ToString());
+                                        }
+
+                                    }
+                                    Console.WriteLine("-----");
+
+                                    //remove everything after and including last '/'
+                                    if (subjectTableKey.Contains("/"))
+                                    {
+                                        string regex = "/(?!.*/).*";
+                                        subjectTableKey = Regex.Replace(subjectTableKey, regex, "");
+                                    }
+                                    else
+                                    {
+                                        subjectTableKey = "";
+                                    }
+
+
+
+                                }
+
+                                //if no valid refrence already exists
+                                if (!currentData[tableKey].ContainsKey((dynamic)(colName + ParentSubTableRefrenceColumnKeyExt)))
+                                {
+
+                                    string[] input = Prompt.ShowDialog("Choose a subtable to refrence from.", "Create Parent SubTable Refrence Column", false, null, true, ParentSubTables.ToArray(), false, null);
+                                    parentSubtableRefrence = input[2];
+                                }
+                                else
+                                {
+                                    parentSubtableRefrence = currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt];
+                                }
+
+
+                                if (parentSubtableRefrence != null && ParentSubTables.Contains(parentSubtableRefrence))
+                                {
+                                    if (currentData[parentSubtableRefrence].ContainsValue("Primary Key"))
+                                    {
+
+                                        valid = true;
+                                        //changes made to currentdata can't happen when loading a table
+
+
+                                        //add refrence kv pair
+
+                                        currentData[tableKey][colName + ParentSubTableRefrenceColumnKeyExt] = parentSubtableRefrence;
+
+
+
+
+                                    }
+                                    else
+                                    {
+                                        System.Windows.Forms.MessageBox.Show("that subtable doesn't have a Primary Key column!");
+                                    }
+
+                                }
+                                else
+                                {
+                                    System.Windows.Forms.MessageBox.Show("that table doesn't exist!");
+
+                                }
+
+                            }
+                            else if (colType == "SubTable") {
+
+
+                                valid = CreateSubTable(tableKey, colName);
+
+
+
+                            }
+                            else if (colType == "Primary Key") {
+
+                                if (!currentData[tableKey].ContainsValue("Primary Key"))
+                                {
                                     valid = true;
-                                    break;
+                                }
+                                else
+                                {
+                                    System.Windows.Forms.MessageBox.Show("this table already has a Primary Key Column!");
+                                }
+                            }
+                            else {
+
+                                valid = true;
                             }
                         }
+                    
 
 
 
@@ -446,28 +457,38 @@ namespace MDB
                                     foreach (KeyValuePair<int, Dictionary<string, dynamic>> entryData in tableData)
                                     {
 
-                                        
-
-                                        
-
-                                        if (new string[3] { "Bool", "SubTable", "Auto Table Constructor Script Receiver" }.Contains(colType))
-                                        {
-                                            
-                                            //set cell tag to enabled
-                                            if (openDGVOfTable != null)
-                                            {
-                                                openDGVOfTable.Rows[entryData.Key].Cells[colName].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
-                                            }
 
 
 
-                                        }
+
+
 
                                         //define the default value
                                         dynamic defaultVal = ColumnTypes.GetDefaultColumnValue(colType);
                                         //add it to directory
                                         entryData.Value.Add(colName, defaultVal);
                                         //Program.mainForm.TableMainGridView.Rows[entryData.Key].Cells[colName].Value = null;
+
+                                        if (new string[2] { "Bool", "SubTable" }.Contains(colType) || Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
+                                        {
+
+                                            //set cell tag to enabled
+                                            if (openDGVOfTable != null)
+                                            {
+                                                openDGVOfTable.Rows[entryData.Key].Cells[colName].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
+                                            }
+
+                                            //set initial text color
+                                            UpdateReceiverCellUnfulfilledDependencyState(tableKey, colName, tableData, entryData.Key, DGV);
+
+
+                                            //set initial display value (encapsulated by enabling and disabling the loadingTable bool as to not trigger the CellValueChanged event)
+                                            loadingTable = true;
+                                            openDGVOfTable.Rows[entryData.Key].Cells[colName].Value = "empty";
+                                            loadingTable = false;
+
+                                        }
+
                                     }
                                 }
 
@@ -558,7 +579,7 @@ namespace MDB
                     List<string> removalList = new List<string>();
                     foreach (KeyValuePair<string,dynamic> KV in currentData[tableKey])
                     {
-                        if (KV.Value is string && KV.Value == "Auto Table Constructor Script Receiver")
+                        if (KV.Value is string && Regex.IsMatch(KV.Value, @"Auto Table Constructor Script Receiver\d*$"))
                         {
                             
                             
@@ -586,7 +607,7 @@ namespace MDB
                     currentData[tableKey].Remove(colName + ParentSubTableRefrenceColumnKeyExt);
 
                 }
-                else if (colType == "SubTable" || colType == "Auto Table Constructor Script Receiver")
+                else if (colType == "SubTable" || Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
                 {
                     string subTableKey = tableKey + "/" + colName;
 
@@ -631,7 +652,7 @@ namespace MDB
                             }
                         }
                     }
-                    else if (colType == "Auto Table Constructor Script Receiver")
+                    else if (Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
                     {
                         //remove the adjacent refrence column link data
                         currentData[tableKey].Remove(colName + ScriptReceiverLinkToRefrenceColumnExt);
@@ -820,7 +841,7 @@ namespace MDB
                             
                             foreach (KeyValuePair<string, dynamic> KV in currentData[tableKey])
                             {
-                                if (KV.Value is string && KV.Value == "Auto Table Constructor Script Receiver")
+                                if (KV.Value is string && Regex.IsMatch(KV.Value, @"Auto Table Constructor Script Receiver\d*$"))
                                 {
                                     dynamic linkedFKeyRefrenceColumnNameData = currentData[tableKey][KV.Key + ScriptReceiverLinkToRefrenceColumnExt];
                                     //convert to list from string for backwards compatablity
@@ -860,7 +881,7 @@ namespace MDB
 
                         }
                         //rename all data branching from the subtable if it is a subtable column being renamed
-                        else if (colType == "SubTable" || colType == "Auto Table Constructor Script Receiver")
+                        else if (colType == "SubTable" || Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
                         {
 
                             string oldStart = tableKey + "/" + colName + "/";
@@ -1304,7 +1325,7 @@ namespace MDB
 
 
                 //set cell tag to be enabled if it's one of these column types
-                if (new string[3] { "Bool", "SubTable", "Auto Table Constructor Script Receiver" }.Contains(colType))
+                if (new string[2] { "Bool", "SubTable" }.Contains(colType) || Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
                 {
                     DGV.Rows[index].Cells[column.Index].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
                 }
@@ -1549,11 +1570,12 @@ namespace MDB
                         
 
                     //if the column type is an Auto Table Constructor Script, confirm that the script is valid
-                    if (colType == "Auto Table Constructor Script" && value != null)
+                    if (Regex.IsMatch(colType,@"Auto Table Constructor Script\d*$") && value != null)
                     {
-                        
+
 
                         string scriptError = AutoTableConstructorScriptFunct.ValidateScript(value);
+                        
                         if (scriptError != "")
                         {
                             //give the cell a red outline
@@ -1613,11 +1635,11 @@ namespace MDB
 
                         //this is left null if isConstructed is false so that the subtable structure would be pulled from currentData instead.
                         string subtableConstructorScript = null;
-                        
-                        if (colType == "Auto Table Constructor Script Receiver") //get receiver script 
+
+                        if (Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$")) //get receiver script 
                         {
-                            
-                            subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, column.Name, tableData, rowIndex,DGV);
+                            //fetches constructor script regardless of being constructed or not
+                            subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, column.Name, tableData, rowIndex, DGV);
 
                             // if the primary key being refrenced is changed to a key that doesn't exist in the table being refrenced, set the subtableConstructorScript to be empty instead of null
                             // since giving a null subtableConstructorScript to GetSubTableCellDisplay() will cause issues
@@ -1627,6 +1649,11 @@ namespace MDB
                                 // and clear the constructed subtable's data
                                 tableData[rowIndex][column.Name].Clear();
                             }
+
+                            //get linked columns and grey out the cell if none of the linked columns are filled
+                            UpdateReceiverCellUnfulfilledDependencyState(tableKey, column.Name, tableData, rowIndex, DGV);
+
+
                         }
                         else if (isConstructed)
                         {

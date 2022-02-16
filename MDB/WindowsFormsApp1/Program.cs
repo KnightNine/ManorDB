@@ -23,7 +23,7 @@ namespace MDB
         //<<parentDGV,row>,<column,childDGV>> (only one subtable can be open at a time per row)
         public static Dictionary<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubTables = new Dictionary<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>>();
 
-        
+        private static int initialScriptColumnTypeDuplicates = 1;
 
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace MDB
             //get settings data
             LoadConfigurationFile();
 
-
+            
 
 
 
@@ -121,6 +121,9 @@ namespace MDB
             {
                 //convert dictionary to json string so that it can be stored as string
                 Properties.Settings.Default.scriptPrefabDict = Newtonsoft.Json.JsonConvert.SerializeObject(AutoTableConstructorScriptFunct.scriptPrefabDict);
+                //set initial script column type dupes
+                Properties.Settings.Default.scriptColumnTypeDuplicates = ColumnTypes.scriptColumnTypeDuplicates;
+
                 Properties.Settings.Default.Save();
             }
             catch
@@ -135,6 +138,8 @@ namespace MDB
             {
                 //convert dictionary from json string
                 AutoTableConstructorScriptFunct.scriptPrefabDict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string,string>>(Properties.Settings.Default.scriptPrefabDict);
+                //set initial script column type dupes
+                ColumnTypes.SetScriptColumnTypeDuplicates(Properties.Settings.Default.scriptColumnTypeDuplicates);
             }
             catch
             {

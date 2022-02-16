@@ -113,7 +113,7 @@ namespace MDB
             }
 
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Filter = "All Files (*.*)|*.*"; ;
+            openFileDialog1.Filter = "All Files (*.*)|*.*"; 
             openFileDialog1.FilterIndex = 1;
             openFileDialog1.InitialDirectory = InputOutput.selectedPath;
 
@@ -193,10 +193,7 @@ namespace MDB
                 {
                     isPrimaryKeyCheckBox.Enabled = true;
                 }
-                else if (RegexRefrenceTableConstructorPromptHandler.RegexRefrenceTableConstructorData[RegexRefrenceTableConstructorPromptHandler.ColumnDataRefrence][colName]["isATCS"])
-                {
-                    isAutoTableConstructorScriptCheckBox.Enabled = true;
-                }
+                
 
                 //delete the column from RegexRefrenceTableConstructorData
                 RegexRefrenceTableConstructorPromptHandler.RegexRefrenceTableConstructorData[RegexRefrenceTableConstructorPromptHandler.ColumnDataRefrence].Remove(colName);
@@ -271,10 +268,7 @@ namespace MDB
             {
                 isPrimaryKeyCheckBox.Enabled = false;
             }
-            else if (isATCS)
-            {
-                isAutoTableConstructorScriptCheckBox.Enabled = false;
-            }
+            
 
 
             //add the row to the DGV

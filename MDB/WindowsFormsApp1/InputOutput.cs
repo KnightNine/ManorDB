@@ -120,6 +120,8 @@ namespace MDB
 
             bool valid = true;
 
+            int LargestATCSDuplicateIndex = 0;
+
             //deserialize all dicts and values
             void subFunct(int tableLevel, dynamic currentTable)
             {
@@ -248,6 +250,19 @@ namespace MDB
                                 //int64s must be int32s to register properly
                                 tableLevelKVs[key] = (int)ct[key];
                             }
+                            else if (tableLevel == 1 && ct[key].GetType() == typeof(string))
+                            {
+                                //see if duplicate column types exist
+                                string x = (string)ct[key];
+                                if (Regex.IsMatch(x,@"Auto Table Constructor Script\d+$")|| Regex.IsMatch(x, @"Auto Table Constructor Script Receiver\d+$"))
+                                {
+                                    int duplicateVal = Int32.Parse(Regex.Match(x, @"\d+$").Value);
+                                    if (duplicateVal > LargestATCSDuplicateIndex)
+                                    {
+                                        LargestATCSDuplicateIndex = duplicateVal;
+                                    }
+                                }
+                            }
                             else
                             {
                                 //do nothing
@@ -303,6 +318,13 @@ namespace MDB
 
             if (valid)
             {
+
+                if (LargestATCSDuplicateIndex > ColumnTypes.scriptColumnTypeDuplicates)
+                {
+                    MessageBox.Show("Increasing the number of supported Script Column Type Duplicates to accomodate for the Script Column Type Duplicates defined in this .mdb file.");
+                    ColumnTypes.SetScriptColumnTypeDuplicates(LargestATCSDuplicateIndex);
+                }
+
 
 
                 DatabaseFunct.ClearMainTable();

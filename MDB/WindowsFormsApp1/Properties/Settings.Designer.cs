@@ -34,5 +34,17 @@ namespace MDB.Properties {
                 this["scriptPrefabDict"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int scriptColumnTypeDuplicates {
+            get {
+                return ((int)(this["scriptColumnTypeDuplicates"]));
+            }
+            set {
+                this["scriptColumnTypeDuplicates"] = value;
+            }
+        }
     }
 }

@@ -360,10 +360,7 @@ namespace MDB
                     }
 
 
-                    //look for Auto Table Constructor Script Receiver columns that link to this column and close their tables
-                    List<string> removalList = new List<string>();
-
-
+                    //look for Auto Table Constructor Script Receiver columns that link to this column and close their tables:
 
                     DatabaseFunct.loadingTable = true;
 
@@ -398,7 +395,7 @@ namespace MDB
 
                     foreach (KeyValuePair<string, dynamic> KV in relevantTableColumnData)
                     {
-                        if (KV.Value is string && KV.Value == "Auto Table Constructor Script Receiver")
+                        if (KV.Value is string && Regex.IsMatch(KV.Value, @"Auto Table Constructor Script Receiver\d*$"))
                         {
                             Console.WriteLine(KV.Key);
 
@@ -416,6 +413,7 @@ namespace MDB
                             {
                                 
                                 dynamic linkedFKeyRefrenceColumnNameData = relevantTableColumnData[KV.Key + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
+
                                 //convert to list from string for backwards compatablity
                                 if (linkedFKeyRefrenceColumnNameData is string)
                                 {
@@ -468,6 +466,9 @@ namespace MDB
                                 senderDGV.Rows[e.RowIndex].Cells[linkedColIndex].ToolTipText = senderDGV.Rows[e.RowIndex].Cells[linkedColIndex].Value.ToString();
 
 
+                                //update the receiver cell's UnfulfilledDependency state
+                                //get linked fkey columns and grey out the cell if none of the linked columns at the same row are filled
+                                DatabaseFunct.UpdateReceiverCellUnfulfilledDependencyState(tableKey, linkedColName, tableData, rowIndex, senderDGV);
 
 
                             }
@@ -985,17 +986,7 @@ namespace MDB
             
                 
                 
-            //fetch script for Auto Table Constructor Script Receiver column
-            if (colType == "Auto Table Constructor Script Receiver")
-            {
-
-                subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, colName, tableData, e.RowIndex,senderDGV);
-                //if tableConstructorScript is null then an error was shown and cancel function here
-                if (subtableConstructorScript == null)
-                {
-                    return;
-                }
-            }
+            
 
 
 
@@ -1023,10 +1014,22 @@ namespace MDB
                 
             if (isEnabled)
             {
-                
 
-                
-                if (colType == "SubTable" || colType == "Auto Table Constructor Script Receiver")
+                //fetch script for Auto Table Constructor Script Receiver column
+                if (Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
+                {
+
+                    subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, colName, tableData, e.RowIndex, senderDGV);
+                    //if tableConstructorScript is null then an error was shown and cancel function here
+                    if (subtableConstructorScript == null)
+                    {
+                        return;
+                    }
+                }
+
+
+
+                if (colType == "SubTable" || Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
                 {
                     
 
@@ -1501,6 +1504,37 @@ namespace MDB
             }
 
         }
+
+        private void setScriptColumnTypeDuplicatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string[] input = Prompt.ShowDialog("Edit the number of Script Column Type duplicates (they will appear as \"Auto Table Constructor Script\" and \"Auto Table Constructor Script Receiver\" + the duplicate iteration value when creating a new column.)", "Set Script Column Type Duplicates", true, ColumnTypes.scriptColumnTypeDuplicates.ToString(), false, null, false, null);
+
+            
+
+            if (input[0] == "T")
+            {
+                int val = -1;
+                if (Int32.TryParse(input[1], out val))
+                {
+                    if (val >= 0)
+                    {
+                        ColumnTypes.SetScriptColumnTypeDuplicates(val);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Value entered must be 0 or more.");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Value entered must be an integer.");
+                }
+
+            }
+            
+        }
+
+
 
 
 
