@@ -6,7 +6,7 @@ This Database Manager also has features which are unique to it for the purpose o
 </p>
 
 <h2>What it looks like :</h2>
-<p>New Dark Mode (Default)</p>
+<p>Dark Mode (Default)</p>
 <center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/darkmode.PNG" alt="Logo" width="900" > </center>
 <p>Light Mode (change "defaultTheme" string in ColorThemes.cs to "Light" if you want this, but it's a bit broken)</p>
 <center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/lightmode.PNG" alt="Logo" width="900" > </center>
