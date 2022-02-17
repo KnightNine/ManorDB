@@ -5,7 +5,7 @@ Open Source Json Database Manager Made in WinForms that copies <a href = "https:
 This Database Manager also has features which are unique to it for the purpose of further automating database management, features like: adding additional restrictions to how data can be entered, automatically constructed tables, and refrencing data from non-database files via regex.
 </p>
 
-<h2>What it looks like (outdated):</h2>
+<h2>What it looks like :</h2>
 <p>New Dark Mode (Default)</p>
 <center><img src="https://raw.githubusercontent.com/KnightNine/ManorDB/master/Images/darkmode.PNG" alt="Logo" width="900" > </center>
 <p>Light Mode (change "defaultTheme" string in ColorThemes.cs to "Light" if you want this)</p>
