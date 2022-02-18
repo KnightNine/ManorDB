@@ -34,23 +34,31 @@ namespace MDB
         //focus on cell hover:
         public void TableMainGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
+
+
+            
             CustomDataGridView senderDGV = sender as CustomDataGridView;
 
             //if cell content was in focus instead, winforms doesn't know if it was from this DGV or not
             //so instead of checking Focused, i'll check if the last focused DGV was this one
             //the ideal solution would be to disable this all together when cell content is brought into focus, but i'm unsure of when that happens so this will do for now.
 
-            
+                
 
+            
             if (lastFocusedDGV != senderDGV)
             {
-                    
+
 
                 Console.WriteLine("TMGV Focus");
                 lastFocusedDGV = senderDGV;
 
                 senderDGV.Focus();
             }
+            
+                
+            
+            
             
         }
 

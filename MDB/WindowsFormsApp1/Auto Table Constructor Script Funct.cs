@@ -640,9 +640,11 @@ namespace MDB
         //returns a string if there are errors in the script
         public static string ValidateScript(string script)
         {
+            
+            
 
-            //load prefabs
-            script = LoadScriptPefabs(script);
+
+            
 
 
             string error = "";
@@ -962,6 +964,9 @@ namespace MDB
             {
                 return error;
             }
+
+            //load prefabs
+            script = LoadScriptPefabs(script);
 
             recursiveScriptValidator(script, new List<string>() );
 
