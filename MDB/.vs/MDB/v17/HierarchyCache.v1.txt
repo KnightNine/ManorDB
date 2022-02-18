@@ -1,0 +1,272 @@
+﻿++Solution 'MDB' ‎(2 of 2 projects)
+i:{00000000-0000-0000-0000-000000000000}:MDB.sln
+++Solution Items
+i:{00000000-0000-0000-0000-000000000000}:Solution Items
+++CustomTabControl
+i:{00000000-0000-0000-0000-000000000000}:CustomTabControl
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++Properties
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\properties\
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\properties\
+++References
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++TabControl
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\
+++TabStyleProviders
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyleproviders\
+++CustomTabControl.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\customtabcontrol.cs
+++NativeMethods.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\nativemethods.cs
+++TabStyle.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyle.cs
+++TabStyleProvider.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyleprovider.cs
+++ThemedColors.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\themedcolors.cs
+++JacksonSoft.snk
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\jacksonsoft.snk
+++AssemblyInfo.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\properties\assemblyinfo.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\properties\assemblyinfo.cs
+++Accessibility
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:
+++System
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++System.Configuration
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:
+++System.Drawing
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++System.Windows.Forms
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++TabStyleAngledProvider.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyleproviders\tabstyleangledprovider.cs
+++TabStyleChromeProvider.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyleproviders\tabstylechromeprovider.cs
+++TabStyleDefaultProvider.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyleproviders\tabstyledefaultprovider.cs
+++TabStyleIE8Provider.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyleproviders\tabstyleie8provider.cs
+++TabStyleManorDBProvider.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyleproviders\tabstylemanordbprovider.cs
+++TabStyleNoneProvider.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyleproviders\tabstylenoneprovider.cs
+++TabStyleRoundedProvider.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyleproviders\tabstyleroundedprovider.cs
+++TabStyleVisualStudioProvider.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyleproviders\tabstylevisualstudioprovider.cs
+++TabStyleVS2010Provider.cs
+i:{4dbfe2cf-45e4-4594-8e6a-5ebc2eef85ae}:c:\users\alex\desktop\mdb\mdb\customtabcontrol\tabcontrol\tabstyleproviders\tabstylevs2010provider.cs
+++Manor DB
+i:{00000000-0000-0000-0000-000000000000}:Manor DB
+++Resources.resx
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\properties\resources.resx
+++Settings.settings
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\properties\settings.settings
+++bin
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\
+++Custom Controls
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\custom controls\
+++ColorPicker.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\custom controls\colorpicker.cs
+++CustomDataGridView.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\custom controls\customdatagridview.cs
+++MainTableToolStripMenuItem.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\custom controls\maintabletoolstripmenuitem.cs
+++obj
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\
+++App.config
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\app.config
+++app.manifest
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\app.manifest
+++Auto Table Constructor Script Funct.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\auto table constructor script funct.cs
+++ColorThemes.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\colorthemes.cs
+++ColumnTypes.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\columntypes.cs
+++DatabaseFunct (Columns Rows).cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\databasefunct (columns rows).cs
+++DatabaseFunct (Convert Column Type).cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\databasefunct (convert column type).cs
+++DatabaseFunct (Disabler Functions).cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\databasefunct (disabler functions).cs
+++DatabaseFunct (Main Table Controls).cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\databasefunct (main table controls).cs
+++DatabaseFunct (Subtable Row Restriction).cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\databasefunct (subtable row restriction).cs
+++DatabaseFunct (SubTables).cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\databasefunct (subtables).cs
+++DatabaseFunct (Tables).cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\databasefunct (tables).cs
+++DatabaseFunct.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\databasefunct.cs
+++Edit Regex Refrence Table Constructor Prompt.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\edit regex refrence table constructor prompt.cs
+++Edit Regex Refrence Table Constructor Prompt.Designer.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\edit regex refrence table constructor prompt.designer.cs
+++Edit Regex Refrence Table Constructor Prompt.resx
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\edit regex refrence table constructor prompt.resx
+++Form1.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\form1.cs
+++Form1.Designer.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\form1.designer.cs
+++Form1.resx
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\form1.resx
+++GenericFunct.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\genericfunct.cs
+++InputOutput.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\inputoutput.cs
+++MDB ICON.ico
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\mdb icon.ico
+++packages.config
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\packages.config
+++Program.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\program.cs
+++RegexRefrenceTableConstructorPromptHandler.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\regexrefrencetableconstructorprompthandler.cs
+++Text Editor Form.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\text editor form.cs
+++Resources.Designer.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\properties\resources.designer.cs
+++Settings.Designer.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\properties\settings.designer.cs
+++Microsoft.CSharp
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++Microsoft.VisualBasic
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++Newtonsoft.Json
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++System.Core
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++System.Data
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++System.Data.DataSetExtensions
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++System.Deployment
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++System.Net.Http
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++System.Web
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++System.Xml
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++System.Xml.Linq
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:
+++Debug
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\debug\
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x64\debug\
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x86\debug\
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x86\debug\
+++Release
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\release\
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x64\release\
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x86\release\
+++x64
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x64\
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\
+++x86
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x86\
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x86\
+++Text Editor Form.Designer.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\text editor form.designer.cs
+++Text Editor Form.resx
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\text editor form.resx
+++FDB.exe
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\debug\fdb.exe
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\fdb.exe
+++FDB.exe.config
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\debug\fdb.exe.config
+++FDB.pdb
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\debug\fdb.pdb
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\fdb.pdb
+++TempPE
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\temppe\
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\temppe\
+++.NETFramework,Version=v4.6.1.AssemblyAttributes.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\.netframework,version=v4.6.1.assemblyattributes.cs
+++.NETFramework,Version=v4.8.AssemblyAttributes.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\.netframework,version=v4.8.assemblyattributes.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\.netframework,version=v4.8.assemblyattributes.cs
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x86\debug\.netframework,version=v4.8.assemblyattributes.cs
+++DesignTimeResolveAssemblyReferences.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\designtimeresolveassemblyreferences.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\designtimeresolveassemblyreferences.cache
+++DesignTimeResolveAssemblyReferencesInput.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\designtimeresolveassemblyreferencesinput.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\designtimeresolveassemblyreferencesinput.cache
+++FDB.Properties.Resources.resources
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\fdb.properties.resources.resources
+++MDB.exe
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\mdb.exe
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x64\debug\mdb.exe
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x86\debug\mdb.exe
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\mdb.exe
+++MDB.Form1.resources
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\mdb.form1.resources
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\mdb.form1.resources
+++MDB.pdb
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\mdb.pdb
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x64\debug\mdb.pdb
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x86\debug\mdb.pdb
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\mdb.pdb
+++MDB.Properties.Resources.resources
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\mdb.properties.resources.resources
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\mdb.properties.resources.resources
+++MDB.Text_Editor_Form.resources
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\mdb.text_editor_form.resources
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\mdb.text_editor_form.resources
+++WindowsFormsApp1.csproj.AssemblyReference.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\windowsformsapp1.csproj.assemblyreference.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\windowsformsapp1.csproj.assemblyreference.cache
+++WindowsFormsApp1.csproj.CopyComplete
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\windowsformsapp1.csproj.copycomplete
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\windowsformsapp1.csproj.copycomplete
+++WindowsFormsApp1.csproj.CoreCompileInputs.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\windowsformsapp1.csproj.corecompileinputs.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\windowsformsapp1.csproj.corecompileinputs.cache
+++WindowsFormsApp1.csproj.FileListAbsolute.txt
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\windowsformsapp1.csproj.filelistabsolute.txt
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\windowsformsapp1.csproj.filelistabsolute.txt
+++WindowsFormsApp1.csproj.GenerateResource.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\windowsformsapp1.csproj.generateresource.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\windowsformsapp1.csproj.generateresource.cache
+++WindowsFormsApp1.csproj.SuggestedBindingRedirects.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\windowsformsapp1.csproj.suggestedbindingredirects.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\windowsformsapp1.csproj.suggestedbindingredirects.cache
+++JacksonSoft.CustomTabControl.dll
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x64\debug\jacksonsoft.customtabcontrol.dll
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x86\debug\jacksonsoft.customtabcontrol.dll
+++JacksonSoft.CustomTabControl.pdb
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x64\debug\jacksonsoft.customtabcontrol.pdb
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x86\debug\jacksonsoft.customtabcontrol.pdb
+++MDB.exe.config
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x64\debug\mdb.exe.config
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x86\debug\mdb.exe.config
+++Newtonsoft.Json.dll
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x64\debug\newtonsoft.json.dll
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x86\debug\newtonsoft.json.dll
+++Newtonsoft.Json.xml
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x64\debug\newtonsoft.json.xml
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\bin\x86\debug\newtonsoft.json.xml
+++Properties.Resources.Designer.cs.dll
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\debug\temppe\properties.resources.designer.cs.dll
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\temppe\properties.resources.designer.cs.dll
+++Manor DB.csproj.AssemblyReference.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\manor db.csproj.assemblyreference.cache
+++Manor DB.csproj.CopyComplete
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\manor db.csproj.copycomplete
+++Manor DB.csproj.CoreCompileInputs.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\manor db.csproj.corecompileinputs.cache
+++Manor DB.csproj.FileListAbsolute.txt
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\manor db.csproj.filelistabsolute.txt
+++Manor DB.csproj.GenerateResource.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\manor db.csproj.generateresource.cache
+++Manor DB.csproj.SuggestedBindingRedirects.cache
+i:{279842c0-6b10-4e81-8812-f530ccbac405}:c:\users\alex\desktop\mdb\mdb\windowsformsapp1\obj\x64\debug\manor db.csproj.suggestedbindingredirects.cache

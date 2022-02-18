@@ -1245,7 +1245,7 @@ namespace MDB
 
                 
 
-                //iterate all tabledata from index
+                //iterate through all tabledata from index
                 while (i >= index)
                 {
                     //close row beforehand since RecenterSubtables() only accounts for open rows 
@@ -1283,7 +1283,7 @@ namespace MDB
 
             tableData[index] = new Dictionary<string, dynamic>();
 
-
+            DataGridViewRow newRow = DGV.Rows[index]; 
 
 
 
@@ -1334,6 +1334,20 @@ namespace MDB
                 dynamic defaultVal = ColumnTypes.GetDefaultColumnValue(colType);
                 //add default value to tabledata
                 tableData[index].Add(column.Name, defaultVal);
+
+
+                DataGridViewCell cell = newRow.Cells[column.Index];
+                if (cell.GetType() == typeof(DataGridViewButtonCell))
+                {
+                    //set initial text color
+                    UpdateReceiverCellUnfulfilledDependencyState(tableKey, column.Name, tableData, index, DGV);
+
+
+                    //set initial display value (encapsulated by enabling and disabling the loadingTable bool as to not trigger the CellValueChanged event)
+                    loadingTable = true;
+                    cell.Value = "empty";
+                    loadingTable = false;
+                }
 
 
             }
