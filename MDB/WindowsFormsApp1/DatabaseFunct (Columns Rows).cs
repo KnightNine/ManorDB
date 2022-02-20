@@ -1502,16 +1502,7 @@ namespace MDB
                 List<string> removalList = new List<string>();
                 foreach (string colKey in tableData[rowIndex].Keys)
                 {
-                    if (colKey.Contains("divert"))
-                    {
-                        string v = "";
-                        foreach (KeyValuePair<string, dynamic> x in entryData.Value)
-                        {
-                            v += x.Key + ":" + x.Value + "\n";
-                        }
-                        MessageBox.Show(v);
-
-                    }
+                    
 
                     //for some reason columns.Contains() isn't case sensitive so i'm using this instead
                     bool c = false;
