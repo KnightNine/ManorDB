@@ -24,12 +24,12 @@ namespace MDB
     */
 
     /*
-    EXAMPLES:
+    EXAMPLES (to be fair i'm placing these here for my personal reference):
     In my project i'll be using these regular expressions:
 
     - this one is to match the name of the function itself to function as the table's primary key:
     A function looks like this in the script file: "func function_name():" and this will match "function_name" if the previous line doesn't contain "#-hide-" nor will it match if the line is commented out with '#' at its start:
-    "(?m)(?<=(?<!#-hide-\s*[\r\n]+|#)func\s+).+?(?=\s*\()"
+    "(?m)(?<=(?<!#-hide-\s*[\r\n]+|#[ ,\t]*)func\s+).+?(?=\s*\()"
 
     - this one is to match the Auto Table Contructor Script that will be used in setting the static Params (parameters that are function specific)
     The description looks like this in the script file: "static_param_table_constructor_script: {data}" and the matched text is "data". (if the line isn't commented out with '#')
@@ -43,7 +43,6 @@ namespace MDB
 
 
     "(?<=(?<!#+\s*)is_selection_dependent:\s*\[).*(?=\])"
-    is_selection_dependent
 
 
     "(?<=(?<!#+\s*)dynamic_requirement_description_format:\s*\").*(?=\")"

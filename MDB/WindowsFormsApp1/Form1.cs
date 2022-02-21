@@ -548,7 +548,7 @@ namespace MDB
                     //if this is a constructed table, there is no column related options
                     if (DGVTag.ContainsKey("tableConstructorScript"))
                     {
-                        MessageBox.Show("You cannot use column altering functionality within a constructed table.");
+                        MessageBox.Show("You cannot use column altering functionality within a script constructed table.");
                     }
                     else
                     {
@@ -1057,8 +1057,64 @@ namespace MDB
 
                         if (Program.openSubTables.ContainsKey(subTableKey))
                         {
-                            //remove old open table
+
+                            //update the cell display of current open table cell at the same row
+                            //get cell
+                            string openColName = Program.openSubTables[subTableKey].Item1;
+                            int openColIndex = senderDGV.Columns[openColName].Index;
+
+                            DataGridViewButtonCell openBCell = (DataGridViewButtonCell)senderDGV.Rows[e.RowIndex].Cells[openColIndex];
+
+                            
+
+
+                           
+
+                            //get column type
+                            string openColType = null;
+                            string openSubtableConstructorScript = null;
+
+                            if (isConstructed)
+                            {
+
+                                //fetch the column type from colTag if constructed:
+                                Dictionary<string, dynamic> openColTag = senderDGV.Columns[openColIndex].Tag as Dictionary<string, dynamic>;
+                                openColType = openColTag["columnType"];
+                                //get openSubtableConstructorScript from coltag if this is a subtable
+                                if (openColTag.ContainsKey("subtableConstructorScript"))
+                                {
+                                    openSubtableConstructorScript = openColTag["subtableConstructorScript"];
+                                }
+                            }
+                            else
+                            {
+                                //fetch from currentData
+                                openColType = DatabaseFunct.currentData[tableKey][openColName];
+                            }
+
+                            
+                            //fetch script for Auto Table Constructor Script Receiver column
+                            if (Regex.IsMatch(openColType, @"Auto Table Constructor Script Receiver\d*$"))
+                            {
+
+                                openSubtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, openColName, tableData, e.RowIndex, senderDGV);
+                                //if tableConstructorScript is null then an error was shown and cancel function here
+                                if (openSubtableConstructorScript == null)
+                                {
+                                    return;
+                                }
+                            }
+
+                            //update displayValue of button cell
+                            Dictionary<int, Dictionary<string, dynamic>> openSubtableData = tableData[e.RowIndex][senderDGV.Columns[senderDGV.Columns[openColName].Index].Name];
+                            //if constructed, use stored script within column tag
+                            openBCell.Value = ColumnTypes.GetSubTableCellDisplay(openSubtableData, openColName, tableKey, openSubtableConstructorScript);
+                            //this allows the length of the cell's tooltip text to exceed 256 characters
+                            openBCell.ToolTipText = openBCell.Value.ToString();
+
+                            //remove old open table at the same row
                             DatabaseFunct.RemoveSubtableFromOpenSubtables(subTableKey);
+                            
 
                         }
 
