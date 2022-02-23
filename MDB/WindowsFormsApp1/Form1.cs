@@ -1170,7 +1170,7 @@ namespace MDB
                         //add to open subtables
                         Program.openSubTables.Add(subTableKey, new Tuple<string, CustomDataGridView>(senderDGV.Columns[e.ColumnIndex].Name, newDGV));
 
-                        //change color
+                        //change color of newly opened cell and set other cell colors to default
                         ColorTabOfOpenTable(e.ColumnIndex,e.RowIndex,senderDGV);
 
 
@@ -1596,6 +1596,81 @@ namespace MDB
 
             }
             
+        }
+
+        private void updateRegexReferenceTablesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var confirmResult = MessageBox.Show("Are you sure you want to update your Regex Reference Tables in this database? This will close all AutoTableConstructorScriptReader Subtables in the current table.",
+                                     "Confirm:",
+                                     MessageBoxButtons.YesNo);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+
+                List<dynamic[]> removalList = new List<dynamic[]>();
+
+                // close all AutoTableConstructorScriptReader Subtables in current table
+                //<<parentDGV,row>,<column,childDGV>> (only one subtable can be open at a time per row)
+                foreach (KeyValuePair<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubtable in Program.openSubTables)
+                {
+                    CustomDataGridView parentTable = openSubtable.Key.Item1;
+                    Dictionary<string,dynamic> tableTag = parentTable.Tag as Dictionary<string,dynamic>;
+                    //if not constructed
+                    if (!tableTag.ContainsKey("tableConstructorScript"))
+                    {
+                        string colName = openSubtable.Value.Item1;
+                        string parentTableKey = DatabaseFunct.ConvertDirToTableKey(parentTable.Name);
+                        string colType = DatabaseFunct.currentData[parentTableKey][colName];
+                        
+                        if (Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
+                        {
+                            //close the subtable and set the cell colors to default
+
+                            removalList.Add(new dynamic[] { openSubtable.Key, parentTable, openSubtable.Key.Item2, parentTable.Columns[colName].Index });
+                            
+
+                        }
+
+                    }
+                }
+
+                foreach (dynamic[] removalParams in removalList)
+                {
+                    CloseSubTable(removalParams[0], removalParams[1], removalParams[2], removalParams[3]);
+                }
+
+                RecenterSubTables();
+
+
+                string[] mainTableKeys = DatabaseFunct.GetMainTableKeys();
+                foreach (string mainTableKey in mainTableKeys)
+                {
+
+
+
+                   
+
+
+                    //if this is a File Regex Reference Table update its referenced data  
+                    if (DatabaseFunct.currentData[mainTableKey].ContainsKey(DatabaseFunct.RegexRefrenceTableConstructorDataRefrence))
+                    {
+                        //if this is the currently open table, construct the table:
+                        CustomDataGridView TableMainGridView = Program.mainForm.TableMainGridView;
+                        if (TableMainGridView.Name == mainTableKey)
+                        {
+                            RegexRefrenceTableConstructorPromptHandler.ConstructRegexRefrenceTable();
+                        }
+                        else
+                        {
+                            RegexRefrenceTableConstructorPromptHandler.UpdateRegexRefrenceTableData(mainTableKey);
+                        }
+                        
+                    }
+
+
+
+                }
+            }
         }
 
 

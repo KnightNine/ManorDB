@@ -57,6 +57,7 @@ namespace MDB
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.customTabControl1 = new System.Windows.Forms.CustomTabControl();
+            this.updateRegexReferenceTablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,11 +69,12 @@ namespace MDB
             this.newTableToolStripMenuItem,
             this.removeTableToolStripMenuItem,
             this.hideUnhideColumnsToolStripMenuItem,
-            this.scriptSettingsToolStripMenuItem});
+            this.scriptSettingsToolStripMenuItem,
+            this.updateRegexReferenceTablesToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(2, 1, 0, 1);
-            this.menuStrip1.Size = new System.Drawing.Size(722, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1238, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -140,14 +142,14 @@ namespace MDB
             // editScriptPrefabsToolStripMenuItem
             // 
             this.editScriptPrefabsToolStripMenuItem.Name = "editScriptPrefabsToolStripMenuItem";
-            this.editScriptPrefabsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.editScriptPrefabsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.editScriptPrefabsToolStripMenuItem.Text = "Edit Script Prefabs";
             this.editScriptPrefabsToolStripMenuItem.Click += new System.EventHandler(this.editScriptPrefabsToolStripMenuItem_Click);
             // 
             // setScriptColumnDuplicatesToolStripMenuItem
             // 
-            this.setScriptColumnDuplicatesToolStripMenuItem.Name = "setScriptColumnTypeDuplicatesToolStripMenuItem";
-            this.setScriptColumnDuplicatesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.setScriptColumnDuplicatesToolStripMenuItem.Name = "setScriptColumnDuplicatesToolStripMenuItem";
+            this.setScriptColumnDuplicatesToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.setScriptColumnDuplicatesToolStripMenuItem.Text = "Set Script Column Type Duplicates";
             this.setScriptColumnDuplicatesToolStripMenuItem.Click += new System.EventHandler(this.setScriptColumnTypeDuplicatesToolStripMenuItem_Click);
             // 
@@ -183,7 +185,7 @@ namespace MDB
             // 
             this.vScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.vScrollBar1.LargeChange = 1;
-            this.vScrollBar1.Location = new System.Drawing.Point(706, 24);
+            this.vScrollBar1.Location = new System.Drawing.Point(1222, 24);
             this.vScrollBar1.Maximum = 0;
             this.vScrollBar1.MaximumSize = new System.Drawing.Size(16, 0);
             this.vScrollBar1.Name = "vScrollBar1";
@@ -234,17 +236,24 @@ namespace MDB
             this.customTabControl1.Margin = new System.Windows.Forms.Padding(1);
             this.customTabControl1.Name = "customTabControl1";
             this.customTabControl1.SelectedIndex = 0;
-            this.customTabControl1.Size = new System.Drawing.Size(706, 25);
+            this.customTabControl1.Size = new System.Drawing.Size(1222, 25);
             this.customTabControl1.TabIndex = 0;
             this.customTabControl1.SelectedIndexChanged += new System.EventHandler(this.customTabControl1_SelectedIndexChanged);
             this.customTabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.customTabControl1_MouseDown);
+            // 
+            // updateRegexReferenceTablesToolStripMenuItem
+            // 
+            this.updateRegexReferenceTablesToolStripMenuItem.Name = "updateRegexReferenceTablesToolStripMenuItem";
+            this.updateRegexReferenceTablesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.updateRegexReferenceTablesToolStripMenuItem.Text = "Update Regex Reference Tables ";
+            this.updateRegexReferenceTablesToolStripMenuItem.Click += new System.EventHandler(this.updateRegexReferenceTablesToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.ClientSize = new System.Drawing.Size(722, 445);
+            this.ClientSize = new System.Drawing.Size(1238, 445);
             this.Controls.Add(this.customTabControl1);
             this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.menuStrip1);
@@ -291,6 +300,7 @@ namespace MDB
         private ToolStripMenuItem scriptSettingsToolStripMenuItem;
         private ToolStripMenuItem editScriptPrefabsToolStripMenuItem;
         private ToolStripMenuItem setScriptColumnDuplicatesToolStripMenuItem;
+        private ToolStripMenuItem updateRegexReferenceTablesToolStripMenuItem;
     }
 
 
