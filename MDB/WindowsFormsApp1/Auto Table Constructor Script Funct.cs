@@ -285,6 +285,11 @@ namespace MDB
             //add to tableData of this table directory's rows.
             foreach (Dictionary<string,dynamic> rowData in tableData.Values)
             {
+                //add column data if it doesn't exist
+                if (!rowData.ContainsKey(colName))
+                {
+                    rowData.Add(colName, ColumnTypes.GetDefaultColumnValue(colType));
+                }
 
                 
                 //check if existing value type is valid for column:
