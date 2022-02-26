@@ -478,14 +478,19 @@ namespace MDB
                                                 //set cell tag to enabled
                                                 openDGVOfTable.Rows[entryData.Key].Cells[colName].Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
 
-                                                //set initial text color
-                                                UpdateReceiverCellUnfulfilledDependencyState(tableKey, colName, tableData, entryData.Key, DGV);
+                                                //this is only for subtable and script receiver cells
+                                                if (colType != "Bool")
+                                                {
+                                                    //set initial text color
+                                                    UpdateReceiverCellUnfulfilledDependencyState(tableKey, colName, tableData, entryData.Key, DGV);
 
 
-                                                //set initial display value (encapsulated by enabling and disabling the loadingTable bool as to not trigger the CellValueChanged event)
-                                                loadingTable = true;
-                                                openDGVOfTable.Rows[entryData.Key].Cells[colName].Value = "empty";
-                                                loadingTable = false;
+                                                    //set initial display value (encapsulated by enabling and disabling the loadingTable bool as to not trigger the CellValueChanged event)
+                                                    loadingTable = true;
+                                                    openDGVOfTable.Rows[entryData.Key].Cells[colName].Value = "empty";
+                                                    loadingTable = false;
+                                                }
+                                                
                                             }
 
                                             
