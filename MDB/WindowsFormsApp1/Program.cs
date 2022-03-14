@@ -80,6 +80,9 @@ namespace MDB
             mainForm.Refresh();
             mainForm.ResumeLayout(true);
 
+            //get settings data
+            LoadConfigurationFile();
+
             //load file if opened from file
             if (args.Count() > 0)
             {
@@ -92,8 +95,7 @@ namespace MDB
             }
 
 
-            //get settings data
-            LoadConfigurationFile();
+            
 
             
 
