@@ -29,7 +29,6 @@ The game I am working on relies on complex repeating data structures to define i
   There are some features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least:
 <p/>
 <ul>
-  <li>BUG: Stored script prefabs reset themselves when run from the compiled application, this will need to be fixed.</li>
   <li>ability to change columns linked to a `Auto Table Constructor Script Receiver` column without having to delete and re-add the column (thus losing data)</li>
   <li>hovering over the table tabs should allow you to scroll through them with the scroll wheel</li>
   <li>Column Type Icons (to show the type of each column)</li>
