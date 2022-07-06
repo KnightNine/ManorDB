@@ -666,6 +666,7 @@ namespace MDB
                 string[] columnScripts = dat.Item3;
                 List<string[]> disablerArrays = dat.Item4;
 
+
                 
 
 
@@ -746,143 +747,180 @@ namespace MDB
 
                     if (columnType == "SubTable")
                     {
-                        string subTableScript = columnDat[2].Trim();
-                        //this should only contain the brackets since i've already removed all subtable data from the scriptToValidate
-                        if (subTableScript != "{}")
+                        if (columnDat.Length < 3)
                         {
-                            columnError += "    subtable data formatting is invalid and must be contained within curly brackets \n";
-                            //break the error loop if subtable formatting is invalid because the error loop will start considering the data within the subtable to be at the current table level when it isn't.
+                            columnError += "    subtable column data formatting is invalid and is missing a 3rd entry for the data contained within the subtable \n";
                             breakloop = true;
                         }
+                        else
+                        {
+                            string subTableScript = columnDat[2].Trim();
+                            //this should only contain the brackets since i've already removed all subtable data from the scriptToValidate
+                            if (subTableScript != "{}")
+                            {
+                                columnError += "    subtable data formatting is invalid and must be contained within curly brackets \n";
+                                //break the error loop if subtable formatting is invalid because the error loop will start considering the data within the subtable to be at the current table level when it isn't.
+                                breakloop = true;
+                            }
+                        }
+                        
 
 
 
                     }
                     else if (Regex.IsMatch(columnType, @"Auto Table Constructor Script Receiver\d*$"))
                     {
-                        //get string within <>
-                        
-                        string linkedFKeyColumn = columnDat[2].Trim();
-                        //get string within <>
-                        MatchCollection x = Regex.Matches(linkedFKeyColumn, @"(?<=\<)[^<>]*(?=\>)");
-                        if (x.Count == 0)
+
+                        if (columnDat.Length < 3)
                         {
-                            columnError += "    linkedForeignKeyColumn name(s) are missing <> brackets \n";
+                            columnError += "    Auto Table Constructor Script Receiver column data formatting is invalid and is missing a 3rd entry for the linked foreign key column name \n";
+                            breakloop = true;
                         }
                         else
                         {
-                            foreach (Match m in x)
+                            //get string within <>
+
+                            string linkedFKeyColumn = columnDat[2].Trim();
+                            //get string within <>
+                            MatchCollection x = Regex.Matches(linkedFKeyColumn, @"(?<=\<)[^<>]*(?=\>)");
+                            if (x.Count == 0)
                             {
-                                //check if adjacent column of Fkey type exists
-                                linkedFKeyColumn = m.Value;
-
-                                bool linkedFKeyColumnIsFound = false;
-
-                                foreach (string columnScriptAtCurrentLevel in columnScripts)
+                                columnError += "    linkedForeignKeyColumn name(s) are missing <> brackets \n";
+                            }
+                            else
+                            {
+                                foreach (Match m in x)
                                 {
-                                    try
+                                    //check if adjacent column of Fkey type exists
+                                    linkedFKeyColumn = m.Value;
+
+                                    bool linkedFKeyColumnIsFound = false;
+
+                                    foreach (string columnScriptAtCurrentLevel in columnScripts)
                                     {
-                                        string[] _columnDat = columnScriptAtCurrentLevel.Split(':');
-                                        string _columnName = Regex.Match(_columnDat[0], @"(?<=\<)[^<>]*(?=\>)").Value;
-                                        string _columnTypeShorthand = _columnDat[1].Trim();
-
-                                        Console.WriteLine(_columnName + "==" + linkedFKeyColumn + " ?");
-
-                                        if (_columnName == linkedFKeyColumn)
+                                        try
                                         {
-                                            if (columnTypeShorthandDict.ContainsKey(_columnTypeShorthand))
-                                            {
+                                            string[] _columnDat = columnScriptAtCurrentLevel.Split(':');
+                                            string _columnName = Regex.Match(_columnDat[0], @"(?<=\<)[^<>]*(?=\>)").Value;
+                                            string _columnTypeShorthand = _columnDat[1].Trim();
 
-                                                string _columnType = columnTypeShorthandDict[_columnTypeShorthand];
-                                                if (_columnType != "Foreign Key Refrence")
+                                            Console.WriteLine(_columnName + "==" + linkedFKeyColumn + " ?");
+
+                                            if (_columnName == linkedFKeyColumn)
+                                            {
+                                                if (columnTypeShorthandDict.ContainsKey(_columnTypeShorthand))
                                                 {
-                                                    columnError += "        linked column \"" + _columnName + "\" is not a Foreign Key Refrence column \n";
-                                                    break;
+
+                                                    string _columnType = columnTypeShorthandDict[_columnTypeShorthand];
+                                                    if (_columnType != "Foreign Key Refrence")
+                                                    {
+                                                        columnError += "        linked column \"" + _columnName + "\" is not a Foreign Key Refrence column \n";
+                                                        break;
+                                                    }
+                                                    else
+                                                    {
+                                                        linkedFKeyColumnIsFound = true;
+                                                    }
+
                                                 }
                                                 else
                                                 {
-                                                    linkedFKeyColumnIsFound = true;
+                                                    columnError += "    could not read the column type of linkedFKeyColumn: \"" + _columnName + "\"\n";
+                                                    break;
                                                 }
+                                            }
 
-                                            }
-                                            else
-                                            {
-                                                columnError += "    could not read the column type of linkedFKeyColumn: \""+ _columnName + "\"\n";
-                                                break;
-                                            }
+
+
+                                        }
+                                        catch
+                                        {
+                                            columnError += "    could not read a column name or type when checking for the linked Foreign key refrence column \n";
                                         }
 
-
-
                                     }
-                                    catch
+
+                                    if (!linkedFKeyColumnIsFound)
                                     {
-                                        columnError += "    could not read a column name or type when checking for the linked Foreign key refrence column \n";
+                                        columnError += "    could not find linkedForeignKeyColumn \"" + linkedFKeyColumn + "\"\n";
                                     }
-
                                 }
 
-                                if (!linkedFKeyColumnIsFound)
-                                {
-                                    columnError += "    could not find linkedForeignKeyColumn \"" + linkedFKeyColumn + "\"\n";
-                                }
+
+
                             }
-                            
-
-
                         }
+                        
                     }
                     else if (columnType == "Foreign Key Refrence")
                     {
-                        string tableBeingRefrenced = columnDat[2].Trim();
-                        //get string within <>
-                        MatchCollection x = Regex.Matches(tableBeingRefrenced, @"(?<=\<)[^<>]*(?=\>)");
-                        if (x.Count == 0)
+                        if (columnDat.Length < 3)
                         {
-                            columnError += "    tableBeingRefrenced name is missing <> brackets \n";
+                            columnError += "    Foreign Key Refrence column data formatting is invalid and is missing a 3rd entry for the foreign table name \n";
+                            breakloop = true;
                         }
                         else
                         {
-                            tableBeingRefrenced = x[0].Value;
-
-                            //confirm that the table being refrenced exists in current data
-                            if (!DatabaseFunct.currentData.ContainsKey(tableBeingRefrenced))
+                            string tableBeingRefrenced = columnDat[2].Trim();
+                            //get string within <>
+                            MatchCollection x = Regex.Matches(tableBeingRefrenced, @"(?<=\<)[^<>]*(?=\>)");
+                            if (x.Count == 0)
                             {
-                                columnError += "    The table being refrenced by the column doesn't exist within currentData \n";
+                                columnError += "    tableBeingRefrenced name is missing <> brackets \n";
                             }
+                            else
+                            {
+                                tableBeingRefrenced = x[0].Value;
 
+                                //confirm that the table being refrenced exists in current data
+                                if (!DatabaseFunct.currentData.ContainsKey(tableBeingRefrenced))
+                                {
+                                    columnError += "    The table being refrenced by the column doesn't exist within currentData \n";
+                                }
+
+                            }
                         }
+                        
 
 
                     }
                     else if (columnType == "Parent Subtable Foreign Key Refrence")
                     {
-                        string outwardDirectory = columnDat[2].Trim();
-                        //get string within <>
-                        MatchCollection x = Regex.Matches(outwardDirectory, @"(?<=\<)[^<>]*(?=\>)");
-                        if (x.Count == 0)
+                        if (columnDat.Length < 3)
                         {
-                            columnError += "    outwardDirectory is missing <> brackets \n";
+                            columnError += "    Parent Subtable Foreign Key Refrence column data formatting is invalid and is missing a 3rd entry for the outward directory \n";
+                            breakloop = true;
                         }
                         else
                         {
-                            //check that all directory syntax is valid:
-                            string[] splitOutwardDirectory = x[0].Value.Split('/');
-                            foreach (string s in splitOutwardDirectory)
+                            string outwardDirectory = columnDat[2].Trim();
+                            //get string within <>
+                            MatchCollection x = Regex.Matches(outwardDirectory, @"(?<=\<)[^<>]*(?=\>)");
+                            if (x.Count == 0)
                             {
-                                string ts = s.Trim();
-                                if (ts != "-" )
-                                {
-                                    MatchCollection y = Regex.Matches(outwardDirectory, "(?<=\")[^\"]*(?=\")");
-                                    if (y.Count == 0)
-                                    {
-                                        columnError += "    outwardDirectory entry \""+ ts + "\" is missing \"\" quotes \n";
-                                    }
-                                   
-                                }
+                                columnError += "    outwardDirectory is missing <> brackets \n";
                             }
+                            else
+                            {
+                                //check that all directory syntax is valid:
+                                string[] splitOutwardDirectory = x[0].Value.Split('/');
+                                foreach (string s in splitOutwardDirectory)
+                                {
+                                    string ts = s.Trim();
+                                    if (ts != "-")
+                                    {
+                                        MatchCollection y = Regex.Matches(outwardDirectory, "(?<=\")[^\"]*(?=\")");
+                                        if (y.Count == 0)
+                                        {
+                                            columnError += "    outwardDirectory entry \"" + ts + "\" is missing \"\" quotes \n";
+                                        }
 
+                                    }
+                                }
+
+                            }
                         }
+                        
 
 
                     }
@@ -906,6 +944,7 @@ namespace MDB
                     {
                         if (subtableScripts.Count > subtableScriptIndex)
                         {
+                            
 
                             //relevant match to subtable column should line up with subtableScriptIndex
                             Match match = subtableScripts[subtableScriptIndex];
@@ -923,6 +962,8 @@ namespace MDB
                             columnError += "    the ammount of subtable data doesn't match up with the number of subtable columns, maybe there is a subtable left blank\n";
                             breakloop = true;
                         }
+
+
                     }
 
                 }
@@ -964,7 +1005,7 @@ namespace MDB
             
 
 
-            //script cannot be blank if runing recursiveScriptValidator()
+            //script cannot be blank if running recursiveScriptValidator()
             if (String.IsNullOrWhiteSpace(script))
             {
                 return error;
