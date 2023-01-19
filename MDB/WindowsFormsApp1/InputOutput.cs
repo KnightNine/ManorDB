@@ -147,7 +147,11 @@ namespace MDB
                     }
 
                 }
-                else if (tabType.IsGenericType && tabType.GetGenericTypeDefinition() == typeof(List<>))
+				else if (currentTable is Dictionary<string,string>) // is config prefab data
+				{
+					//do nothing
+				}
+				else if (tabType.IsGenericType && tabType.GetGenericTypeDefinition() == typeof(List<>))
                 {
                     // do nothing
 
@@ -197,14 +201,24 @@ namespace MDB
                         else if (ct[key] is Newtonsoft.Json.Linq.JObject)
                         {
 
+
+
                             if (tableLevel < 1)
                             {
+                                
+
                                 //tableData (the base table structure data)
                                 tableLevelKVs[key] = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(ct[key].ToString());
 
 
                             }
-                            else if (key == DatabaseFunct.RegexRefrenceTableConstructorDataRefrence)
+                            else if (key == "@scriptPrefabDict")
+
+							{
+								//script prefab data stored in @Config
+								tableLevelKVs[key] = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(ct[key].ToString());
+							}
+							else if (key == DatabaseFunct.RegexRefrenceTableConstructorDataRefrence)
                             {
                                 //regex constructor table data
                                 tableLevelKVs[key] = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(ct[key].ToString());
@@ -237,6 +251,7 @@ namespace MDB
                         else if (ct[key] is dynamic)//when converting dicts from json, keys are automatically converted to dynamic so "if (ct[key] is Newtonsoft.Json.Linq.JValue)" never gets used
                         {
 
+                            
                             if (key == DatabaseFunct.BookmarkColorRefrence)
                             {
 
@@ -287,7 +302,7 @@ namespace MDB
                     {
 
                         ct[KV.Key] = KV.Value;
-                        //if not a value type
+                        //if not a value type (is a dictionary)
                         if (!(KV.Value is ValueType) && KV.Value != null)
                         {
                             subFunct(tableLevel + 1, ct[KV.Key]);
@@ -329,15 +344,15 @@ namespace MDB
 
                 DatabaseFunct.ClearMainTable();
 
-                if (isReplace)
+                if (isReplace) //overriding with new currentData
                 {
                     defaultPath = fileName;
                     selectedPath = Path.GetDirectoryName(fileName);
 
                     DatabaseFunct.currentData = cd;
                 }
-                else
-                {
+				else //merging with new currentData
+				{
                     if (String.IsNullOrEmpty(selectedPath))
                     {
                         defaultPath = fileName;
@@ -449,12 +464,12 @@ namespace MDB
 
                 }
 
+                //merge data configs
+                Program.CompareConfigToCurrentDataConfig();
 
+				//change table to first table
 
-
-                //change table to first table
-
-                DatabaseFunct.ChangeMainTable(Program.mainForm.customTabControl1.TabPages[0].Name);
+				DatabaseFunct.ChangeMainTable(Program.mainForm.customTabControl1.TabPages[0].Name);
 
                 Program.mainForm.label1.Visible = false;
 

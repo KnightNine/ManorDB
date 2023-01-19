@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Drawing;
+using System.Security.Cryptography;
 
 namespace MDB
 {
@@ -659,7 +660,11 @@ namespace MDB
                                 currentData.Remove(tableEntry);
                             }
                         }
-                    }
+                        //remove row restriction data
+                        currentData[tableKey].Remove(colName + SubtableRowRestrictionExt);
+
+
+					}
                     else if (Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
                     {
                         //remove the adjacent refrence column link data
@@ -671,7 +676,7 @@ namespace MDB
                 
 
 
-
+                //remove the column from data
                 currentData[tableKey].Remove(colName);
 
 

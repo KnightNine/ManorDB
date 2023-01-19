@@ -91,6 +91,8 @@ namespace MDB
                 if (mdbFilePath != "" && File.Exists(mdbFilePath) && mdbFilePath.EndsWith(".mdb"))
                 {
                     InputOutput.ImportMDBFile(mdbFilePath, true);
+
+
                 }
             }
 
@@ -117,6 +119,68 @@ namespace MDB
             pi.SetValue(dgv, setting, null);
         }
 
+
+
+        public static void CompareConfigToCurrentDataConfig()
+        {
+            Dictionary<string, dynamic> currentDataConfig;
+            dynamic x;
+            
+            if (DatabaseFunct.currentData.TryGetValue("@Config", out x))
+            {
+				currentDataConfig = x as Dictionary<string, dynamic>;
+
+
+				try
+                {
+                    Dictionary<string, string> scriptPrefabDict1 = currentDataConfig["@scriptPrefabDict"];
+                    Dictionary<string, string> scriptPrefabDict2 = AutoTableConstructorScriptFunct.scriptPrefabDict;
+
+
+
+
+                    //prefabs tied to the current data take priority
+                    foreach (KeyValuePair<string, string> prefab in scriptPrefabDict1)
+                    {
+                        //overwrite
+                        scriptPrefabDict2[prefab.Key] = prefab.Value;
+                    }
+
+                    foreach (KeyValuePair<string, string> prefab in scriptPrefabDict2)
+                    {
+                        //add new prefabs that don't exist within this database
+                        if (!scriptPrefabDict1.ContainsKey(prefab.Key))
+                        {
+							scriptPrefabDict1[prefab.Key] = prefab.Value;
+						}
+
+					}
+
+                    SaveConfigurationFile();
+
+
+				}
+                catch
+                {
+					currentDataConfig["@scriptPrefabDict"] = AutoTableConstructorScriptFunct.scriptPrefabDict;
+				}
+
+
+
+            }
+            else
+            {
+                currentDataConfig = new Dictionary<string, dynamic>();
+                currentDataConfig.Add("@scriptPrefabDict", AutoTableConstructorScriptFunct.scriptPrefabDict);
+
+				//this is not needed since mdb automatically changes this value to accomodate for the database
+				//currentDataConfig.Add("scriptColumnTypeDuplicates", ColumnTypes.scriptColumnTypeDuplicates);
+
+				DatabaseFunct.currentData["@Config"] = currentDataConfig;
+			}
+
+        }
+
         public static void SaveConfigurationFile()
         {
             try
@@ -125,6 +189,7 @@ namespace MDB
                 Properties.Settings.Default.scriptPrefabDict = Newtonsoft.Json.JsonConvert.SerializeObject(AutoTableConstructorScriptFunct.scriptPrefabDict);
                 //set initial script column type dupes
                 Properties.Settings.Default.scriptColumnTypeDuplicates = ColumnTypes.scriptColumnTypeDuplicates;
+
 
                 Properties.Settings.Default.Save();
             }

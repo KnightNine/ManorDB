@@ -281,8 +281,8 @@ namespace MDB
             var MainTables = currentData.Keys.ToList<string>();
             foreach (string tab in currentData.Keys)
             {
-                //remove subtables from list
-                if (tab.Contains("/"))
+                //remove subtables and config settings from list
+                if (tab.Contains("/") || tab.Contains("@"))
                 {
                     MainTables.Remove(tab);
                 }

@@ -1562,9 +1562,10 @@ namespace MDB
             {
                 //update the prefabDict
                 AutoTableConstructorScriptFunct.scriptPrefabDict = data.Item2;
+                DatabaseFunct.currentData["@Config"]["@scriptPrefabDict"] = data.Item2;
 
-                //save the prefab dict 
-                Program.SaveConfigurationFile();
+				//save the prefab dict 
+				Program.SaveConfigurationFile();
             }
 
         }
