@@ -384,7 +384,7 @@ namespace MDB
 			Program.mainForm.TableMainGridView.ClearInvalidCellIndexes();
             Program.mainForm.TableMainGridView.Rows.Clear();
             Program.mainForm.TableMainGridView.Columns.Clear();
-            //this should clear all the children of TableMainGridView
+            
             
 			Program.openSubTables.Clear();
 
