@@ -1145,9 +1145,10 @@ namespace MDB
 
                         //add newdgv to parent
                         senderDGV.Controls.Add(newDGV);
+                        Console.WriteLine("Adding subtable "+ newDGV.Name + " to controls of parent table:" + tableDir);
 
-                        //if the new subtable is constructed
-                        if (subtableConstructorScript != null)
+						//if the new subtable is constructed
+						if (subtableConstructorScript != null)
                         {
                             //load table structure from tableConstructorScript
                             AutoTableConstructorScriptFunct.ConstructSubTableStructureFromScript(newDGV);

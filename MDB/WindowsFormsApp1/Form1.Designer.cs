@@ -129,10 +129,10 @@ namespace MDB
             this.hideUnhideColumnsToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.hideUnhideColumnsToolStripMenuItem.Text = "Hide/Unhide Columns";
             this.hideUnhideColumnsToolStripMenuItem.Click += new System.EventHandler(this.hideUnhideColumnsToolStripMenuItem_Click);
-            // 
-            // scriptSettingsToolStripMenuItem
-            // 
-            this.scriptSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			// 
+			// scriptSettingsToolStripMenuItem
+			// 
+			this.scriptSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editScriptPrefabsToolStripMenuItem,
             this.setScriptColumnDuplicatesToolStripMenuItem});
             this.scriptSettingsToolStripMenuItem.Name = "scriptSettingsToolStripMenuItem";

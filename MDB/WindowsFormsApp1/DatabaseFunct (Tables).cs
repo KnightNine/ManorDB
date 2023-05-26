@@ -360,12 +360,35 @@ namespace MDB
         }
         internal static void ClearMainTable()
         {
-            Program.mainForm.TableMainGridView.ClearInvalidCellIndexes();
+            //clear subtables
+            Console.WriteLine("removing the controls:");
+            //Yes this needs to be done this way to work properly
+            int i = Program.mainForm.TableMainGridView.Controls.Count - 1;
+            while (i >= 0)
+			{
+                dynamic control = Program.mainForm.TableMainGridView.Controls[i];
+				Console.WriteLine("     -" + control.Name + "," + control.ToString());
+                //if control is a table:
+				if (control is CustomDataGridView)
+                {
+					Program.mainForm.TableMainGridView.Controls.Remove(control);
+                    Console.WriteLine("      removed");
+				}
+                i--;
+				
+			}
+            //This should've replaced the code above but fails to remove all the controls when there are more than 3
+			//Program.mainForm.TableMainGridView.Controls.Clear();
+			
+
+			Program.mainForm.TableMainGridView.ClearInvalidCellIndexes();
             Program.mainForm.TableMainGridView.Rows.Clear();
             Program.mainForm.TableMainGridView.Columns.Clear();
-            Program.mainForm.TableMainGridView.Controls.Clear();
-            Program.openSubTables.Clear();
-        }
+            //this should clear all the children of TableMainGridView
+            
+			Program.openSubTables.Clear();
+
+		}
 
     }
 }
