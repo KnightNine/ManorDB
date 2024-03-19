@@ -102,12 +102,14 @@ namespace MDB
                 {
 
                     Program.openSubTables[key1] = Program.openSubTables[key2];
+                    Program.openSubTables.Remove(key2);
                 }
 
                 if (storedOpenSubTableVal.Item1 != null)
                 {
                     Program.openSubTables[key2] = storedOpenSubTableVal;
                     Console.WriteLine(" and placed into " + key2.ToString() + " as " + storedOpenSubTableVal.ToString());
+                    
                 }
 
 

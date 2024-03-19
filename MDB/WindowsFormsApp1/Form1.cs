@@ -1411,7 +1411,7 @@ namespace MDB
                 Console.WriteLine("expanding row: " + row.ToString());
 
                 int subDGVHeight = (int)GetDataGridViewHeightAtRow(DGV, -1);
-                //test
+                
 
 
                 parentDGV.Rows[row].DividerHeight = subDGVHeight + subTableSpacing;
