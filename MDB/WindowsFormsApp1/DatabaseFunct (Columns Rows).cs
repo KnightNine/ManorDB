@@ -8,6 +8,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Drawing;
 using System.Security.Cryptography;
+using System.Data.Common;
 
 namespace MDB
 {
@@ -1453,13 +1454,35 @@ namespace MDB
 
             List<string> invalidColNames = new List<string>();
 
-            //If the row has a primary key column, erase its data
-            foreach (string colName in dupedRowData.Keys)
+            bool isConstructed = false;
+            string tableConstructorScript = null;
+            Dictionary<string, dynamic> DGVTag = DGV.Tag as Dictionary<string, dynamic>;
+            if (DGVTag.ContainsKey("tableConstructorScript"))
             {
-                var colType = DatabaseFunct.currentData[tableKey][colName];
+                isConstructed = true;
+                tableConstructorScript = DGVTag["tableConstructorScript"];
+            }
+
+            //If the row has a primary key column, erase its data
+            foreach (DataGridViewColumn column in DGV.Columns)
+            {
+                string colType = null;
+                
+
+                if (isConstructed)
+                {
+                    //fetch the column type from colTag is constructed:
+                    Dictionary<string, dynamic> colTag = column.Tag as Dictionary<string, dynamic>;
+                    colType = colTag["columnType"];
+                }
+                else
+                {
+                    colType = currentData[tableKey][column.Name];
+                }
+                
                 if (colType == "Primary Key")
                 {
-                    invalidColNames.Add(colName);
+                    invalidColNames.Add(column.Name);
                     
                 }
             }
@@ -1475,8 +1498,8 @@ namespace MDB
             //set loadingTable to true
             DatabaseFunct.loadingTable = true;
             //reload the row
-            List<string> columnOrderRefrence = currentData[tableKey][ColumnOrderRefrence] as List<string>;
-            LoadRow(new KeyValuePair<int, Dictionary<string, dynamic>>(rowIndex, tableData[rowIndex]), DGV, false);
+            //List<string> columnOrderRefrence = currentData[tableKey][ColumnOrderRefrence] as List<string>;
+            LoadRow(new KeyValuePair<int, Dictionary<string, dynamic>>(rowIndex, tableData[rowIndex]), DGV, isConstructed);
             //set it back to false
             DatabaseFunct.loadingTable = false;
             
