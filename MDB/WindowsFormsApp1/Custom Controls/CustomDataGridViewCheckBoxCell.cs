@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace MDB
 {
@@ -8,6 +9,7 @@ namespace MDB
     {
         private Rectangle curCellBounds;
         private Rectangle checkBoxRect;
+        public bool enabled = true;
 
         public CustomDataGridViewCheckBoxCell() : base() { }
 
@@ -48,17 +50,30 @@ namespace MDB
                 curCellBounds = cellBounds;
                 // ToDo: Use col.DefaultCellStyle.Alignment or
                 // DataGridView.ColumnHeadersDefaultCellStyle.Alignment
-                // to position the box. MiddleCenter here...
+                // to position the box. TOPLEFT here...
                 checkBoxRect = new Rectangle(
-                    (cellBounds.Width - col.CheckBoxSize.Width) / 2 + cellBounds.X,
-                    (cellBounds.Height - col.CheckBoxSize.Height) / 2 + cellBounds.Y,
+                    3 + cellBounds.X,
+                    3 + cellBounds.Y,
                     col.CheckBoxSize.Width,
                     col.CheckBoxSize.Height);
             }
 
-            ControlPaint.DrawCheckBox(g, checkBoxRect, (bool)formattedValue
+
+
+
+            if (enabled == false)
+            {
+                Pen pen = new Pen(System.Drawing.ColorTranslator.FromHtml("#540000"), (float)2);
+                g.DrawRectangle(pen, checkBoxRect);
+            }
+            else {
+
+
+                ControlPaint.DrawCheckBox(g, checkBoxRect, (bool)formattedValue
                 ? ButtonState.Checked | ButtonState.Flat
                 : ButtonState.Flat);
+            }
+
 
 
         }

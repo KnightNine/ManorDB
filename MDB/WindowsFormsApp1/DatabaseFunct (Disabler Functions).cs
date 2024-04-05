@@ -224,8 +224,7 @@ namespace MDB
                 {
                     CustomDataGridViewCheckBoxCell cbcell = (CustomDataGridViewCheckBoxCell)cell;
                     //cbcell.FlatStyle = FlatStyle.Popup;
-                    
-
+                    cbcell.enabled = false;
 
                 }
 
@@ -267,6 +266,8 @@ namespace MDB
                 {
                     CustomDataGridViewCheckBoxCell cbcell = (CustomDataGridViewCheckBoxCell)cell;
                     //cbcell.FlatStyle = FlatStyle.Standard;
+
+                    cbcell.enabled = true;
                 }
 
 

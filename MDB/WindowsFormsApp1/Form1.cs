@@ -1019,7 +1019,7 @@ namespace MDB
                 CustomDataGridViewCheckBoxCell cbcell = (CustomDataGridViewCheckBoxCell)selcell;
                 isEnabled = ((Dictionary<string, dynamic>)cbcell.Tag)["Enabled"];
             }
-                
+            
             if (isEnabled)
             {
 
