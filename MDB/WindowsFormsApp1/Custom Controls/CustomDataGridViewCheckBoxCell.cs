@@ -59,6 +59,8 @@ namespace MDB
             ControlPaint.DrawCheckBox(g, checkBoxRect, (bool)formattedValue
                 ? ButtonState.Checked | ButtonState.Flat
                 : ButtonState.Flat);
+
+
         }
 
         // In case you don't use the `Alignment` property to position the 

@@ -19,7 +19,7 @@ namespace MDB
         //extra spacing within open subtables
         static int subTableSpacing = 10;
         //indent value for subtable depth
-        static int indentationValue = 10;
+        static int indentationValue = 20;
         //stored scroll point used to retain the panel1 scroll position when contents of panel are redrawn
         //Point scrollValue;
         

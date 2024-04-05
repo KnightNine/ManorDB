@@ -223,7 +223,10 @@ namespace MDB
                 if (cell.GetType() == typeof(CustomDataGridViewCheckBoxCell))
                 {
                     CustomDataGridViewCheckBoxCell cbcell = (CustomDataGridViewCheckBoxCell)cell;
-                    cbcell.FlatStyle = FlatStyle.Popup;
+                    //cbcell.FlatStyle = FlatStyle.Popup;
+                    
+
+
                 }
 
 
@@ -263,7 +266,7 @@ namespace MDB
                 if (cell.GetType() == typeof(CustomDataGridViewCheckBoxCell))
                 {
                     CustomDataGridViewCheckBoxCell cbcell = (CustomDataGridViewCheckBoxCell)cell;
-                    cbcell.FlatStyle = FlatStyle.Standard;
+                    //cbcell.FlatStyle = FlatStyle.Standard;
                 }
 
 
