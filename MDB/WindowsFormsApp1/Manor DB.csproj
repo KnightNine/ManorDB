@@ -101,6 +101,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auto Table Constructor Script Funct.cs" />
+    <Compile Include="Custom Controls\CustomDataGridViewCheckBoxCell.cs" />
+    <Compile Include="Custom Controls\CustomDataGridViewCheckBoxColumn.cs" />
     <Compile Include="Custom Controls\MainTableToolStripMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>

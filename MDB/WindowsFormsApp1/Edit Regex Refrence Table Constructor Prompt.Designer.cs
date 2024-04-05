@@ -45,8 +45,8 @@ namespace MDB
             this.columnNameTextBox = new System.Windows.Forms.TextBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.columnNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.isPrimaryKeyColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.isAutoTableConstructorScriptColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.isPrimaryKeyColumn = new CustomDataGridViewCheckBoxColumn();
+            this.isAutoTableConstructorScriptColumn = new CustomDataGridViewCheckBoxColumn();
             this.regexColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label3 = new System.Windows.Forms.Label();
             this.fileDirectoryTextBox = new System.Windows.Forms.TextBox();
@@ -381,8 +381,8 @@ namespace MDB
         private System.Windows.Forms.TextBox regexTextBox;
         private System.Windows.Forms.TextBox columnNameTextBox;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnNameColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn isPrimaryKeyColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn isAutoTableConstructorScriptColumn;
+        private CustomDataGridViewCheckBoxColumn isPrimaryKeyColumn;
+        private CustomDataGridViewCheckBoxColumn isAutoTableConstructorScriptColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn regexColumn;
         private System.Windows.Forms.Button addColumnButton;
         private System.Windows.Forms.Label label2;

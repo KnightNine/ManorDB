@@ -1642,9 +1642,9 @@ namespace MDB
 
 
                     }
-                    else if (DGV.Columns[column.Name] is DataGridViewCheckBoxColumn)
+                    else if (DGV.Columns[column.Name] is CustomDataGridViewCheckBoxColumn)
                     {
-                        DataGridViewCheckBoxCell cell = ColumnTypes.setBoolCellTFVals(new DataGridViewCheckBoxCell());
+                        CustomDataGridViewCheckBoxCell cell = ColumnTypes.setBoolCellTFVals(new CustomDataGridViewCheckBoxCell());
 
                         cell.Tag = new Dictionary<string, dynamic>() { { "Enabled", true } };
 
@@ -1653,6 +1653,7 @@ namespace MDB
                         if (value)
                         {
                             cellVal = cell.TrueValue;
+                            
                         }
 
                         

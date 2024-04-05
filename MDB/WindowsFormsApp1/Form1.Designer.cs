@@ -50,6 +50,7 @@ namespace MDB
             this.scriptSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editScriptPrefabsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setScriptColumnDuplicatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateRegexReferenceTablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -57,12 +58,12 @@ namespace MDB
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.customTabControl1 = new System.Windows.Forms.CustomTabControl();
-            this.updateRegexReferenceTablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -74,7 +75,7 @@ namespace MDB
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(2, 1, 0, 1);
-            this.menuStrip1.Size = new System.Drawing.Size(1238, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1005, 47);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -85,73 +86,80 @@ namespace MDB
             this.appendFileToolStripMenuItem,
             this.saveAsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 22);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 45);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(343, 54);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // appendFileToolStripMenuItem
             // 
             this.appendFileToolStripMenuItem.Name = "appendFileToolStripMenuItem";
-            this.appendFileToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.appendFileToolStripMenuItem.Size = new System.Drawing.Size(343, 54);
             this.appendFileToolStripMenuItem.Text = "Append File";
             this.appendFileToolStripMenuItem.Click += new System.EventHandler(this.appendFileToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(343, 54);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // newTableToolStripMenuItem
             // 
             this.newTableToolStripMenuItem.Name = "newTableToolStripMenuItem";
-            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(73, 22);
+            this.newTableToolStripMenuItem.Size = new System.Drawing.Size(179, 45);
             this.newTableToolStripMenuItem.Text = "New Table";
             this.newTableToolStripMenuItem.Click += new System.EventHandler(this.newTableToolStripMenuItem_Click);
             // 
             // removeTableToolStripMenuItem
             // 
             this.removeTableToolStripMenuItem.Name = "removeTableToolStripMenuItem";
-            this.removeTableToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.removeTableToolStripMenuItem.Size = new System.Drawing.Size(226, 45);
             this.removeTableToolStripMenuItem.Text = "Remove Table";
             this.removeTableToolStripMenuItem.Click += new System.EventHandler(this.removeTableToolStripMenuItem_Click);
             // 
             // hideUnhideColumnsToolStripMenuItem
             // 
             this.hideUnhideColumnsToolStripMenuItem.Name = "hideUnhideColumnsToolStripMenuItem";
-            this.hideUnhideColumnsToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.hideUnhideColumnsToolStripMenuItem.Size = new System.Drawing.Size(337, 45);
             this.hideUnhideColumnsToolStripMenuItem.Text = "Hide/Unhide Columns";
             this.hideUnhideColumnsToolStripMenuItem.Click += new System.EventHandler(this.hideUnhideColumnsToolStripMenuItem_Click);
-			// 
-			// scriptSettingsToolStripMenuItem
-			// 
-			this.scriptSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            // 
+            // scriptSettingsToolStripMenuItem
+            // 
+            this.scriptSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editScriptPrefabsToolStripMenuItem,
             this.setScriptColumnDuplicatesToolStripMenuItem});
             this.scriptSettingsToolStripMenuItem.Name = "scriptSettingsToolStripMenuItem";
-            this.scriptSettingsToolStripMenuItem.Size = new System.Drawing.Size(94, 22);
+            this.scriptSettingsToolStripMenuItem.Size = new System.Drawing.Size(232, 45);
             this.scriptSettingsToolStripMenuItem.Text = "Script Settings";
             // 
             // editScriptPrefabsToolStripMenuItem
             // 
             this.editScriptPrefabsToolStripMenuItem.Name = "editScriptPrefabsToolStripMenuItem";
-            this.editScriptPrefabsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.editScriptPrefabsToolStripMenuItem.Size = new System.Drawing.Size(638, 54);
             this.editScriptPrefabsToolStripMenuItem.Text = "Edit Script Prefabs";
             this.editScriptPrefabsToolStripMenuItem.Click += new System.EventHandler(this.editScriptPrefabsToolStripMenuItem_Click);
             // 
             // setScriptColumnDuplicatesToolStripMenuItem
             // 
             this.setScriptColumnDuplicatesToolStripMenuItem.Name = "setScriptColumnDuplicatesToolStripMenuItem";
-            this.setScriptColumnDuplicatesToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.setScriptColumnDuplicatesToolStripMenuItem.Size = new System.Drawing.Size(638, 54);
             this.setScriptColumnDuplicatesToolStripMenuItem.Text = "Set Script Column Type Duplicates";
             this.setScriptColumnDuplicatesToolStripMenuItem.Click += new System.EventHandler(this.setScriptColumnTypeDuplicatesToolStripMenuItem_Click);
+            // 
+            // updateRegexReferenceTablesToolStripMenuItem
+            // 
+            this.updateRegexReferenceTablesToolStripMenuItem.Name = "updateRegexReferenceTablesToolStripMenuItem";
+            this.updateRegexReferenceTablesToolStripMenuItem.Size = new System.Drawing.Size(466, 45);
+            this.updateRegexReferenceTablesToolStripMenuItem.Text = "Update Regex Reference Tables ";
+            this.updateRegexReferenceTablesToolStripMenuItem.Click += new System.EventHandler(this.updateRegexReferenceTablesToolStripMenuItem_Click);
             // 
             // label1
             // 
@@ -160,10 +168,10 @@ namespace MDB
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 25);
+            this.label1.Location = new System.Drawing.Point(10, 29);
             this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(350, 29);
+            this.label1.Size = new System.Drawing.Size(864, 69);
             this.label1.TabIndex = 1;
             this.label1.Text = "Open or create a new MDB File";
             // 
@@ -185,11 +193,11 @@ namespace MDB
             // 
             this.vScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.vScrollBar1.LargeChange = 1;
-            this.vScrollBar1.Location = new System.Drawing.Point(1222, 24);
+            this.vScrollBar1.Location = new System.Drawing.Point(989, 47);
             this.vScrollBar1.Maximum = 0;
             this.vScrollBar1.MaximumSize = new System.Drawing.Size(16, 0);
             this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(16, 421);
+            this.vScrollBar1.Size = new System.Drawing.Size(16, 252);
             this.vScrollBar1.TabIndex = 1;
             this.vScrollBar1.ValueChanged += new System.EventHandler(this.ScrollBar_ValueChanged);
             // 
@@ -228,32 +236,25 @@ namespace MDB
             this.customTabControl1.DisplayStyleProvider.TabBookmarkColorsByName = ((System.Collections.Generic.Dictionary<string, System.Drawing.Color>)(resources.GetObject("resource.TabBookmarkColorsByName")));
             this.customTabControl1.DisplayStyleProvider.TextColor = System.Drawing.Color.White;
             this.customTabControl1.DisplayStyleProvider.TextColorDisabled = System.Drawing.Color.WhiteSmoke;
-            this.customTabControl1.DisplayStyleProvider.TextColorSelected = System.Drawing.Color.White;
+            this.customTabControl1.DisplayStyleProvider.TextColorSelected = System.Drawing.Color.Black;
             this.customTabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.customTabControl1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.customTabControl1.HotTrack = true;
-            this.customTabControl1.Location = new System.Drawing.Point(0, 420);
+            this.customTabControl1.Location = new System.Drawing.Point(0, 274);
             this.customTabControl1.Margin = new System.Windows.Forms.Padding(1);
             this.customTabControl1.Name = "customTabControl1";
             this.customTabControl1.SelectedIndex = 0;
-            this.customTabControl1.Size = new System.Drawing.Size(1222, 25);
+            this.customTabControl1.Size = new System.Drawing.Size(989, 25);
             this.customTabControl1.TabIndex = 0;
             this.customTabControl1.SelectedIndexChanged += new System.EventHandler(this.customTabControl1_SelectedIndexChanged);
             this.customTabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.customTabControl1_MouseDown);
-            // 
-            // updateRegexReferenceTablesToolStripMenuItem
-            // 
-            this.updateRegexReferenceTablesToolStripMenuItem.Name = "updateRegexReferenceTablesToolStripMenuItem";
-            this.updateRegexReferenceTablesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.updateRegexReferenceTablesToolStripMenuItem.Text = "Update Regex Reference Tables ";
-            this.updateRegexReferenceTablesToolStripMenuItem.Click += new System.EventHandler(this.updateRegexReferenceTablesToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.ClientSize = new System.Drawing.Size(1238, 445);
+            this.ClientSize = new System.Drawing.Size(1005, 299);
             this.Controls.Add(this.customTabControl1);
             this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.menuStrip1);

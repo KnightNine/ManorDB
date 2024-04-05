@@ -32,8 +32,8 @@ The game I am working on relies on complex repeating data structures to define i
   <li>ability to change columns linked to a `Auto Table Constructor Script Receiver` column without having to delete and re-add the column (thus losing data)</li>
   <li>hovering over the table tabs should allow you to scroll through them with the scroll wheel</li>
   <li>Column Type Icons (to show the type of each column)</li>
-  <li> increase the visibility of selected bool cells (they are somewhat hard to destinguish from unselected bool cells)</li>
   <li> make the row being hovered over become more visible  </li>
+  <li>Search functionality for key reference dropdowns</li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>"Table Directory" column type that constructs and stores a string array of the directory in another table's structure, this would resolve the typos that could arise from writing these directories manually.</li>
   <li>Key Shortcuts</li>
@@ -42,7 +42,6 @@ The game I am working on relies on complex repeating data structures to define i
   <li>Undo/Redo</li>
   <li>an option to expand all rows so that text is readable</li>
   <li> Normalized Numeric Column (all values are restricted to total 1 across all rows in the same table/sub-table)</li>
-  <li>color coding tables by their depth</li>
   <li>A "Foreign Key Refrence Primary Key" column (to base a table around foreign keys that can't have duplicate refrences)</li>
   <li>A "force adjecent cell to value when cell is filled" setting, similar to the feature that disallows two cells from being filled at the same time, except instead of disabling the other cell entirely, the cell is set to a specific value and becomes read only. </li>
   <li>Table Shifting (re-ordering of Tables)</li>

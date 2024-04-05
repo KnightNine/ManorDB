@@ -292,7 +292,7 @@ namespace MDB
             columnNameCell.Value = colName;
 
             //is Primary Key column
-            DataGridViewCheckBoxCell isPKCell = columnRow.Cells[dataGridView.Columns.IndexOf(isPrimaryKeyColumn)] as DataGridViewCheckBoxCell;
+            CustomDataGridViewCheckBoxCell isPKCell = columnRow.Cells[dataGridView.Columns.IndexOf(isPrimaryKeyColumn)] as CustomDataGridViewCheckBoxCell;
             ColumnTypes.setBoolCellTFVals(isPKCell);
 
 
@@ -303,11 +303,11 @@ namespace MDB
                 cellVal = isPKCell.TrueValue;
             }
             isPKCell.Value = cellVal;
-            
+
 
 
             //is Auto Table Constructor Script column
-            DataGridViewCheckBoxCell isATCSCell = columnRow.Cells[dataGridView.Columns.IndexOf(isAutoTableConstructorScriptColumn)] as DataGridViewCheckBoxCell;
+            CustomDataGridViewCheckBoxCell isATCSCell = columnRow.Cells[dataGridView.Columns.IndexOf(isAutoTableConstructorScriptColumn)] as CustomDataGridViewCheckBoxCell;
             ColumnTypes.setBoolCellTFVals(isATCSCell);
 
             //set checkbox state

@@ -1014,9 +1014,9 @@ namespace MDB
                 DataGridViewButtonCell bcell = (DataGridViewButtonCell)selcell;
                 isEnabled = ((Dictionary<string, dynamic>)bcell.Tag)["Enabled"];
             }
-            else if (selcell is DataGridViewCheckBoxCell)
+            else if (selcell is CustomDataGridViewCheckBoxCell)
             {
-                DataGridViewCheckBoxCell cbcell = (DataGridViewCheckBoxCell)selcell;
+                CustomDataGridViewCheckBoxCell cbcell = (CustomDataGridViewCheckBoxCell)selcell;
                 isEnabled = ((Dictionary<string, dynamic>)cbcell.Tag)["Enabled"];
             }
                 
@@ -1124,13 +1124,33 @@ namespace MDB
                         CustomDataGridView newDGV = Program.GetGridView(subtableConstructorScript != null);
                         //-------------------------------------------------setting edits-----
                         newDGV.Dock = DockStyle.None;
+
                         
 
                         newDGV.Name = senderDGV.Name + "/" + e.RowIndex.ToString() + "," + senderDGV.Columns[e.ColumnIndex].Name;
 
+                        int depth = DatabaseFunct.ConvertDirToTableKey(newDGV.Name).Split('/').Length;
+
+                        Color depthColor = ColorThemes.Themes[ColorThemes.currentTheme]["GridColor"];
+                        int depthColorShift = ColorThemes.Themes[ColorThemes.currentTheme]["DepthColorShift"];
+
+                        double R = depthColor.R + depthColorShift * depth;
+                        R = Math.Max(0.0,(Math.Min(R, 255.0)));
+                        //make green greener as depth increases
+                        double G = depthColor.R + depthColorShift * depth * (depthColorShift > 0 ? 1.5 : 0.75 );
+                        G = Math.Max(0.0, (Math.Min(G, 255.0)));
+                        double B = depthColor.R + depthColorShift * depth;
+                        B = Math.Max(0.0, (Math.Min(B, 255.0)));
+
+                        depthColor = Color.FromArgb((int)R, (int)G, (int)B);
+
+                        
+                        
+
+                        newDGV.GridColor = depthColor;
 
 
-                       
+
                         //store the table construction data within the DGV tag to be used instead of the table structure from currentData
                         if (subtableConstructorScript != null)
                         {
@@ -1199,6 +1219,7 @@ namespace MDB
                 {
                     
                     senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Convert.ToBoolean(senderDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].EditedFormattedValue);
+
                 }
             }
             
@@ -1468,9 +1489,9 @@ namespace MDB
 
                 //place subtable below row relative to parent table
                 //adjust relative to TableMainGridView scroll
-                subDGV.Location = new Point(xOffset, (int)(row != 0 ? GetDataGridViewHeightAtRow(parentDGV, row - 1) : subDGV.ColumnHeadersHeight) + parentDGV.RowTemplate.Height);//- Program.mainForm.TableMainGridView.VerticalScrollingOffset);
+                subDGV.Location = new Point(indentationValue, (int)(row != 0 ? GetDataGridViewHeightAtRow(parentDGV, row - 1) : subDGV.ColumnHeadersHeight) + parentDGV.RowTemplate.Height);//- Program.mainForm.TableMainGridView.VerticalScrollingOffset);
 
-                subDGV.Width = ClientRectangle.Width - (vScrollBar1.Visible ? vScrollBar1.Width : 0) - xOffset;
+                subDGV.Width = (ClientRectangle.Width - (vScrollBar1.Visible ? vScrollBar1.Width : 0)) - xOffset;
 
             }
 
@@ -1674,6 +1695,8 @@ namespace MDB
                 }
             }
         }
+
+       
 
 
 

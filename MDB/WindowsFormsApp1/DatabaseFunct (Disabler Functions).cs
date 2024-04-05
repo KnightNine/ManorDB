@@ -220,9 +220,9 @@ namespace MDB
                     DataGridViewComboBoxCell cbcell = (DataGridViewComboBoxCell)cell;
                     //cbcell.FlatStyle = FlatStyle.Popup;
                 }
-                if (cell.GetType() == typeof(DataGridViewCheckBoxCell))
+                if (cell.GetType() == typeof(CustomDataGridViewCheckBoxCell))
                 {
-                    DataGridViewCheckBoxCell cbcell = (DataGridViewCheckBoxCell)cell;
+                    CustomDataGridViewCheckBoxCell cbcell = (CustomDataGridViewCheckBoxCell)cell;
                     cbcell.FlatStyle = FlatStyle.Popup;
                 }
 
@@ -260,9 +260,9 @@ namespace MDB
                     DataGridViewComboBoxCell cbcell = (DataGridViewComboBoxCell)cell;
                     //cbcell.FlatStyle = FlatStyle.Standard;
                 }
-                if (cell.GetType() == typeof(DataGridViewCheckBoxCell))
+                if (cell.GetType() == typeof(CustomDataGridViewCheckBoxCell))
                 {
-                    DataGridViewCheckBoxCell cbcell = (DataGridViewCheckBoxCell)cell;
+                    CustomDataGridViewCheckBoxCell cbcell = (CustomDataGridViewCheckBoxCell)cell;
                     cbcell.FlatStyle = FlatStyle.Standard;
                 }
 

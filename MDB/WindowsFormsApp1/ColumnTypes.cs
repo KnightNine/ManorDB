@@ -35,7 +35,7 @@ namespace MDB
             //it stores links to this maintable's primary keys.
             {"Foreign Key Refrence",typeof(DataGridViewComboBoxColumn) },
             //stores true or false values
-            {"Bool",typeof(DataGridViewCheckBoxColumn) },
+            {"Bool",typeof(CustomDataGridViewCheckBoxColumn) },
             //this column exists in a subtable and is set to a parent directory layer in the same table upon creation
             //it stores links to this parent subtable's primary key's
             {"Parent Subtable Foreign Key Refrence",typeof(DataGridViewComboBoxColumn) },
@@ -121,7 +121,7 @@ namespace MDB
         }
 
 
-        internal static DataGridViewCheckBoxCell setBoolCellTFVals(DataGridViewCheckBoxCell cell)
+        internal static CustomDataGridViewCheckBoxCell setBoolCellTFVals(CustomDataGridViewCheckBoxCell cell)
         {
             cell.FalseValue = false;
             cell.TrueValue = true;

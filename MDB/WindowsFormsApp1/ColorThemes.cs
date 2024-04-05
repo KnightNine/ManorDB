@@ -274,6 +274,7 @@ namespace MDB
                     {"FormBack",darkFormBackColor },
                     {"FormFore",darkFormForeColor },
                     {"LabelFore",darkLabelColor },
+                    {"DepthColorShift",10 },
                     {"GridColor",darkGridColor },
                     {"Disabled",darkDisabledCell },
                     {"DisabledText",darkDisabledText },
@@ -285,7 +286,7 @@ namespace MDB
                     { "InvalidCellOutline",darkInvalidCellOutline},
                     {"TabStyle", System.Windows.Forms.TabStyle.ManorDB },
                     {"TabTextColor",  darkTabText},
-
+                    {"SelectedTabTextColor",  darkTabSelectedText},
                     {"SubTableCellFore",darkSubTableCellText },
                     {"SubTableSelectedCellFore",darkSubTableSelectedCellText },
 
@@ -312,6 +313,7 @@ namespace MDB
                     {"FormBack",lightFormBackColor },
                     {"FormFore",lightFormForeColor },
                     {"LabelFore",lightLabelColor },
+                    {"DepthColorShift",-10 },
                     {"GridColor",lightGridColor },
                     {"Disabled",lightDisabledCell },
                     {"DisabledText",lightDisabledText },
@@ -323,6 +325,7 @@ namespace MDB
                     { "InvalidCellOutline",lightInvalidCellOutline},
                     {"TabStyle", System.Windows.Forms.TabStyle.VisualStudio },
                     {"TabTextColor",  lightTabText},
+                    {"SelectedTabTextColor",  lightTabSelectedText},
 
                     {"SubTableCellFore",lightSubTableCellText },
                     {"SubTableSelectedCellFore",lightSubTableSelectedCellText },
