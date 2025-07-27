@@ -28,6 +28,7 @@ The game I am working on relies on complex repeating data structures to define i
 <ul>
   <li>ability to change columns linked to a `Auto Table Constructor Script Receiver` column without having to delete and re-add the column (thus losing data)</li>
   <li>hovering over the table tabs should allow you to scroll through them with the scroll wheel</li>
+  <li>ability to copy a row from one subtable and paste it into another subtable of the same depth</li>
   <li>Column Type Icons (to show the type of each column)</li>
   <li> make the row being hovered over become more visible  </li>
   <li>Search functionality for key reference dropdowns</li>

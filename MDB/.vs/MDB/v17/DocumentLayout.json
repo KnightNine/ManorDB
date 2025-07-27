@@ -1,0 +1,564 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\databasefunct (columns rows).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\databasefunct (columns rows).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\auto table constructor script funct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\auto table constructor script funct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\columntypes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\columntypes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\databasefunct (subtables).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\databasefunct (subtables).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|c:\\users\\alexa\\desktop\\mdb\\mdb\\windowsformsapp1\\databasefunct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\databasefunct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\databasefunct (tables).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\databasefunct (tables).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|CustomTabControl||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Manor DB||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\app.manifest||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\app.manifest||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\custom controls\\customdatagridviewcheckboxcell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\custom controls\\customdatagridviewcheckboxcell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\colorthemes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\colorthemes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\custom controls\\customdatagridviewcheckboxcolumn.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\custom controls\\customdatagridviewcheckboxcolumn.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\databasefunct (disabler functions).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\databasefunct (disabler functions).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\databasefunct (subtable row restriction).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\databasefunct (subtable row restriction).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\edit regex refrence table constructor prompt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\edit regex refrence table constructor prompt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\edit regex refrence table constructor prompt.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\edit regex refrence table constructor prompt.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\custom controls\\maintabletoolstripmenuitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\custom controls\\maintabletoolstripmenuitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\custom controls\\maintabletoolstripmenuitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\custom controls\\maintabletoolstripmenuitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\custom controls\\customdatagridview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\custom controls\\customdatagridview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\custom controls\\colorpicker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\custom controls\\colorpicker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\regexrefrencetableconstructorprompthandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\regexrefrencetableconstructorprompthandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\custom controls\\customdatagridview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\custom controls\\customdatagridview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\inputoutput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\inputoutput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\databasefunct (main table controls).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\databasefunct (main table controls).cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\edit regex refrence table constructor prompt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\edit regex refrence table constructor prompt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\form1.resx||{FF4D6ACA-9352-4A5F-821E-F4D6EBDCAB11}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\form1.resx||{FF4D6ACA-9352-4A5F-821E-F4D6EBDCAB11}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\windowsformsapp1\\edit regex refrence table constructor prompt.resx||{FF4D6ACA-9352-4A5F-821E-F4D6EBDCAB11}",
+      "RelativeMoniker": "D:0:0:{279842C0-6B10-4E81-8812-F530CCBAC405}|WindowsFormsApp1\\Manor DB.csproj|solutionrelative:windowsformsapp1\\edit regex refrence table constructor prompt.resx||{FF4D6ACA-9352-4A5F-821E-F4D6EBDCAB11}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4DBFE2CF-45E4-4594-8E6A-5EBC2EEF85AE}|CustomTabControl\\CustomTabControl.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\customtabcontrol\\tabcontrol\\customtabcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{4DBFE2CF-45E4-4594-8E6A-5EBC2EEF85AE}|CustomTabControl\\CustomTabControl.csproj|solutionrelative:customtabcontrol\\tabcontrol\\customtabcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4DBFE2CF-45E4-4594-8E6A-5EBC2EEF85AE}|CustomTabControl\\CustomTabControl.csproj|C:\\Users\\alexa\\Desktop\\MDB\\MDB\\customtabcontrol\\tabcontrol\\customtabcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4DBFE2CF-45E4-4594-8E6A-5EBC2EEF85AE}|CustomTabControl\\CustomTabControl.csproj|solutionrelative:customtabcontrol\\tabcontrol\\customtabcontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DatabaseFunct (Columns Rows).cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (Columns Rows).cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\DatabaseFunct (Columns Rows).cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (Columns Rows).cs",
+              "RelativeToolTip": "WindowsFormsApp1\\DatabaseFunct (Columns Rows).cs",
+              "ViewState": "AgIAAHYDAAAAAAAAAAAuwIYDAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.329Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Auto Table Constructor Script Funct.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Auto Table Constructor Script Funct.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Auto Table Constructor Script Funct.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Auto Table Constructor Script Funct.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\Auto Table Constructor Script Funct.cs",
+              "ViewState": "AgIAAMcBAAAAAAAAAAAWwMwBAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.329Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DatabaseFunct (SubTables).cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (SubTables).cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\DatabaseFunct (SubTables).cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (SubTables).cs",
+              "RelativeToolTip": "WindowsFormsApp1\\DatabaseFunct (SubTables).cs",
+              "ViewState": "AgIAANkAAAAAAAAAAAAmwOEAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.594Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ColumnTypes.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\ColumnTypes.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\ColumnTypes.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\ColumnTypes.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\ColumnTypes.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAowCUAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.59Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Program.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Program.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Program.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\Program.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABcAAABxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.591Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Form1.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Form1.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Form1.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\Form1.cs",
+              "ViewState": "AgIAAKEEAAAAAAAAAAAewK8EAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.587Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DatabaseFunct.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\DatabaseFunct.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\DatabaseFunct.cs",
+              "ViewState": "AgIAAHEAAAAAAAAAAAAwwHcAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.484Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "DatabaseFunct (Tables).cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (Tables).cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\DatabaseFunct (Tables).cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (Tables).cs",
+              "RelativeToolTip": "WindowsFormsApp1\\DatabaseFunct (Tables).cs",
+              "ViewState": "AQIAAC0BAAAAAAAAAAAhwD0BAABWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.328Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CustomTabControl",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\CustomTabControl\\CustomTabControl.csproj",
+              "RelativeDocumentMoniker": "CustomTabControl\\CustomTabControl.csproj",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\CustomTabControl\\CustomTabControl.csproj",
+              "RelativeToolTip": "CustomTabControl\\CustomTabControl.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2022-01-21T23:19:11.539Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Manor DB",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Manor DB.csproj",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Manor DB.csproj",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Manor DB.csproj",
+              "RelativeToolTip": "WindowsFormsApp1\\Manor DB.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2022-01-18T10:13:07.918Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "app.manifest",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\app.manifest",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\app.manifest",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\app.manifest",
+              "RelativeToolTip": "WindowsFormsApp1\\app.manifest",
+              "ViewState": "AQIAACcAAAAAAAAAAAAhwD4AAAAXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001203|",
+              "WhenOpened": "2025-07-27T00:45:18.326Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "DatabaseFunct (Subtable Row Restriction).cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (Subtable Row Restriction).cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\DatabaseFunct (Subtable Row Restriction).cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (Subtable Row Restriction).cs",
+              "RelativeToolTip": "WindowsFormsApp1\\DatabaseFunct (Subtable Row Restriction).cs",
+              "ViewState": "AQIAALEAAAAAAAAAAAAowMIAAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.208Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "CustomDataGridViewCheckBoxCell.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\CustomDataGridViewCheckBoxCell.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Custom Controls\\CustomDataGridViewCheckBoxCell.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\CustomDataGridViewCheckBoxCell.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\Custom Controls\\CustomDataGridViewCheckBoxCell.cs",
+              "ViewState": "AQIAADcAAAAAAAAAAAAowEUAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.587Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "CustomDataGridViewCheckBoxColumn.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\CustomDataGridViewCheckBoxColumn.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Custom Controls\\CustomDataGridViewCheckBoxColumn.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\CustomDataGridViewCheckBoxColumn.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\Custom Controls\\CustomDataGridViewCheckBoxColumn.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAABIwAsAAABOAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.588Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ColorThemes.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\ColorThemes.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\ColorThemes.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\ColorThemes.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\ColorThemes.cs",
+              "ViewState": "AQIAAAEAAAAAAAAAAAAkwA8AAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.588Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "DatabaseFunct (Disabler Functions).cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (Disabler Functions).cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\DatabaseFunct (Disabler Functions).cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (Disabler Functions).cs",
+              "RelativeToolTip": "WindowsFormsApp1\\DatabaseFunct (Disabler Functions).cs",
+              "ViewState": "AQIAAOYAAAAAAAAAAAAowAABAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.589Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Edit Regex Refrence Table Constructor Prompt.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.cs",
+              "ViewState": "AQIAANYAAAAAAAAAAAAowOsAAABPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003525|",
+              "WhenOpened": "2025-07-27T00:45:18.589Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Edit Regex Refrence Table Constructor Prompt.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.Designer.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.Designer.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.Designer.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.Designer.cs",
+              "ViewState": "AQIAANMAAAAAAAAAAAAowOsAAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001384|",
+              "WhenOpened": "2025-07-27T00:45:18.59Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Form1.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Form1.Designer.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Form1.Designer.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Form1.Designer.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\Form1.Designer.cs",
+              "ViewState": "AQIAAKYAAAAAAAAAAAAowNkAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001384|",
+              "WhenOpened": "2025-07-27T00:45:18.591Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "MainTableToolStripMenuItem.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\MainTableToolStripMenuItem.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Custom Controls\\MainTableToolStripMenuItem.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\MainTableToolStripMenuItem.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\Custom Controls\\MainTableToolStripMenuItem.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAmwBMAAAAkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000587|",
+              "WhenOpened": "2025-07-27T00:45:18.592Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "MainTableToolStripMenuItem.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\MainTableToolStripMenuItem.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Custom Controls\\MainTableToolStripMenuItem.cs",
+              "ToolTip": "C:\\Users\\Alex\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\MainTableToolStripMenuItem.cs [Design]",
+              "RelativeToolTip": "..\\..\\..\\..\\Alex\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\MainTableToolStripMenuItem.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000587|",
+              "WhenOpened": "2025-07-27T00:45:18.592Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "ColorPicker.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\ColorPicker.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Custom Controls\\ColorPicker.cs",
+              "ToolTip": "C:\\Users\\Alex\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\ColorPicker.cs [Design]",
+              "RelativeToolTip": "..\\..\\..\\..\\Alex\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\ColorPicker.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000587|",
+              "WhenOpened": "2025-07-27T00:45:18.593Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "AssemblyInfo.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Properties\\AssemblyInfo.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Properties\\AssemblyInfo.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Properties\\AssemblyInfo.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\Properties\\AssemblyInfo.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAABCAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.593Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "App.config",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\App.config",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\App.config",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\App.config",
+              "RelativeToolTip": "WindowsFormsApp1\\App.config",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-07-27T00:45:18.593Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "CustomDataGridView.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\CustomDataGridView.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Custom Controls\\CustomDataGridView.cs",
+              "ToolTip": "C:\\Users\\Alex\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\CustomDataGridView.cs [Design]",
+              "RelativeToolTip": "..\\..\\..\\..\\Alex\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\CustomDataGridView.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000587|",
+              "WhenOpened": "2025-07-27T00:45:18.594Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "RegexRefrenceTableConstructorPromptHandler.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\RegexRefrenceTableConstructorPromptHandler.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\RegexRefrenceTableConstructorPromptHandler.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\RegexRefrenceTableConstructorPromptHandler.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\RegexRefrenceTableConstructorPromptHandler.cs",
+              "ViewState": "AQIAAFcAAAAAAAAAAADwv2MAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.595Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "CustomDataGridView.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\CustomDataGridView.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Custom Controls\\CustomDataGridView.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Custom Controls\\CustomDataGridView.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\Custom Controls\\CustomDataGridView.cs",
+              "ViewState": "AQIAAE8AAAAAAAAAAAAnwF8AAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000587|",
+              "WhenOpened": "2025-07-27T00:45:18.596Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "InputOutput.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\InputOutput.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\InputOutput.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\InputOutput.cs",
+              "RelativeToolTip": "WindowsFormsApp1\\InputOutput.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAABQwGsBAAA/AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.596Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "DatabaseFunct (Main Table Controls).cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (Main Table Controls).cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\DatabaseFunct (Main Table Controls).cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\DatabaseFunct (Main Table Controls).cs",
+              "RelativeToolTip": "WindowsFormsApp1\\DatabaseFunct (Main Table Controls).cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAFwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-27T00:45:18.597Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "Edit Regex Refrence Table Constructor Prompt.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.cs",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.cs",
+              "ToolTip": "C:\\Users\\Alex\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.cs [Design]",
+              "RelativeToolTip": "..\\..\\..\\..\\Alex\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003525|",
+              "WhenOpened": "2025-07-27T00:45:18.597Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "Form1.resx",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Form1.resx",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Form1.resx",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Form1.resx",
+              "RelativeToolTip": "WindowsFormsApp1\\Form1.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001384|",
+              "WhenOpened": "2025-07-27T00:45:18.598Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "Edit Regex Refrence Table Constructor Prompt.resx",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.resx",
+              "RelativeDocumentMoniker": "WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.resx",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.resx",
+              "RelativeToolTip": "WindowsFormsApp1\\Edit Regex Refrence Table Constructor Prompt.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001384|",
+              "WhenOpened": "2025-07-27T00:45:18.598Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "CustomTabControl.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\CustomTabControl\\TabControl\\CustomTabControl.cs",
+              "RelativeDocumentMoniker": "CustomTabControl\\TabControl\\CustomTabControl.cs",
+              "ToolTip": "C:\\Users\\Alex\\Desktop\\MDB\\MDB\\CustomTabControl\\TabControl\\CustomTabControl.cs [Design]",
+              "RelativeToolTip": "..\\..\\..\\..\\Alex\\Desktop\\MDB\\MDB\\CustomTabControl\\TabControl\\CustomTabControl.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000587|",
+              "WhenOpened": "2025-07-27T00:45:18.599Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "CustomTabControl.cs",
+              "DocumentMoniker": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\CustomTabControl\\TabControl\\CustomTabControl.cs",
+              "RelativeDocumentMoniker": "CustomTabControl\\TabControl\\CustomTabControl.cs",
+              "ToolTip": "C:\\Users\\alexa\\Desktop\\MDB\\MDB\\CustomTabControl\\TabControl\\CustomTabControl.cs",
+              "RelativeToolTip": "CustomTabControl\\TabControl\\CustomTabControl.cs",
+              "ViewState": "AQIAAIIAAAAAAAAAAAASwBoAAAB7AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000587|",
+              "WhenOpened": "2025-07-27T00:45:18.599Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

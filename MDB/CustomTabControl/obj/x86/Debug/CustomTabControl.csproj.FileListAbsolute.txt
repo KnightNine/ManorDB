@@ -12,3 +12,9 @@ C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\obj\x86\Debug\JacksonSoft.CustomT
 C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\JacksonSoft.CustomTabControl.dll
 C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\JacksonSoft.CustomTabControl.pdb
 C:\Users\Alex\Desktop\MDB\MDB\CustomTabControl\obj\x86\Debug\CustomTabControl.csproj.AssemblyReference.cache
+C:\Users\alexa\Desktop\MDB\MDB\CustomTabControl\obj\x86\Debug\CustomTabControl.csproj.AssemblyReference.cache
+C:\Users\alexa\Desktop\MDB\MDB\CustomTabControl\obj\x86\Debug\CustomTabControl.csproj.CoreCompileInputs.cache
+C:\Users\alexa\Desktop\MDB\MDB\CustomTabControl\obj\x86\Debug\JacksonSoft.CustomTabControl.dll
+C:\Users\alexa\Desktop\MDB\MDB\CustomTabControl\obj\x86\Debug\JacksonSoft.CustomTabControl.pdb
+C:\Users\alexa\Desktop\MDB\MDB\CustomTabControl\JacksonSoft.CustomTabControl.dll
+C:\Users\alexa\Desktop\MDB\MDB\CustomTabControl\JacksonSoft.CustomTabControl.pdb

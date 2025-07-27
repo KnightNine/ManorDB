@@ -901,6 +901,12 @@ namespace MDB
                             string oldStart = tableKey + "/" + colName + "/";
                             string newStart = tableKey + "/" + newColName + "/";
 
+                            
+
+                            
+
+
+
                             //table structures in current data are only relevant to subtables
                             //and parentSubtableRefrenceEntries cannot be made to an adjacent Auto Table Constructor Script Receiver column since Auto Table Constructor Scripts don't support primary keys
                             if (colType == "SubTable")
@@ -919,7 +925,7 @@ namespace MDB
 
                                 renamedEntries[tableKey + "/" + newColName] = currentData[tableKey + "/" + colName];
 
-
+                                
 
                                 //rename all sub tables below it
                                 foreach (KeyValuePair<string, dynamic> tableKV in currentData)
@@ -1015,7 +1021,7 @@ namespace MDB
 
 
                             List<dynamic[]> replacer = new List<dynamic[]>();
-                            //change all open DGV names that start with or are subtable directory
+                            //change all open DGV names that start with or are the subtable directory
                             foreach (KeyValuePair<Tuple<CustomDataGridView, int>, Tuple<string, CustomDataGridView>> openSubTable in Program.openSubTables)
                             {
                                 string openTableDir = openSubTable.Value.Item2.Name;
@@ -1075,6 +1081,17 @@ namespace MDB
 
 
                             }
+
+                            //update column names in open subtables
+                            var keysToUpdate = Program.openSubTables.Where(kvp => kvp.Key.Item1 == DGV && kvp.Value.Item1 == colName).Select(kvp => kvp.Key).ToList();
+
+                            foreach (var key in keysToUpdate)
+                            {
+                                var oldValue = Program.openSubTables[key];
+                                Program.openSubTables[key] = Tuple.Create(newColName, oldValue.Item2);
+                            }
+
+
                             
 
                         }

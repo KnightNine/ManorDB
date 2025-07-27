@@ -99,7 +99,50 @@ namespace MDB
                 //get column
                 currentDir = currentDir[key.Item2];
             }
-            
+            //correct order if data is not ordered
+            bool ordered = true;
+            int lastRowIndex = -1;
+            foreach (KeyValuePair<int, Dictionary<string, dynamic>> entry in currentDir)
+            {
+                
+                if (entry.Key != lastRowIndex + 1)
+                {
+                    ordered = false;
+                    break;
+                }
+
+                lastRowIndex = entry.Key;
+            }
+            if (!ordered) // reorder rows
+            {
+                Console.WriteLine("--REORDERING TABLE--");
+                Dictionary<int, Dictionary<string, dynamic>> ordered_dict = new Dictionary<int, Dictionary<string, dynamic>>();
+                int i = 0;
+                
+                while (i < currentDir.Count)
+                {
+                    ordered_dict.Add(i, currentDir[i]);
+                    i+=1;
+                }
+
+                var dat = currentData[selectedTable];
+                string last_key2 = RowEntryRefrence;
+                foreach (Tuple<int, string> key in keys)
+                {
+
+                    dat = dat[last_key2];
+                    dat = dat[key.Item1];
+                    last_key2 = key.Item2;
+
+
+                }
+                //save it in currentdata
+                dat[last_key2] = ordered_dict;
+
+
+                currentDir = ordered_dict;
+            }
+
 
             Console.WriteLine("Returning TableData of: " + dir);
             return currentDir;
