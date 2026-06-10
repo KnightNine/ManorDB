@@ -26,12 +26,9 @@ The game I am working on relies on complex repeating data structures to define i
   There are some features that should be added beyond basic functionality but my attention is needed elsewhere. Here is what MDB is lacking in order of most prioritized to least:
 <p/>
 <ul>
-  <li>ability to change columns linked to a `Auto Table Constructor Script Receiver` column without having to delete and re-add the column (thus losing data)</li>
-  <li>hovering over the table tabs should allow you to scroll through them with the scroll wheel</li>
   <li>ability to copy a row from one subtable and paste it into another subtable of the same depth</li>
   <li>Column Type Icons (to show the type of each column)</li>
   <li> make the row being hovered over become more visible  </li>
-  <li>Search functionality for key reference dropdowns</li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>"Table Directory" column type that constructs and stores a string array of the directory in another table's structure, this would resolve the typos that could arise from writing these directories manually.</li>
   <li>Key Shortcuts</li>
