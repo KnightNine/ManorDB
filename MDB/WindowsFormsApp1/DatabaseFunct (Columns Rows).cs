@@ -1006,9 +1006,25 @@ namespace MDB
                                 currentData[tableKey + "/" + newColName] = dat;
                                 currentData.Remove(tableKey + "/" + colName);
 
+                                //rename row restriction data
+                                if (currentData[tableKey].ContainsKey(colName + SubtableRowRestrictionExt))
+                                {
+                                    currentData[tableKey][newColName + SubtableRowRestrictionExt] = currentData[tableKey][colName + SubtableRowRestrictionExt];
+                                    currentData[tableKey].Remove(colName + SubtableRowRestrictionExt);
+                                }
+
                             }
-                            
-                            
+                            else if (Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
+                            {
+                                //rename the adjacent refrence column link data
+                                if (currentData[tableKey].ContainsKey(colName + ScriptReceiverLinkToRefrenceColumnExt))
+                                {
+                                    currentData[tableKey][newColName + ScriptReceiverLinkToRefrenceColumnExt] = currentData[tableKey][colName + ScriptReceiverLinkToRefrenceColumnExt];
+                                    currentData[tableKey].Remove(colName + ScriptReceiverLinkToRefrenceColumnExt);
+                                }
+                            }
+
+
 
                             
                             
@@ -1204,25 +1220,31 @@ namespace MDB
                 
 
                 //for all columns which have shifted position due to this change
-                
-                //if shifted right, a single column to the right has been shifted before the new index
-                int colI = newIndex - 1;
-                if (isLeft)
+
+                //shift column DisplayIndexes in every open instance of this table structure.
+                //the column order is shared, so adjacent open subtables at this level must be reordered too,
+                //not just the grid whose header was used.
+                foreach (CustomDataGridView openDGV in GetAllOpenDGVsAtTableLevel(tableKey))
                 {
-                    //if shifted to the left, only the new index and indexes after it have been shifted
-                    colI = newIndex;
-                }
+                    //if shifted right, a single column to the right has been shifted before the new index
+                    int colI = newIndex - 1;
+                    if (isLeft)
+                    {
+                        //if shifted to the left, only the new index and indexes after it have been shifted
+                        colI = newIndex;
+                    }
 
-                //shift column DisplayIndexes
-                while ( colI < orderList.Count)
-                {
-                    string thisColName = orderList[colI];
-                    int thisOldIndex = oldOrderList.IndexOf(thisColName);
-                    int thisNewIndex = colI;
-                    DGV.Columns[thisColName].DisplayIndex = thisNewIndex;
+                    //shift column DisplayIndexes
+                    while (colI < orderList.Count)
+                    {
+                        string thisColName = orderList[colI];
+                        int thisOldIndex = oldOrderList.IndexOf(thisColName);
+                        int thisNewIndex = colI;
+                        openDGV.Columns[thisColName].DisplayIndex = thisNewIndex;
 
 
-                    colI++;
+                        colI++;
+                    }
                 }
 
                 //shift cell outlines

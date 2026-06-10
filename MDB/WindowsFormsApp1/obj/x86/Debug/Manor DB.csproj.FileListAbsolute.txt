@@ -32,3 +32,17 @@ C:\Users\alexa\Desktop\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\Manor DB.csproj.Co
 C:\Users\alexa\Desktop\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\Manor DB.csproj.Up2Date
 C:\Users\alexa\Desktop\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.exe
 C:\Users\alexa\Desktop\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.pdb
+D:\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\Manor DB.csproj.AssemblyReference.cache
+D:\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.exe.config
+D:\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.EditRegexRefrenceTableConstructorPrompt.resources
+D:\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.Form1.resources
+D:\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.Properties.Resources.resources
+D:\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.Text_Editor_Form.resources
+D:\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\Manor DB.csproj.GenerateResource.cache
+D:\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\Manor DB.csproj.CoreCompileInputs.cache
+D:\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.exe
+D:\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\MDB.pdb
+D:\MDB Built\MDB.exe.config
+D:\MDB Built\MDB.exe
+D:\MDB Built\MDB.pdb
+D:\MDB\MDB\WindowsFormsApp1\obj\x86\Debug\Manor DB.csproj.Up2Date

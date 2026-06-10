@@ -51,6 +51,7 @@ namespace MDB
             this.editScriptPrefabsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setScriptColumnDuplicatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateRegexReferenceTablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.primaryKeySearchToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -63,6 +64,7 @@ namespace MDB
             // 
             // menuStrip1
             // 
+            this.menuStrip1.CanOverflow = false;
             this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -71,14 +73,21 @@ namespace MDB
             this.removeTableToolStripMenuItem,
             this.hideUnhideColumnsToolStripMenuItem,
             this.scriptSettingsToolStripMenuItem,
-            this.updateRegexReferenceTablesToolStripMenuItem});
+            this.updateRegexReferenceTablesToolStripMenuItem,
+            this.primaryKeySearchToolStripTextBox});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(2, 1, 0, 1);
             this.menuStrip1.Size = new System.Drawing.Size(1005, 47);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
-            // 
+            //
+            // primaryKeySearchToolStripTextBox
+            //
+            this.primaryKeySearchToolStripTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.primaryKeySearchToolStripTextBox.Name = "primaryKeySearchToolStripTextBox";
+            this.primaryKeySearchToolStripTextBox.Size = new System.Drawing.Size(220, 23);
+            //
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -248,7 +257,7 @@ namespace MDB
             this.customTabControl1.TabIndex = 0;
             this.customTabControl1.SelectedIndexChanged += new System.EventHandler(this.customTabControl1_SelectedIndexChanged);
             this.customTabControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.customTabControl1_MouseDown);
-            // 
+            //
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -302,6 +311,7 @@ namespace MDB
         private ToolStripMenuItem editScriptPrefabsToolStripMenuItem;
         private ToolStripMenuItem setScriptColumnDuplicatesToolStripMenuItem;
         private ToolStripMenuItem updateRegexReferenceTablesToolStripMenuItem;
+        public ToolStripTextBox primaryKeySearchToolStripTextBox;
     }
 
 
@@ -553,7 +563,7 @@ namespace MDB
 
     public static class MultiSelectPrompt
     {
-        public static Tuple<string, List<string>> Show(string text, string caption, string[] listBoxArr, string addButtonText)
+        public static Tuple<string, List<string>> Show(string text, string caption, string[] listBoxArr, string addButtonText, List<string> preSelectedItems = null)
         {
             Form prompt = new Form()
             {
@@ -577,9 +587,17 @@ namespace MDB
 
             foreach (string key in listBoxArr)
             {
+                //pre-selected items go straight into the selected list below instead of the combo box
+                if (preSelectedItems != null && preSelectedItems.Contains(key))
+                {
+                    continue;
+                }
                 ComboBox1.Items.Add(key);
             }
-            ComboBox1.SelectedIndex = 0;
+            if (ComboBox1.Items.Count > 0)
+            {
+                ComboBox1.SelectedIndex = 0;
+            }
 
             prompt.Controls.Add(ComboBox1);
             //---dataGridView
@@ -603,6 +621,29 @@ namespace MDB
 
             dataGridView.DefaultCellStyle = dataGridViewCellStyle1;
             dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+
+            //add any pre-selected items as already-selected rows (order preserved)
+            if (preSelectedItems != null)
+            {
+                foreach (string item in preSelectedItems)
+                {
+                    //only include items that are valid options
+                    if (System.Array.IndexOf(listBoxArr, item) < 0)
+                    {
+                        continue;
+                    }
+
+                    dataGridView.Rows.Add();
+                    DataGridViewCell preCell = dataGridView.Rows[dataGridView.Rows.Count - 1].Cells[0];
+                    //these have to be set manually due to some issue
+                    preCell.Style.BackColor = System.Drawing.SystemColors.Window;
+                    preCell.Style.ForeColor = System.Drawing.SystemColors.ControlText;
+                    preCell.Style.SelectionBackColor = System.Drawing.SystemColors.Window;
+                    preCell.Style.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+                    preCell.Value = item;
+                    preCell.Tag = item;
+                }
+            }
 
             dataGridView.CellClick += DataGridView_CellClick;
             dataGridView.CellMouseEnter += DataGridView_CellMouseEnter;
@@ -924,9 +965,14 @@ namespace MDB
                 {
                     options.Add(new MenuItem() { Name = "Apply Subable Single Row Restriction", Text = "Apply SubTable Single Row Restriction", Tag = new dynamic[] { _DGV, _colName } });
                     options[5].Click += new System.EventHandler(addRowRestrictionToSubtableColumn);
-                    
+
                 }
-                
+
+            }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(colType, @"Auto Table Constructor Script Receiver\d*$"))
+            {
+                options.Add(new MenuItem() { Name = "Edit Linked Foreign Key Ref Columns", Text = "Edit Linked Foreign Key Ref Columns", Tag = new dynamic[] { _DGV, _colName } });
+                options[5].Click += new System.EventHandler(editLinkedForeignKeyRefColumns);
             }
 
 
@@ -1243,6 +1289,17 @@ namespace MDB
             string _colName = dat[1];
 
             ShowColumnDisablerContextMenu(_DGV, _colName);
+        }
+
+        private static void editLinkedForeignKeyRefColumns(object sender, System.EventArgs e)
+        {
+            MenuItem senderMI = sender as MenuItem;
+            dynamic[] dat = senderMI.Tag as dynamic[];
+            CustomDataGridView _DGV = dat[0];
+            string _colName = dat[1];
+
+            cMenu.Dispose();
+            Program.mainForm.EditReceiverLinkedColumns(_DGV, _colName);
         }
 
         private static void deleteColumn(object sender, System.EventArgs e)

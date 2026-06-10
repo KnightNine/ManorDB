@@ -60,7 +60,7 @@ namespace MDB
 
                 foreach (KeyValuePair<int, Dictionary<string, dynamic>> rowEntryData in tableData)
                 {
-                    if (rowEntryData.Value != null)
+                    if (rowEntryData.Value != null && rowEntryData.Value[colName] != null)
                     {
                         double val = rowEntryData.Value[colName];
                         rowEntryData.Value[colName] = (int)val;
@@ -88,8 +88,11 @@ namespace MDB
 
                 foreach (KeyValuePair<int, Dictionary<string, dynamic>> rowEntryData in tableData)
                 {
-                    int val = rowEntryData.Value[colName];
-                    rowEntryData.Value[colName] = (double)val;
+                    if (rowEntryData.Value != null && rowEntryData.Value[colName] != null)
+                    {
+                        int val = rowEntryData.Value[colName];
+                        rowEntryData.Value[colName] = (double)val;
+                    }
 
                 }
             }

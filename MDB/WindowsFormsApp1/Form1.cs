@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 namespace MDB
 {
 
-    public partial class Form1 : Form
+    public partial class Form1 : Form, IMessageFilter
     {
         //extra spacing within open subtables
         static int subTableSpacing = 10;
@@ -27,6 +27,14 @@ namespace MDB
         public Form1()
         {
             InitializeComponent();
+            Application.AddMessageFilter(this);
+
+            // home-bar "Deep Search" button: opens a read-only window that maps every
+            // subtable/column/row in the current table where a search string is found
+            var deepSearchItem = new ToolStripMenuItem("Deep Search");
+            deepSearchItem.Name = "deepSearchToolStripMenuItem";
+            deepSearchItem.Click += (s, e) => new DeepSearchForm().Show();
+            menuStrip1.Items.Add(deepSearchItem);
         }
 
         private CustomDataGridView lastFocusedDGV = null;
@@ -252,14 +260,63 @@ namespace MDB
                 {
                     if (customTabControl1.GetTabRect(i).Contains(e.Location))
                     {
-                        //tabs.Controls[i]; // this is your tab
-                        var tableName = customTabControl1.Controls[i].Text;
+                        //use TabPages[i] to match how the tab is read elsewhere (e.g. SelectedTab)
+                        var tableName = customTabControl1.TabPages[i].Name;
                         ContextMenuPrompt.ShowTableContextMenu(tableName);
 
                     }
                 }
 
             }
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        private static extern IntPtr FindWindowEx(IntPtr parent, IntPtr childAfter, string className, string windowName);
+
+        private const int WM_MOUSEWHEEL = 0x020A;
+        private const int WM_HSCROLL = 0x114;
+        private const int SB_THUMBPOSITION = 4;
+        private const int UDM_SETPOS = 0x0467;
+        private const int UDM_GETPOS = 0x0468;
+
+        //scroll wheel over the tab strip scrolls it (same as the overflow arrows), without changing selection.
+        //handled at the message-pump level because the wheel only reaches the focused control otherwise.
+        public bool PreFilterMessage(ref Message m)
+        {
+            if (m.Msg != WM_MOUSEWHEEL || !customTabControl1.IsHandleCreated)
+            {
+                return false;
+            }
+
+            if (!customTabControl1.RectangleToScreen(customTabControl1.ClientRectangle).Contains(Cursor.Position))
+            {
+                return false;
+            }
+
+            //the overflow arrows are a native up-down control; nudge its position then tell the
+            //tab control to scroll to it. the tab control only honours SB_THUMBPOSITION scrolls.
+            IntPtr upDown = FindWindowEx(customTabControl1.Handle, IntPtr.Zero, "msctls_updown32", null);
+            if (upDown == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            //high word of wParam is the signed wheel delta: down (negative) scrolls right
+            int delta = (short)((m.WParam.ToInt64() >> 16) & 0xffff);
+            int current = SendMessage(upDown, UDM_GETPOS, IntPtr.Zero, IntPtr.Zero).ToInt32() & 0xffff;
+            int target = current + (delta > 0 ? -1 : 1);
+
+            SendMessage(upDown, UDM_SETPOS, IntPtr.Zero, (IntPtr)(target & 0xffff));
+            int actual = SendMessage(upDown, UDM_GETPOS, IntPtr.Zero, IntPtr.Zero).ToInt32() & 0xffff;
+
+            if (actual != current)
+            {
+                SendMessage(customTabControl1.Handle, WM_HSCROLL, (IntPtr)(SB_THUMBPOSITION | (actual << 16)), upDown);
+            }
+            return true;
         }
 
         public void TableMainGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -1282,6 +1339,155 @@ namespace MDB
 
             
             
+        }
+
+
+        //change the foreign key refrence columns linked to an Auto Table Constructor Script Receiver column
+        //without deleting/re-adding the column (preserves the column's stored data)
+        public void EditReceiverLinkedColumns(CustomDataGridView DGV, string colName)
+        {
+            string tableKey = DatabaseFunct.ConvertDirToTableKey(DGV.Name);
+            string colType = DatabaseFunct.currentData[tableKey][colName];
+
+            //gather the foreign key refrence columns available to link to in this table
+            List<string> foreignKeyRefrenceColumnsInTable = new List<string>();
+            foreach (KeyValuePair<string, dynamic> KV in DatabaseFunct.currentData[tableKey])
+            {
+                if (KV.Value is string && KV.Value == "Foreign Key Refrence")
+                {
+                    foreignKeyRefrenceColumnsInTable.Add(KV.Key);
+                }
+            }
+
+            if (foreignKeyRefrenceColumnsInTable.Count == 0)
+            {
+                MessageBox.Show("This table no longer contains any \"Foreign Key Refrence\" columns to link this column to.");
+                return;
+            }
+
+            //read the columns currently linked so they can be pre-selected in the prompt
+            List<string> currentLinks = new List<string>();
+            if (DatabaseFunct.currentData[tableKey].ContainsKey(colName + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt))
+            {
+                dynamic existingLinkData = DatabaseFunct.currentData[tableKey][colName + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt];
+                //handle the legacy string format as well as the list format
+                if (existingLinkData is string)
+                {
+                    currentLinks.Add(existingLinkData);
+                }
+                else
+                {
+                    foreach (string link in existingLinkData)
+                    {
+                        currentLinks.Add(link);
+                    }
+                }
+            }
+
+            //open the same selection window used when creating the column, pre-selected with the current links
+            Tuple<string, List<string>> input = MultiSelectPrompt.Show("Choose Foreign Key Refrence Columns to link to.", "Edit Linked Foreign Key Ref Columns", foreignKeyRefrenceColumnsInTable.ToArray(), "Link Column", currentLinks);
+
+            //prompt closed/canceled - leave existing links unchanged
+            if (input.Item1 == "F")
+            {
+                return;
+            }
+
+            List<string> linkedFKeyRefrenceColumnNameData = input.Item2;
+            if (linkedFKeyRefrenceColumnNameData.Count == 0)
+            {
+                MessageBox.Show("One or more column links must be selected. No changes were made to the linked columns.");
+                return;
+            }
+
+            //match the duplicate type index (e.g. "...Receiver2" links to "Auto Table Constructor Script2")
+            string typeIndexString = "";
+            if (Regex.IsMatch(colType, @"\d+$"))
+            {
+                typeIndexString = Regex.Match(colType, @"\d+$").Value;
+            }
+
+            //validate each selection the same way column creation does
+            string linkError = "";
+            foreach (string linkedFKeyRefrenceColumnName in linkedFKeyRefrenceColumnNameData)
+            {
+                if (!DatabaseFunct.currentData[tableKey].ContainsKey(linkedFKeyRefrenceColumnName) || DatabaseFunct.currentData[tableKey][linkedFKeyRefrenceColumnName] != "Foreign Key Refrence" || !foreignKeyRefrenceColumnsInTable.Contains(linkedFKeyRefrenceColumnName))
+                {
+                    linkError += "The foreign key refrence column, \"" + linkedFKeyRefrenceColumnName + "\", that you are linking this column to is invalid!\n Column is either not of type \"Foreign Key Refrence\" or the column does not exst in TableData \n";
+                    continue;
+                }
+
+                string tableKeyBeingRefrenced = DatabaseFunct.currentData[tableKey][linkedFKeyRefrenceColumnName + DatabaseFunct.RefrenceColumnKeyExt];
+                bool refrencedTableContainsScript = false;
+                foreach (KeyValuePair<string, dynamic> KV in DatabaseFunct.currentData[tableKeyBeingRefrenced])
+                {
+                    if (KV.Value is string && KV.Value == "Auto Table Constructor Script" + typeIndexString)
+                    {
+                        refrencedTableContainsScript = true;
+                    }
+                }
+
+                if (!refrencedTableContainsScript)
+                {
+                    linkError += "the foreign key refrence column, \"" + linkedFKeyRefrenceColumnName + "\", that you are linking this column to does not contain a \"Auto Table Constructor Script Column" + typeIndexString + "\" within it's referenced table to read from! \n";
+                }
+            }
+
+            if (!String.IsNullOrEmpty(linkError))
+            {
+                MessageBox.Show(linkError + "\nNo changes were made to the linked columns.");
+                return;
+            }
+
+            //apply the new links
+            DatabaseFunct.currentData[tableKey][colName + DatabaseFunct.ScriptReceiverLinkToRefrenceColumnExt] = linkedFKeyRefrenceColumnNameData;
+
+            //refresh every visible instance of this column. The same table structure can be open in
+            //several subtables at once (e.g. the subtable opened under different parent rows), so update
+            //all of them - not just the one whose header was right-clicked.
+            DatabaseFunct.loadingTable = true;
+
+            foreach (CustomDataGridView openDGV in DatabaseFunct.GetAllOpenDGVsAtTableLevel(tableKey))
+            {
+                //each open instance has its own row data; fetch it by the instance's dir (works for subtables too)
+                Dictionary<int, Dictionary<string, dynamic>> tableData = DatabaseFunct.GetTableDataFromDir(openDGV.Name) as Dictionary<int, Dictionary<string, dynamic>>;
+                int colIndex = openDGV.Columns[colName].Index;
+
+                foreach (int rowIndex in new List<int>(tableData.Keys))
+                {
+                    Tuple<CustomDataGridView, int> subTableKey = new Tuple<CustomDataGridView, int>(openDGV, rowIndex);
+
+                    //close the open subtable at this row if it is the one sourced from this column,
+                    //so the newly merged construction script takes effect on the next open
+                    if (Program.openSubTables.ContainsKey(subTableKey) && Program.openSubTables[subTableKey].Item1 == colName)
+                    {
+                        CloseSubTable(subTableKey, openDGV, rowIndex, colIndex);
+                    }
+
+                    //recompute the button's data preview using the new merged script.
+                    //Fetch returns null when no linked column has a value at this row; that row has no script
+                    //to render against, so show an empty preview while KEEPING the row's stored data intact
+                    //(it re-appears once a linked column is filled again).
+                    string subtableConstructorScript = AutoTableConstructorScriptFunct.FetchTableConstructorScriptForReceiverColumn(tableKey, colName, tableData, rowIndex, openDGV);
+                    if (subtableConstructorScript != null)
+                    {
+                        Dictionary<int, Dictionary<string, dynamic>> subtableData = tableData[rowIndex][colName];
+                        openDGV.Rows[rowIndex].Cells[colIndex].Value = ColumnTypes.GetSubTableCellDisplay(subtableData, colName, tableKey, subtableConstructorScript);
+                    }
+                    else
+                    {
+                        openDGV.Rows[rowIndex].Cells[colIndex].Value = "empty";
+                    }
+                    //this allows the length of the cell's tooltip text to exceed 256 characters
+                    openDGV.Rows[rowIndex].Cells[colIndex].ToolTipText = openDGV.Rows[rowIndex].Cells[colIndex].Value.ToString();
+
+                    //grey out the receiver cell if none of the (new) linked columns at this row are filled
+                    DatabaseFunct.UpdateReceiverCellUnfulfilledDependencyState(tableKey, colName, tableData, rowIndex, openDGV);
+                }
+            }
+
+            RecenterSubTables();
+            DatabaseFunct.loadingTable = false;
         }
 
 

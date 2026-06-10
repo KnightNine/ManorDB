@@ -112,11 +112,12 @@ namespace MDB
 
         }
 
-        //isReplace is false if appending data from another table
-        internal static void ImportMDBFile(string fileName, bool isReplace)
+        //grid-free: reads + deserializes an .mdb (JSON) into the typed currentData model.
+        //returns null on unrecoverable type errors (errorMessage set). does not touch the UI.
+        internal static SortedDictionary<string, dynamic> DeserializeMDB(string fileName, out int largestATCSDuplicateIndex, out string errorMessage)
         {
-            DatabaseFunct.loadingTable = true;
-            string js = "";
+            errorMessage = "";
+            string capturedError = "";
 
             bool valid = true;
 
@@ -163,7 +164,7 @@ namespace MDB
                 else
                 {
                     Console.WriteLine("unhandled table/object type: " + currentTable.GetType().ToString());
-                    MessageBox.Show("unhandled table/object type: " + currentTable.GetType().ToString());
+                    capturedError = "unhandled table/object type: " + currentTable.GetType().ToString();
                     valid = false;
                 }
 
@@ -195,6 +196,7 @@ namespace MDB
                             {
 
                                 Console.WriteLine("\"" + key + "\" key Array value not handled.");
+                                capturedError = "\"" + key + "\" key Array value not handled.";
                                 valid = false;
                             }
                         }
@@ -293,6 +295,7 @@ namespace MDB
                         else
                         {
                             Console.WriteLine("\"" + key + "\" key value not handled.");
+                            capturedError = "\"" + key + "\" key value not handled.";
                             valid = false;
                         }
 
@@ -317,21 +320,32 @@ namespace MDB
 
 
 
-            js = File.ReadAllText(fileName);
+            string js = File.ReadAllText(fileName);
             Console.WriteLine(js);
-            SortedDictionary<string, dynamic> cd;
 
             //appended/opened table data
-            cd = Newtonsoft.Json.JsonConvert.DeserializeObject<SortedDictionary<string, dynamic>>(js);
+            SortedDictionary<string, dynamic> cd = Newtonsoft.Json.JsonConvert.DeserializeObject<SortedDictionary<string, dynamic>>(js);
 
             subFunct(0, cd);
 
+            errorMessage = capturedError;
+            largestATCSDuplicateIndex = LargestATCSDuplicateIndex;
+            return valid ? cd : null;
+        }
+
+        //isReplace is false if appending data from another table
+        internal static void ImportMDBFile(string fileName, bool isReplace)
+        {
+            DatabaseFunct.loadingTable = true;
+
+            SortedDictionary<string, dynamic> cd = DeserializeMDB(fileName, out int LargestATCSDuplicateIndex, out _);
 
 
 
 
 
-            if (valid)
+
+            if (cd != null) // valid
             {
 
                 if (LargestATCSDuplicateIndex > ColumnTypes.scriptColumnTypeDuplicates)

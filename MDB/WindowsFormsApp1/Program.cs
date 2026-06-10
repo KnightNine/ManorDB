@@ -73,8 +73,11 @@ namespace MDB
             /*mainForm.hideUnhideColumnsToolStripMenuItem.DropDown.LostFocus += new EventHandler(mainForm.hideUnhideColumnsToolStripMenuItemLostFocus);*/
             ((System.ComponentModel.ISupportInitialize)(mainForm.TableMainGridView)).EndInit();
 
+            //primary key search bar in the top menu
+            PrimaryKeySearch.Init(mainForm.primaryKeySearchToolStripTextBox);
 
-            
+
+
 
             mainForm.SuspendLayout();
             mainForm.Refresh();

@@ -30,7 +30,15 @@ namespace MDB
 
 
 
-                    Program.mainForm.customTabControl1.TabPages.Add(tabName, tabName);
+                    //insert the tab at its alphabetical position so tab order matches the sorted currentData
+                    //(GetMainTableKeys reflects currentData's sorted key order, and now includes tabName)
+                    string[] sortedKeys = GetMainTableKeys();
+                    int insertIndex = Array.IndexOf(sortedKeys, tabName);
+                    if (insertIndex < 0)
+                    {
+                        insertIndex = Program.mainForm.customTabControl1.TabPages.Count;
+                    }
+                    Program.mainForm.customTabControl1.TabPages.Insert(insertIndex, tabName, tabName);
 
                     Program.mainForm.label1.Visible = false;
 
@@ -350,6 +358,7 @@ namespace MDB
                 Program.mainForm.UpdateScrollBar();
                 Program.mainForm.RecenterSubTables();
 
+                PrimaryKeySearch.UpdateForCurrentTable();
 
             }
             else

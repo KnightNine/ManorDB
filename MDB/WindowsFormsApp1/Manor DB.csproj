@@ -123,12 +123,21 @@
       <DependentUpon>Edit Regex Refrence Table Constructor Prompt.cs</DependentUpon>
     </Compile>
     <Compile Include="GenericFunct.cs" />
+    <Compile Include="AI Interface\AiSession.cs" />
+    <Compile Include="AI Interface\AiLevel.cs" />
+    <Compile Include="AI Interface\AiRestrictions.cs" />
+    <Compile Include="AI Interface\AiRender.cs" />
+    <Compile Include="AI Interface\AiCommandInterface.cs" />
     <Compile Include="ColumnTypes.cs" />
     <Compile Include="DatabaseFunct.cs" />
     <Compile Include="DatabaseFunct %28SubTables%29.cs" />
     <Compile Include="DatabaseFunct %28Disabler Functions%29.cs" />
     <Compile Include="ColorThemes.cs" />
     <Compile Include="DatabaseFunct %28Tables%29.cs" />
+    <Compile Include="DatabaseFunct %28Deep Search%29.cs" />
+    <Compile Include="DeepSearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -137,6 +146,7 @@
     </Compile>
     <Compile Include="DatabaseFunct %28Columns Rows%29.cs" />
     <Compile Include="InputOutput.cs" />
+    <Compile Include="PrimaryKeySearch.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Text Editor Form.cs">
