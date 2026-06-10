@@ -29,6 +29,7 @@ The game I am working on relies on complex repeating data structures to define i
   <li>ability to copy a row from one subtable and paste it into another subtable of the same depth</li>
   <li>Column Type Icons (to show the type of each column)</li>
   <li> make the row being hovered over become more visible  </li>
+  <li>Search functionality for key reference dropdowns</li>
   <li>Editable "on Mouse Hover" Column Descriptions + text editor for text cells</li>
   <li>"Table Directory" column type that constructs and stores a string array of the directory in another table's structure, this would resolve the typos that could arise from writing these directories manually.</li>
   <li>Key Shortcuts</li>
